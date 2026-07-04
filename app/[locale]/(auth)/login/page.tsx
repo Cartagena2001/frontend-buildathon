@@ -6,7 +6,7 @@ export default function LoginPage() {
   const t = useTranslations("auth.login");
 
   return (
-    <div className="glass rounded-2xl w-full max-w-md p-8 fade-up">
+    <div className="glass rounded-2xl w-full max-w-md p-6 sm:p-8 fade-up">
       <div className="mb-8">
         <h2 className="font-display text-3xl text-fp-cream mb-1">{t("title")}</h2>
         <p className="text-fp-muted text-sm">{t("subtitle")}</p>
@@ -20,7 +20,7 @@ export default function LoginPage() {
           <input
             type="email"
             placeholder={t("emailPlaceholder")}
-            className="fp-input w-full bg-white/5 border border-fp-border rounded-xl px-4 py-3 text-fp-cream placeholder:text-fp-muted text-sm font-sans transition-colors"
+            className="fp-input w-full fp-field border border-fp-border rounded-xl px-4 py-3 text-sm font-sans transition-colors"
           />
         </div>
 
@@ -31,7 +31,7 @@ export default function LoginPage() {
           <input
             type="password"
             placeholder={t("passwordPlaceholder")}
-            className="fp-input w-full bg-white/5 border border-fp-border rounded-xl px-4 py-3 text-fp-cream placeholder:text-fp-muted text-sm font-sans transition-colors"
+            className="fp-input w-full fp-field border border-fp-border rounded-xl px-4 py-3 text-sm font-sans transition-colors"
           />
         </div>
 
@@ -43,7 +43,7 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          className="w-full bg-fp-red text-fp-cream font-semibold text-sm rounded-xl py-3.5 hover:bg-fp-cyan hover:text-fp-dark transition-colors mt-2"
+          className="w-full bg-fp-red text-fp-on-accent font-semibold text-sm rounded-xl py-3.5 hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors mt-2"
         >
           {t("submitButton")}
         </button>
@@ -57,7 +57,7 @@ export default function LoginPage() {
 
       <button
         type="button"
-        className="w-full flex items-center justify-center gap-3 bg-white/5 border border-fp-border rounded-xl py-3 text-fp-cream text-sm font-medium hover:bg-white/10 transition-colors"
+        className="w-full flex items-center justify-center gap-3 fp-btn-secondary rounded-xl py-3 text-sm font-medium transition-colors"
       >
         <GoogleIcon />
         {t("googleButton")}

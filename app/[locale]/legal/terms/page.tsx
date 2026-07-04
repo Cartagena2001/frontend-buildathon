@@ -68,7 +68,7 @@ export default function TermsPage() {
           </Link>
           <Link
             href="/register"
-            className="px-5 py-2.5 rounded-full bg-fp-red text-fp-cream text-sm font-semibold hover:bg-fp-cyan hover:text-fp-dark transition-colors"
+            className="px-5 py-2.5 rounded-full bg-fp-red text-fp-on-accent text-sm font-semibold hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors"
           >
             Back to Sign Up
           </Link>

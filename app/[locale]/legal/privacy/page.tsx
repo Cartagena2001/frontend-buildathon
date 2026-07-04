@@ -47,7 +47,7 @@ export default function PrivacyPage() {
           <p className="text-fp-muted text-sm">
             {t("lastUpdated")}: {p("date")}
           </p>
-          <p className="text-fp-muted text-sm leading-7 mt-6 p-5 rounded-xl border border-fp-border bg-white/3">
+          <p className="text-fp-muted text-sm leading-7 mt-6 p-5 rounded-xl fp-legal-intro">
             {p("intro")}
           </p>
         </header>
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
           </Link>
           <Link
             href="/register"
-            className="px-5 py-2.5 rounded-full bg-fp-red text-fp-cream text-sm font-semibold hover:bg-fp-cyan hover:text-fp-dark transition-colors"
+            className="px-5 py-2.5 rounded-full bg-fp-red text-fp-on-accent text-sm font-semibold hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors"
           >
             Back to Sign Up
           </Link>

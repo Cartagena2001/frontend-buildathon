@@ -10,6 +10,11 @@
     "searchPlaceholder": "Where's the heat in El Salvador?",
     "searchButton": "Search",
     "viralLabel": "Viral right now",
+    "popular": {
+      "eyebrow": "Trending now",
+      "title": "The most talked-about spots.",
+      "viewAll": "View all places"
+    },
     "tags": {
       "surfing": "Surfing El Zonte",
       "pupusas": "Pupusas in Olocuilta",
@@ -17,6 +22,56 @@
       "beaches": "Beaches in La Libertad",
       "coffee": "Coffee in Santa Ana"
     }
+  },
+  "explore": {
+    "title": "The Heat Map",
+    "subtitle": "{count} locations resolved from {clips} viral clips this week.",
+    "sortedBy": "Sorted by",
+    "sortOptions": {
+      "viral": "Viral Momentum",
+      "sentiment": "Best Sentiment",
+      "recent": "Most Recent"
+    },
+    "filterByVibe": "Filter by Vibe",
+    "vibes": {
+      "highEnergy": "High Energy",
+      "chillRelaxed": "Chill / Relaxed",
+      "hiddenGem": "Hidden Gem",
+      "aesthetic": "Aesthetic"
+    },
+    "category": "Category",
+    "categories": {
+      "all": "All",
+      "beaches": "Beaches",
+      "restaurants": "Restaurants",
+      "nightlife": "Nightlife",
+      "cafes": "Cafés"
+    },
+    "trendingGrowth": "Trending Growth",
+    "trendingHint": "Showing spots with >100% weekly growth",
+    "currentView": "Current View",
+    "noResults": "No places found. Try a different search.",
+    "viralScore": "Viral Score",
+    "sentiment": "Sentiment",
+    "hits": "hits"
+  },
+  "footer": {
+    "tagline": "The first sentiment-aware travel discovery engine. Powered by public signals, curated by the crowd, mapped for you.",
+    "exploreTitle": "Explore",
+    "platformTitle": "Platform",
+    "explore": {
+      "beaches": "Beaches",
+      "dining": "Dining",
+      "hiddenGems": "Hidden Gems",
+      "nightlife": "Nightlife"
+    },
+    "platform": {
+      "ourData": "Our Data",
+      "apiAccess": "API Access",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "rights": "All rights reserved."
   },
   "legal": {
     "backHome": "Back to home",

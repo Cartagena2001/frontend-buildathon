@@ -31,7 +31,7 @@ export default function SearchBar() {
       />
       <button
         type="submit"
-        className="m-1 px-6 py-3 rounded-full bg-fp-red text-fp-cream text-sm font-semibold hover:bg-fp-cyan hover:text-fp-dark transition-colors shrink-0"
+        className="m-1 px-6 py-3 rounded-full bg-fp-red text-fp-on-accent text-sm font-semibold hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors shrink-0"
       >
         {t("searchButton")}
       </button>

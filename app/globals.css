@@ -1,37 +1,116 @@
 @import "tailwindcss";
 
-@theme inline {
-  /* Brand palette */
-  --color-fp-dark:    #040404;
-  --color-fp-dim:     #0e0e0e;
-  --color-fp-surface: rgba(255,255,255,0.05);
-  --color-fp-border:  rgba(255,255,255,0.10);
-  --color-fp-cream:   #f0e8ec;
-  --color-fp-muted:   #de8c9d;
-  --color-fp-rose:    #de8c9d;
-  --color-fp-red:     #fe2858;
-  --color-fp-cyan:    #2af0ea;
-  --color-fp-teal:    #397684;
-  --color-fp-cyan-dim: rgba(42,240,234,0.12);
+/* ══════════════════════════════════════════════════════════
+   THEME TOKENS — raw CSS variables toggled by data-theme
+   ══════════════════════════════════════════════════════════ */
 
-  /* Typography */
+/* ── Default: Dark ─────────────────────────────────────── */
+:root {
+  --fp-dark:      #040404;
+  --fp-dim:       #0e0e0e;
+  --fp-surface:   rgba(255,255,255,0.05);
+  --fp-border:    rgba(255,255,255,0.10);
+  --fp-cream:     #f0e8ec;
+  --fp-muted:     #de8c9d;
+  --fp-rose:      #de8c9d;
+  --fp-red:       #fe2858;
+  --fp-cyan:      #2af0ea;
+  --fp-teal:      #397684;
+  --fp-cyan-dim:  rgba(42,240,234,0.12);
+
+  /* hero / auth overlay */
+  --hero-overlay-start:  rgba(4,4,4,0.38);
+  --hero-overlay-mid:    rgba(4,4,4,0.22);
+  --hero-overlay-heavy:  rgba(4,4,4,0.60);
+  --hero-overlay-end:    rgba(4,4,4,0.94);
+  --auth-overlay:        rgba(4,4,4,0.75);
+
+  /* glass card */
+  --glass-bg:    rgba(4,4,4,0.80);
+  --glass-border:rgba(222,140,157,0.18);
+
+  /* map bg */
+  --map-bg:      #111518;
+
+  /* field & interactive surfaces */
+  --fp-field-bg:       rgba(255,255,255,0.05);
+  --fp-field-hover-bg: rgba(255,255,255,0.10);
+  --fp-badge-bg:       rgba(4,4,4,0.80);
+  --fp-tooltip-bg:     rgba(14,14,14,0.96);
+  --fp-overlay-close:  rgba(4,4,4,0.80);
+}
+
+/* ── Light mode ─────────────────────────────────────────── */
+[data-theme="light"] {
+  --fp-dark:      #f5eff0;
+  --fp-dim:       #ede5e7;
+  --fp-surface:   rgba(26,5,12,0.05);
+  --fp-border:    rgba(26,5,12,0.12);
+  --fp-cream:     #1a050c;
+  --fp-muted:     #7a4a58;
+  --fp-rose:      #b83a56;
+  --fp-red:       #e0153a;
+  --fp-cyan:      #1799a0;
+  --fp-teal:      #2a5f6e;
+  --fp-cyan-dim:  rgba(23,153,160,0.12);
+
+  --hero-overlay-start:  rgba(245,239,240,0.25);
+  --hero-overlay-mid:    rgba(245,239,240,0.10);
+  --hero-overlay-heavy:  rgba(245,239,240,0.45);
+  --hero-overlay-end:    rgba(245,239,240,0.92);
+  --auth-overlay:        rgba(245,239,240,0.80);
+
+  --glass-bg:    rgba(255,255,255,0.90);
+  --glass-border:rgba(180,60,86,0.18);
+
+  --map-bg:      #c8dde3;
+
+  --fp-field-bg:       rgba(26,5,12,0.05);
+  --fp-field-hover-bg: rgba(26,5,12,0.08);
+  --fp-badge-bg:       rgba(255,255,255,0.80);
+  --fp-tooltip-bg:     rgba(237,229,231,0.98);
+  --fp-overlay-close:  rgba(237,229,231,0.90);
+}
+
+/* ══════════════════════════════════════════════════════════
+   TAILWIND v4 THEME — references the CSS variables above
+   ══════════════════════════════════════════════════════════ */
+@theme inline {
+  --color-fp-dark:       var(--fp-dark);
+  --color-fp-dim:        var(--fp-dim);
+  --color-fp-surface:    var(--fp-surface);
+  --color-fp-border:     var(--fp-border);
+  --color-fp-cream:      var(--fp-cream);
+  --color-fp-muted:      var(--fp-muted);
+  --color-fp-rose:       var(--fp-rose);
+  --color-fp-red:        var(--fp-red);
+  --color-fp-cyan:       var(--fp-cyan);
+  --color-fp-teal:       var(--fp-teal);
+  --color-fp-cyan-dim:   var(--fp-cyan-dim);
+  /* Fixed — never change with theme */
+  --color-fp-on-accent:  #ffffff;   /* text on red bg */
+  --color-fp-on-cyan:    #040404;   /* text on cyan bg */
   --font-display: var(--font-display);
   --font-sans:    var(--font-sans);
 }
 
-/* ── Base ─────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   BASE
+   ══════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; }
-
 html, body { height: 100%; }
 
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
-  background-color: #040404;
-  color: #f0e8ec;
+  background-color: var(--fp-dark);
+  color: var(--fp-cream);
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s, color 0.25s;
 }
 
-/* ── Hero background blend ────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   HERO / AUTH BACKGROUNDS
+   ══════════════════════════════════════════════════════════ */
 .hero-bg {
   position: relative;
   background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80');
@@ -45,17 +124,16 @@ body {
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(4, 4, 4, 0.38) 0%,
-    rgba(4, 4, 4, 0.22) 35%,
-    rgba(4, 4, 4, 0.60) 70%,
-    rgba(4, 4, 4, 0.94) 100%
+    var(--hero-overlay-start) 0%,
+    var(--hero-overlay-mid) 35%,
+    var(--hero-overlay-heavy) 70%,
+    var(--hero-overlay-end) 100%
   );
   z-index: 1;
 }
 
 .hero-content { position: relative; z-index: 2; }
 
-/* ── Auth background ──────────────────────────────────── */
 .auth-bg {
   position: relative;
   background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80');
@@ -67,22 +145,27 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(4, 4, 4, 0.75);
+  background: var(--auth-overlay);
   backdrop-filter: blur(2px);
   z-index: 1;
 }
 
 .auth-content { position: relative; z-index: 2; }
 
-/* ── Glass card ───────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   GLASS CARD
+   ══════════════════════════════════════════════════════════ */
 .glass {
-  background: rgba(4, 4, 4, 0.80);
-  border: 1px solid rgba(222, 140, 157, 0.18);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
+  transition: background 0.25s, border-color 0.25s;
 }
 
-/* ── Fade-up entrance ─────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   ANIMATIONS
+   ══════════════════════════════════════════════════════════ */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(22px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -95,7 +178,9 @@ body {
 .delay-400 { animation-delay: 0.44s; }
 .delay-500 { animation-delay: 0.56s; }
 
-/* ── Pill tags ────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   PILL TAGS
+   ══════════════════════════════════════════════════════════ */
 .tag-pill {
   display: inline-flex;
   align-items: center;
@@ -105,28 +190,98 @@ body {
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.01em;
-  border: 1px solid rgba(222,140,157,0.30);
-  background: rgba(222,140,157,0.08);
-  color: #f0e8ec;
+  border: 1px solid var(--fp-border);
+  background: var(--fp-surface);
+  color: var(--fp-cream);
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
   white-space: nowrap;
 }
 
 .tag-pill:hover {
   background: rgba(222,140,157,0.16);
-  border-color: rgba(222,140,157,0.50);
+  border-color: var(--fp-rose);
 }
 
 .tag-pill.active {
-  background: #fe2858;
-  border-color: #fe2858;
-  color: #f0e8ec;
+  background: var(--fp-red);
+  border-color: var(--fp-red);
+  color: #ffffff;
 }
 
-/* ── Focus ring (cyan) ────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   INPUT FOCUS
+   ══════════════════════════════════════════════════════════ */
 .fp-input:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(42,240,234,0.45);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fp-cyan) 45%, transparent);
 }
 
+/* ══════════════════════════════════════════════════════════
+   THEME-AWARE UTILITY CLASSES
+   ══════════════════════════════════════════════════════════ */
+
+/* Input fields */
+.fp-field {
+  background: var(--fp-field-bg);
+  color: var(--fp-cream);
+}
+.fp-field::placeholder { color: var(--fp-muted); }
+.fp-field:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fp-cyan) 45%, transparent);
+}
+
+/* Social / secondary buttons (Google, etc.) */
+.fp-btn-secondary {
+  background: var(--fp-field-bg);
+  border: 1px solid var(--fp-border);
+  color: var(--fp-cream);
+  transition: background 0.2s;
+}
+.fp-btn-secondary:hover { background: var(--fp-field-hover-bg); }
+
+/* Image overlay badges (rank number on card photos) */
+.fp-badge-overlay {
+  background: var(--fp-badge-bg);
+  border: 1px solid var(--fp-border);
+  color: var(--fp-cream);
+  backdrop-filter: blur(8px);
+}
+
+/* Tooltip / popover bg */
+.fp-tooltip {
+  background: var(--fp-tooltip-bg);
+  border: 1px solid var(--fp-border);
+  color: var(--fp-cream);
+}
+
+/* Close button overlay (mobile drawer) */
+.fp-overlay-close-btn {
+  background: var(--fp-overlay-close);
+  color: var(--fp-muted);
+}
+
+/* Explore search bar */
+.fp-search-bar {
+  background: var(--fp-field-bg);
+  border: 1px solid var(--fp-border);
+}
+
+/* Legal intro block */
+.fp-legal-intro {
+  background: var(--fp-field-bg);
+  border: 1px solid var(--fp-border);
+}
+
+/* color-scheme for native inputs */
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  color-scheme: light;
+}
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  color-scheme: dark;
+}

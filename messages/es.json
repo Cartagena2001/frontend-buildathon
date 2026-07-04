@@ -10,6 +10,11 @@
     "searchPlaceholder": "¿Dónde está lo viral en El Salvador?",
     "searchButton": "Buscar",
     "viralLabel": "Viral ahora mismo",
+    "popular": {
+      "eyebrow": "Tendencia ahora",
+      "title": "Los lugares más comentados.",
+      "viewAll": "Ver todos los lugares"
+    },
     "tags": {
       "surfing": "Surf en El Zonte",
       "pupusas": "Pupusas en Olocuilta",
@@ -17,6 +22,56 @@
       "beaches": "Playas en La Libertad",
       "coffee": "Café en Santa Ana"
     }
+  },
+  "explore": {
+    "title": "El Mapa del Calor",
+    "subtitle": "{count} lugares resueltos de {clips} clips virales esta semana.",
+    "sortedBy": "Ordenado por",
+    "sortOptions": {
+      "viral": "Momentum viral",
+      "sentiment": "Mejor sentimiento",
+      "recent": "Más reciente"
+    },
+    "filterByVibe": "Filtrar por ambiente",
+    "vibes": {
+      "highEnergy": "Alta energía",
+      "chillRelaxed": "Relajado",
+      "hiddenGem": "Joya oculta",
+      "aesthetic": "Estético"
+    },
+    "category": "Categoría",
+    "categories": {
+      "all": "Todos",
+      "beaches": "Playas",
+      "restaurants": "Restaurantes",
+      "nightlife": "Vida nocturna",
+      "cafes": "Cafés"
+    },
+    "trendingGrowth": "Crecimiento viral",
+    "trendingHint": "Mostrando lugares con >100% de crecimiento semanal",
+    "currentView": "Vista actual",
+    "noResults": "No se encontraron lugares. Intenta otra búsqueda.",
+    "viralScore": "Score viral",
+    "sentiment": "Sentimiento",
+    "hits": "hits"
+  },
+  "footer": {
+    "tagline": "El primer motor de descubrimiento de viajes con análisis de sentimiento. Impulsado por señales públicas, curado por la multitud, mapeado para ti.",
+    "exploreTitle": "Explorar",
+    "platformTitle": "Plataforma",
+    "explore": {
+      "beaches": "Playas",
+      "dining": "Restaurantes",
+      "hiddenGems": "Lugares ocultos",
+      "nightlife": "Vida nocturna"
+    },
+    "platform": {
+      "ourData": "Nuestros datos",
+      "apiAccess": "Acceso API",
+      "privacy": "Privacidad",
+      "terms": "Términos"
+    },
+    "rights": "Todos los derechos reservados."
   },
   "legal": {
     "backHome": "Volver al inicio",

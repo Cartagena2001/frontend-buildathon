@@ -16,7 +16,7 @@ export default function RegisterPage() {
   const match = touched && confirm.length > 0 && password === confirm;
 
   return (
-    <div className="glass rounded-2xl w-full max-w-md p-8 fade-up">
+    <div className="glass rounded-2xl w-full max-w-md p-6 sm:p-8 fade-up">
       <div className="mb-8">
         <h2 className="font-display text-3xl text-fp-cream mb-1">{t("title")}</h2>
         <p className="text-fp-muted text-sm">{t("subtitle")}</p>
@@ -85,7 +85,7 @@ export default function RegisterPage() {
               onChange={(e) => setConfirm(e.target.value)}
               onBlur={() => setTouched(true)}
               placeholder={t("confirmPasswordPlaceholder")}
-              className={`fp-input w-full bg-white/5 border rounded-xl px-4 py-3 pr-10 text-fp-cream placeholder:text-fp-muted text-sm font-sans transition-colors ${
+              className={`fp-input fp-field w-full border rounded-xl px-4 py-3 pr-10 text-sm font-sans transition-colors ${
                 mismatch
                   ? "border-fp-red"
                   : match
@@ -125,7 +125,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={mismatch || (touched && confirm.length === 0 && password.length > 0)}
-          className="w-full bg-fp-red text-fp-cream font-semibold text-sm rounded-xl py-3.5 hover:bg-fp-cyan hover:text-fp-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full bg-fp-red text-fp-on-accent font-semibold text-sm rounded-xl py-3.5 hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {t("submitButton")}
         </button>
