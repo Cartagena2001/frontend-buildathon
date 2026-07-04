@@ -2,18 +2,18 @@
 
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
+import { useSearchNavigation } from "./SearchNavigationProvider";
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
-  const router = useRouter();
+  const { startSearch, isSearching } = useSearchNavigation();
   const inputRef = useRef<HTMLInputElement>(null);
   const t = useTranslations("home");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!query.trim()) return;
-    router.push(`/explore?q=${encodeURIComponent(query.trim())}`);
+    if (!query.trim() || isSearching) return;
+    startSearch(query);
   }
 
   return (
@@ -27,7 +27,8 @@ export default function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t("searchPlaceholder")}
-        className="fp-input flex-1 bg-transparent text-fp-cream placeholder:text-fp-muted text-[0.95rem] px-6 py-4 font-sans"
+        disabled={isSearching}
+        className="fp-input flex-1 bg-transparent text-fp-cream placeholder:text-fp-muted text-[0.95rem] px-6 py-4 font-sans disabled:cursor-not-allowed"
       />
       <button
         type="submit"

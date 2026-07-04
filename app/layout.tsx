@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans } from "next/font/google";
 import { getLocale } from "next-intl/server";
 import { getTheme } from "@/lib/theme";
+import { MASCOT_VERSION } from "@/components/mascot/types";
 import "./globals.css";
 
 const dmSerifDisplay = DM_Serif_Display({
@@ -36,6 +37,19 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={`${dmSerifDisplay.variable} ${dmSans.variable} h-full`}
     >
+      <head>
+        <link
+          rel="preload"
+          href={`/mascot/loading-search-poster.png?v=${MASCOT_VERSION}`}
+          as="image"
+        />
+        <link
+          rel="preload"
+          href={`/mascot/loading-search.mp4?v=${MASCOT_VERSION}`}
+          as="fetch"
+          type="video/mp4"
+        />
+      </head>
       <body
         data-theme={theme}
         suppressHydrationWarning

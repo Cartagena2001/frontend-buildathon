@@ -9,6 +9,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "generate:favicon": "node scripts/generate-favicon.mjs",
+    "process:mascot-search": "node scripts/process-mascot-search.mjs",
     "lint": "eslint",
     "db:migrate": "dotenv -e .env -- tsx src/lib/db/migrate.ts",
     "db:push": "drizzle-kit push",
