@@ -6,27 +6,42 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint",
-    "db:up": "sg docker -c \"docker compose up -d mongodb\"",
-    "db:down": "sg docker -c \"docker compose down\"",
-    "db:logs": "sg docker -c \"docker compose logs -f mongodb\""
+    "db:migrate": "dotenv -e .env -- tsx src/lib/db/migrate.ts",
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "@upstash/vector": "^1.2.3",
+    "bcryptjs": "^3.0.3",
+    "drizzle-orm": "^0.45.2",
     "mongodb": "^7.4.0",
     "next": "16.2.10",
+    "next-auth": "^5.0.0-beta.31",
     "next-intl": "^4.13.1",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.0.3",
+    "dotenv-cli": "^11.0.0",
+    "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "jsdom": "^29.1.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "tsx": "^4.23.0",
+    "typescript": "^5",
+    "vitest": "^4.1.9"
   }
 }

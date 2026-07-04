@@ -1,11 +1,14 @@
 import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import SearchBar from "@/features/search/components/SearchBar";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import MobileNav from "@/components/ui/MobileNav";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import NavAuth from "@/components/ui/NavAuth";
 import PopularPlaces from "@/features/places/components/PopularPlaces";
 import Footer from "@/components/ui/Footer";
+import { auth } from "@/lib/auth";
 
 const TAG_KEYS = [
   "surfing",
@@ -17,8 +20,15 @@ const TAG_KEYS = [
 
 const ACTIVE_TAG = "nightlife";
 
-export default function HomePage() {
-  const t = useTranslations();
+export default async function HomePage() {
+  const [t, session] = await Promise.all([
+    getTranslations(),
+    auth(),
+  ]);
+
+  const user = session?.user
+    ? { name: session.user.name ?? "", email: session.user.email ?? "" }
+    : null;
 
   return (
     <>
@@ -49,19 +59,14 @@ export default function HomePage() {
             >
               {t("nav.trending")}
             </Link>
-            <Link
-              href="/login"
-              className="px-4 py-2 rounded-full bg-fp-red text-fp-on-accent text-sm font-semibold hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors"
-            >
-              {t("nav.signIn")}
-            </Link>
+            <NavAuth />
           </div>
 
           {/* Mobile: theme + locale + hamburger */}
           <div className="flex md:hidden items-center gap-3">
             <ThemeToggle />
             <LocaleSwitcher />
-            <MobileNav />
+            <MobileNav user={user} />
           </div>
         </nav>
 

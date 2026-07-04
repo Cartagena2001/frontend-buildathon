@@ -2,7 +2,30 @@
   "nav": {
     "destinations": "Destinos",
     "trending": "Tendencias",
-    "signIn": "Iniciar sesión"
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "profile": "Mi Perfil",
+    "saved": "Guardados"
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "memberSince": "Miembro desde",
+    "editProfile": "Editar perfil",
+    "savedPlaces": "Lugares guardados",
+    "reviews": "Mis Reseñas",
+    "noSaved": "No tienes lugares guardados aún. ¡Empieza a explorar!",
+    "noReviews": "No tienes reseñas aún. ¡Comparte tu experiencia!",
+    "exploreNow": "Explorar ahora"
+  },
+  "saved": {
+    "title": "Guardados",
+    "subtitle": "Tus próximas aventuras, todas en un lugar.",
+    "empty": "No tienes lugares guardados aún.",
+    "emptySub": "Explora lugares y toca el marcador para guardarlos aquí.",
+    "exploreNow": "Explorar lugares",
+    "remove": "Quitar",
+    "visitNow": "Ver detalles",
+    "savedOn": "Guardado"
   },
   "home": {
     "headline1": "No el mejor calificado.",
@@ -136,6 +159,7 @@
       "submitButton": "Iniciar sesión",
       "orDivider": "o",
       "googleButton": "Continuar con Google",
+      "googleUnavailable": "Inicio con Google no configurado. Agrega GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET en .env.",
       "noAccount": "¿Sin cuenta?",
       "createOne": "Créala aquí"
     },
@@ -160,6 +184,7 @@
       "submitButton": "Crear cuenta",
       "orDivider": "o",
       "googleButton": "Continuar con Google",
+      "googleUnavailable": "Inicio con Google no configurado. Agrega GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET en .env.",
       "hasAccount": "¿Ya tienes una cuenta?",
       "signIn": "Inicia sesión"
     }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { DM_Serif_Display, DM_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -62,12 +63,13 @@ export default async function LocaleLayout({ children, params }: Props) {
       lang={locale}
       data-theme="dark"
       className={`${dmSerifDisplay.variable} ${dmSans.variable} h-full`}
+      suppressHydrationWarning
     >
-      <head>
-        {/* Anti-FOUC: set data-theme before paint */}
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body className="min-h-full bg-fp-dark text-fp-cream antialiased transition-colors duration-300">
+        {/* Anti-FOUC: runs before hydration via next/script */}
+        <Script id="fp-theme-init" strategy="beforeInteractive">
+          {themeScript}
+        </Script>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             {children}

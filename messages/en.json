@@ -2,7 +2,30 @@
   "nav": {
     "destinations": "Destinations",
     "trending": "Trending",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "profile": "My Profile",
+    "saved": "Saved Places"
+  },
+  "profile": {
+    "title": "My Profile",
+    "memberSince": "Member since",
+    "editProfile": "Edit profile",
+    "savedPlaces": "Saved Places",
+    "reviews": "My Reviews",
+    "noSaved": "No saved places yet. Start exploring!",
+    "noReviews": "No reviews yet. Share your experience!",
+    "exploreNow": "Explore now"
+  },
+  "saved": {
+    "title": "Saved Places",
+    "subtitle": "Your future adventures, all in one place.",
+    "empty": "No saved places yet.",
+    "emptySub": "Browse places and tap the bookmark to save them here.",
+    "exploreNow": "Explore places",
+    "remove": "Remove",
+    "visitNow": "View details",
+    "savedOn": "Saved"
   },
   "home": {
     "headline1": "Not the best rated.",
@@ -136,6 +159,7 @@
       "submitButton": "Sign In",
       "orDivider": "or",
       "googleButton": "Continue with Google",
+      "googleUnavailable": "Google sign-in is not configured. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to .env.",
       "noAccount": "No account?",
       "createOne": "Create one"
     },
@@ -160,6 +184,7 @@
       "submitButton": "Create Account",
       "orDivider": "or",
       "googleButton": "Continue with Google",
+      "googleUnavailable": "Google sign-in is not configured. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to .env.",
       "hasAccount": "Already have an account?",
       "signIn": "Sign in"
     }

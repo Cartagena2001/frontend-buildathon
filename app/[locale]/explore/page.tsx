@@ -1,10 +1,12 @@
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import PlaceListCard from "@/features/places/components/PlaceListCard";
 import ExploreLayout from "@/features/search/components/ExploreLayout";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import NavAuth from "@/components/ui/NavAuth";
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
+import { getSavedPlaceIds } from "@/lib/saved/actions";
 
 const PLACES: PlaceCardData[] = [
   {
@@ -85,14 +87,16 @@ const PLACES: PlaceCardData[] = [
   },
 ];
 
-export default function ExplorePage() {
-  const t = useTranslations("explore");
-  const nav = useTranslations("nav");
+export default async function ExplorePage() {
+  const [t, savedIds] = await Promise.all([
+    getTranslations("explore"),
+    getSavedPlaceIds(),
+  ]);
 
   return (
     <div className="flex flex-col h-screen bg-fp-dark overflow-hidden">
       {/* ── Top nav ──────────────────────────────────────── */}
-      <nav className="shrink-0 flex items-center justify-between gap-4 px-4 sm:px-6 py-3 border-b border-fp-border bg-fp-dark z-30">
+      <nav className="shrink-0 flex items-center justify-between gap-4 px-4 sm:px-6 py-3 border-b border-fp-border bg-fp-dark z-30 overflow-visible">
         <Link
           href="/"
           className="text-fp-cream font-sans text-[1rem] font-light tracking-wide shrink-0"
@@ -107,12 +111,7 @@ export default function ExplorePage() {
         <div className="flex items-center gap-3 shrink-0">
           <ThemeToggle />
           <LocaleSwitcher />
-          <Link
-            href="/login"
-            className="hidden sm:inline-flex px-4 py-1.5 rounded-full bg-fp-red text-fp-on-accent text-xs font-semibold hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors"
-          >
-            {nav("signIn")}
-          </Link>
+          <NavAuth />
         </div>
       </nav>
 
@@ -136,7 +135,7 @@ export default function ExplorePage() {
       <ExploreLayout places={PLACES}>
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-3">
           {PLACES.map((place) => (
-            <PlaceListCard key={place.id} place={place} />
+            <PlaceListCard key={place.id} place={place} isSaved={savedIds.includes(place.id)} />
           ))}
         </div>
       </ExploreLayout>

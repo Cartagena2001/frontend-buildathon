@@ -26,7 +26,7 @@ export default function MapPanel({ places, clusterLabel = "La Libertad Cluster" 
   return (
     <div className="relative w-full h-full overflow-hidden" style={{ background: "var(--map-bg)" }}>
       {/* Current view label */}
-      <div className="absolute top-4 right-4 z-10 fp-tooltip rounded-xl px-3 py-2 backdrop-blur-sm">
+      <div className="absolute top-4 right-4 fp-tooltip rounded-xl px-3 py-2 backdrop-blur-sm" style={{ zIndex: 1 }}>
         <p className="text-fp-muted text-[0.6rem] font-bold uppercase tracking-widest mb-0.5">
           {t("currentView")}
         </p>
@@ -73,8 +73,8 @@ export default function MapPanel({ places, clusterLabel = "La Libertad Cluster" 
         return (
           <div
             key={place.id}
-            className="absolute z-20 -translate-x-1/2 -translate-y-1/2 group cursor-pointer"
-            style={{ top: pos.top, left: pos.left }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 group cursor-pointer"
+            style={{ top: pos.top, left: pos.left, zIndex: 2 }}
           >
             {/* Ping animation */}
             <span className="absolute inset-0 rounded-full bg-fp-cyan opacity-30 animate-ping" />

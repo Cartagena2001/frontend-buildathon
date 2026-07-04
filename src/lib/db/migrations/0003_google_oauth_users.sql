@@ -1,0 +1,5 @@
+ALTER TABLE "users" ALTER COLUMN "password_hash" DROP NOT NULL;
+
+ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "image" TEXT;
+
+ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "auth_provider" TEXT NOT NULL DEFAULT 'credentials';
