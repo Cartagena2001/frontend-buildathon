@@ -30,7 +30,7 @@ export default function HomePage() {
             href="/"
             className="text-fp-cream font-sans text-[1.05rem] font-light tracking-wide"
           >
-            findy<span className="text-fp-cyan">.</span>place
+            findy<span className="text-fp-coral">.</span>place
           </Link>
 
           {/* Desktop nav */}
@@ -39,19 +39,19 @@ export default function HomePage() {
             <LocaleSwitcher />
             <Link
               href="/explore"
-              className="text-fp-muted hover:text-fp-cream text-sm font-medium transition-colors"
+              className="text-fp-muted hover:text-fp-coral text-sm font-medium transition-colors"
             >
               {t("nav.destinations")}
             </Link>
             <Link
               href="/explore?sort=trending"
-              className="text-fp-muted hover:text-fp-cream text-sm font-medium transition-colors"
+              className="text-fp-muted hover:text-fp-coral text-sm font-medium transition-colors"
             >
               {t("nav.trending")}
             </Link>
             <Link
               href="/login"
-              className="px-4 py-2 rounded-full bg-fp-red text-fp-on-accent text-sm font-semibold hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors"
+              className="px-4 py-2 rounded-full bg-fp-red text-fp-on-accent text-sm font-semibold hover:bg-fp-coral transition-colors"
             >
               {t("nav.signIn")}
             </Link>

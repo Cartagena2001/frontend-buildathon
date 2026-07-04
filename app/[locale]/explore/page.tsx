@@ -17,7 +17,7 @@ export default function ExplorePage() {
           href="/"
           className="text-fp-cream font-sans text-[1rem] font-light tracking-wide shrink-0"
         >
-          findy<span className="text-fp-cyan">.</span>place
+          findy<span className="text-fp-coral">.</span>place
         </Link>
 
         <div className="flex-1 min-w-0 max-w-xl">
@@ -29,7 +29,7 @@ export default function ExplorePage() {
           <LocaleSwitcher />
           <Link
             href="/login"
-            className="hidden sm:inline-flex px-4 py-1.5 rounded-full bg-fp-red text-fp-on-accent text-xs font-semibold hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors"
+            className="hidden sm:inline-flex px-4 py-1.5 rounded-full bg-fp-red text-fp-on-accent text-xs font-semibold hover:bg-fp-coral transition-colors"
           >
             {nav("signIn")}
           </Link>
@@ -74,7 +74,7 @@ function ExploreSearchBar() {
 
 function SortDropdown() {
   return (
-    <div className="flex items-center gap-1.5 border border-fp-border rounded-full px-3 py-1.5 cursor-pointer hover:border-fp-rose/40 transition-colors">
+    <div className="flex items-center gap-1.5 border border-fp-border rounded-full px-3 py-1.5 cursor-pointer hover:border-fp-coral/50 transition-colors">
       <span className="text-fp-cream text-xs font-medium whitespace-nowrap">Viral Momentum</span>
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-fp-muted shrink-0">
         <path d="m6 9 6 6 6-6" />

@@ -15,7 +15,7 @@ export default function Footer() {
               href="/"
               className="font-display text-fp-cream text-xl italic tracking-wide inline-block mb-4"
             >
-              findy<span className="text-fp-cyan not-italic">.</span>place
+              findy<span className="text-fp-coral not-italic">.</span>place
             </Link>
             <p className="text-fp-muted text-sm leading-6 max-w-xs">
               {t("tagline")}
@@ -34,7 +34,7 @@ export default function Footer() {
                   <li key={key}>
                     <Link
                       href={`/explore?category=${key}`}
-                      className="text-fp-muted text-sm hover:text-fp-cream transition-colors"
+                      className="text-fp-muted text-sm hover:text-fp-coral transition-colors"
                     >
                       {t(`explore.${key}`)}
                     </Link>
@@ -50,22 +50,22 @@ export default function Footer() {
               </p>
               <ul className="space-y-3">
                 <li>
-                  <Link href="#" className="text-fp-muted text-sm hover:text-fp-cream transition-colors">
+                  <Link href="#" className="text-fp-muted text-sm hover:text-fp-coral transition-colors">
                     {t("platform.ourData")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-fp-muted text-sm hover:text-fp-cream transition-colors">
+                  <Link href="#" className="text-fp-muted text-sm hover:text-fp-coral transition-colors">
                     {t("platform.apiAccess")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/legal/privacy" className="text-fp-muted text-sm hover:text-fp-cream transition-colors">
+                  <Link href="/legal/privacy" className="text-fp-muted text-sm hover:text-fp-coral transition-colors">
                     {t("platform.privacy")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/legal/terms" className="text-fp-muted text-sm hover:text-fp-cream transition-colors">
+                  <Link href="/legal/terms" className="text-fp-muted text-sm hover:text-fp-coral transition-colors">
                     {t("platform.terms")}
                   </Link>
                 </li>
@@ -101,7 +101,7 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
     <a
       href={href}
       aria-label={label}
-      className="w-8 h-8 rounded-full border border-fp-border flex items-center justify-center text-fp-muted hover:text-fp-cyan hover:border-fp-cyan transition-colors"
+      className="w-8 h-8 rounded-full border border-fp-border flex items-center justify-center text-fp-muted hover:text-fp-coral hover:border-fp-coral transition-colors"
     >
       {children}
     </a>

@@ -13,7 +13,7 @@ export default function AuthLayout({
           href="/"
           className="text-fp-cream font-sans text-[1.05rem] font-light tracking-wide"
         >
-          findy<span className="text-fp-cyan">.</span>place
+          findy<span className="text-fp-coral">.</span>place
         </Link>
         <ThemeToggle />
       </nav>

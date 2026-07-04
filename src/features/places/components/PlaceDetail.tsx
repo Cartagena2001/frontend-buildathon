@@ -16,15 +16,15 @@ const MapView = dynamic(() => import("@/features/map/components/MapView"), {
 });
 
 const badgeClasses: Record<PlaceCardData["badgeColor"], string> = {
-  red: "bg-fp-red text-fp-on-accent",
-  cyan: "bg-fp-cyan text-fp-on-cyan",
-  rose: "border border-fp-rose/50 text-fp-rose",
+  red: "bg-fp-orange text-fp-on-accent",
+  cyan: "bg-fp-teal text-fp-on-cyan",
+  rose: "border border-fp-coral/50 text-fp-coral",
 };
 
 const sentimentClasses: Record<string, string> = {
-  high: "text-fp-cyan",
-  medium: "text-fp-rose",
-  low: "text-fp-red",
+  high: "text-fp-teal",
+  medium: "text-fp-coral",
+  low: "text-fp-orange",
 };
 
 interface PlaceDetailProps {
@@ -72,24 +72,14 @@ export default function PlaceDetail({ place }: PlaceDetailProps) {
 }
 
 function PlaceDetailDesktop({ place }: { place: PlaceCardData }) {
-  const t = useTranslations("place");
-
   return (
     <>
-      <main className="flex-1 min-w-0 flex flex-col min-h-0 overflow-hidden">
+      <main className="flex-1 min-w-0 overflow-y-auto min-h-0">
         <PlaceDetailHero place={place} variant="desktop" />
-        <div className="flex-1 overflow-y-auto min-h-0">
-          <PlaceDetailSections place={place} variant="desktop" />
-        </div>
+        <PlaceDetailSections place={place} variant="desktop" />
       </main>
 
       <aside className="w-[380px] xl:w-[480px] 2xl:w-[560px] shrink-0 flex flex-col border-l border-fp-border min-h-0">
-        <div className="shrink-0 px-4 py-3 border-b border-fp-border">
-          <h2 className="text-fp-muted text-[0.65rem] font-bold uppercase tracking-widest">
-            {t("location")}
-          </h2>
-          <p className="text-fp-cream text-sm mt-1">{place.location}</p>
-        </div>
         <div className="relative flex-1 min-h-0">
           <MapView places={[place]} selectedId={place.id} />
         </div>
@@ -126,36 +116,44 @@ function PlaceDetailHero({
   place: PlaceCardData;
   variant: "mobile" | "desktop";
 }) {
-  const isDesktop = variant === "desktop";
+  if (variant === "desktop") {
+    return (
+      <div className="hero-bg relative h-44 lg:h-52 overflow-hidden">
+        <div className="hero-content flex flex-col justify-end h-full px-8 pb-7 gap-2.5">
+          <span
+            className={`self-start inline-block px-3 py-1.5 rounded-full text-[0.65rem] font-bold uppercase tracking-wider ${badgeClasses[place.badgeColor]}`}
+          >
+            {place.badge}
+          </span>
+          <p className="text-fp-muted text-sm">
+            {place.location} · {place.categories.join(" · ")}
+          </p>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-fp-dark to-transparent pointer-events-none z-[2]" />
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={
-        isDesktop
-          ? "relative flex-[1.15] min-h-[280px] max-h-[min(52vh,520px)] shrink-0 overflow-hidden"
-          : "relative h-48 sm:h-56 shrink-0 overflow-hidden"
-      }
-    >
+    <div className="relative h-48 sm:h-56 shrink-0 overflow-hidden">
       <Image
         src={place.coverImage}
         alt={place.name}
         fill
         priority
         className="object-cover"
-        sizes={isDesktop ? "50vw" : "100vw"}
+        sizes="100vw"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-fp-dark/80 via-transparent to-transparent" />
-      <div className="absolute bottom-4 left-4 sm:left-6 lg:left-8">
+      <div className="absolute bottom-4 left-4 sm:left-6">
         <span
           className={`inline-block px-2.5 py-1 rounded-full text-[0.62rem] font-bold uppercase tracking-wider ${badgeClasses[place.badgeColor]}`}
         >
           {place.badge}
         </span>
-        {!isDesktop ? (
-          <p className="text-fp-muted text-xs mt-2">
-            {place.location} · {place.categories.join(" · ")}
-          </p>
-        ) : null}
+        <p className="text-fp-muted text-xs mt-2">
+          {place.location} · {place.categories.join(" · ")}
+        </p>
       </div>
     </div>
   );
@@ -174,10 +172,6 @@ function PlaceDetailSections({
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-8">
-      {isDesktop ? (
-        <p className="text-fp-muted text-xs">{place.categories.join(" · ")}</p>
-      ) : null}
-
       <section>
         <h2 className="text-fp-muted text-[0.65rem] font-bold uppercase tracking-widest mb-3">
           {t("about")}

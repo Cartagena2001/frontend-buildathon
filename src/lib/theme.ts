@@ -6,5 +6,5 @@ export async function getTheme(): Promise<Theme> {
   const store = await cookies();
   const value = store.get("fp-theme")?.value;
   if (value === "light" || value === "dark") return value;
-  return "dark";
+  return "light";
 }

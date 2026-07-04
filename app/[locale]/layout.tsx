@@ -3,6 +3,7 @@ import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import ThemeProvider from "@/components/ui/ThemeProvider";
+import { getTheme } from "@/lib/theme";
 
 type Props = {
   children: React.ReactNode;
@@ -16,11 +17,11 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  const messages = await getMessages();
+  const [messages, theme] = await Promise.all([getMessages(), getTheme()]);
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <ThemeProvider initialTheme={theme}>{children}</ThemeProvider>
     </NextIntlClientProvider>
   );
 }

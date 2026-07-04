@@ -125,7 +125,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={mismatch || (touched && confirm.length === 0 && password.length > 0)}
-          className="w-full bg-fp-red text-fp-on-accent font-semibold text-sm rounded-xl py-3.5 hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full bg-fp-red text-fp-on-accent font-semibold text-sm rounded-xl py-3.5 hover:bg-fp-coral transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {t("submitButton")}
         </button>

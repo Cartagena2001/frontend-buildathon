@@ -21,9 +21,9 @@ const markerIcon = L.divIcon({
     width:14px;
     height:14px;
     border-radius:9999px;
-    background:#fe2858;
-    border:2px solid #f0e8ec;
-    box-shadow:0 0 0 4px rgba(254,40,88,0.25);
+    background:#00B39F;
+    border:2px solid #FFF6EE;
+    box-shadow:0 0 0 4px rgba(0,179,159,0.25);
   "></span>`,
   iconSize: [14, 14],
   iconAnchor: [7, 7],
@@ -37,9 +37,9 @@ const selectedMarkerIcon = L.divIcon({
     width:18px;
     height:18px;
     border-radius:9999px;
-    background:#2af0ea;
-    border:2px solid #f0e8ec;
-    box-shadow:0 0 0 6px rgba(42,240,234,0.3);
+    background:#FF5A5F;
+    border:2px solid #FFF6EE;
+    box-shadow:0 0 0 6px rgba(255,90,95,0.3);
   "></span>`,
   iconSize: [18, 18],
   iconAnchor: [9, 9],

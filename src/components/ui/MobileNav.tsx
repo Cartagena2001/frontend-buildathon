@@ -35,14 +35,14 @@ export default function MobileNav() {
               <Link
                 href="/explore"
                 onClick={() => setOpen(false)}
-                className="font-display text-fp-cream text-3xl italic hover:text-fp-rose transition-colors"
+                className="font-display text-fp-cream text-3xl italic hover:text-fp-coral transition-colors"
               >
                 {t("destinations")}
               </Link>
               <Link
                 href="/explore?sort=trending"
                 onClick={() => setOpen(false)}
-                className="font-display text-fp-cream text-3xl italic hover:text-fp-rose transition-colors"
+                className="font-display text-fp-cream text-3xl italic hover:text-fp-coral transition-colors"
               >
                 {t("trending")}
               </Link>
@@ -52,7 +52,7 @@ export default function MobileNav() {
               <Link
                 href="/login"
                 onClick={() => setOpen(false)}
-                className="inline-flex justify-center px-6 py-3 rounded-full bg-fp-red text-fp-on-accent font-semibold hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors"
+                className="inline-flex justify-center px-6 py-3 rounded-full bg-fp-red text-fp-on-accent font-semibold hover:bg-fp-coral transition-colors"
               >
                 {t("signIn")}
               </Link>

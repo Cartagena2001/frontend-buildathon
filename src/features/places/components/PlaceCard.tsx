@@ -20,22 +20,22 @@ export interface PlaceCardData {
 }
 
 const badgeClasses: Record<PlaceCardData["badgeColor"], string> = {
-  red:  "bg-fp-red text-fp-on-accent",
-  cyan: "bg-fp-cyan text-fp-on-cyan",
-  rose: "bg-fp-rose/20 text-fp-rose border border-fp-rose/40",
+  red:  "bg-fp-orange text-fp-on-accent",
+  cyan: "bg-fp-teal text-fp-on-cyan",
+  rose: "bg-fp-coral/20 text-fp-coral border border-fp-coral/40",
 };
 
 const sentimentClasses: Record<string, string> = {
-  high:    "text-fp-cyan",
-  medium:  "text-fp-rose",
-  low:     "text-fp-red",
+  high:    "text-fp-teal",
+  medium:  "text-fp-coral",
+  low:     "text-fp-orange",
 };
 
 export default function PlaceCard({ place }: { place: PlaceCardData }) {
   return (
     <Link
       href={`/explore/${place.id}`}
-      className="group block bg-fp-dim border border-fp-border rounded-2xl overflow-hidden hover:border-fp-rose/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20"
+      className="group block bg-fp-dim border border-fp-border rounded-2xl overflow-hidden hover:border-fp-coral/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20"
     >
       {/* Image */}
       <div className="relative w-full aspect-[4/3] overflow-hidden">
@@ -58,7 +58,7 @@ export default function PlaceCard({ place }: { place: PlaceCardData }) {
 
       {/* Body */}
       <div className="p-4">
-        <h3 className="font-display text-fp-cream text-lg leading-tight mb-1 group-hover:text-fp-rose transition-colors">
+        <h3 className="font-display text-fp-cream text-lg leading-tight mb-1 group-hover:text-fp-coral transition-colors">
           {place.name}
         </h3>
         <p className="text-fp-muted text-xs mb-3">

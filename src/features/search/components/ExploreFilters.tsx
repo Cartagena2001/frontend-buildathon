@@ -43,8 +43,8 @@ export default function ExploreFilters() {
               <span
                 className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
                   selectedVibe === vibe
-                    ? "border-fp-cyan bg-fp-cyan"
-                    : "border-fp-border group-hover:border-fp-rose"
+                    ? "border-fp-coral bg-fp-coral"
+                    : "border-fp-border group-hover:border-fp-coral/60"
                 }`}
               >
                 {selectedVibe === vibe && (
@@ -53,7 +53,7 @@ export default function ExploreFilters() {
               </span>
               <span
                 className={`text-sm transition-colors ${
-                  selectedVibe === vibe ? "text-fp-cream" : "text-fp-muted group-hover:text-fp-cream"
+                  selectedVibe === vibe ? "text-fp-cream" : "text-fp-muted group-hover:text-fp-coral"
                 }`}
               >
                 {t(`vibes.${vibe}`)}
@@ -78,8 +78,8 @@ export default function ExploreFilters() {
               onClick={() => applyCategory(cat)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                 selectedCategory === cat
-                  ? "bg-fp-red text-fp-on-accent"
-                  : "border border-fp-border text-fp-muted hover:text-fp-cream hover:border-fp-rose/50"
+                  ? "bg-fp-coral text-fp-on-accent"
+                  : "border border-fp-border text-fp-muted hover:text-fp-coral hover:border-fp-coral/50"
               }`}
             >
               {t(`categories.${cat}`)}
@@ -102,7 +102,7 @@ export default function ExploreFilters() {
           max={100}
           value={growth}
           onChange={(e) => setGrowth(Number(e.target.value))}
-          className="w-full accent-fp-red cursor-pointer"
+          className="w-full accent-fp-coral cursor-pointer"
         />
         <p className="text-fp-muted text-[0.68rem] mt-2 leading-4">
           {t("trendingHint")}

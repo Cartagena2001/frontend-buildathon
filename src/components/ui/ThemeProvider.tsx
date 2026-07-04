@@ -9,7 +9,7 @@ interface ThemeContextValue {
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  theme: "dark",
+  theme: "light",
   toggle: () => {},
 });
 
@@ -17,31 +17,32 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
-function resolveTheme(): Theme {
+function readStoredTheme(): Theme | null {
   const stored = localStorage.getItem("fp-theme");
   if (stored === "light" || stored === "dark") return stored;
-
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  return prefersDark ? "dark" : "light";
+  return null;
 }
 
 export default function ThemeProvider({
   children,
+  initialTheme,
 }: {
   children: React.ReactNode;
+  initialTheme: Theme;
 }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>(initialTheme);
 
   useEffect(() => {
-    // Remove legacy attribute from older builds that set theme on <html>.
     document.documentElement.removeAttribute("data-theme");
 
-    const resolved = resolveTheme();
+    const stored = readStoredTheme();
+    const resolved = stored ?? initialTheme;
+
     document.body.setAttribute("data-theme", resolved);
     localStorage.setItem("fp-theme", resolved);
     document.cookie = `fp-theme=${resolved};path=/;max-age=31536000;samesite=lax`;
     setTheme(resolved);
-  }, []);
+  }, [initialTheme]);
 
   function apply(next: Theme) {
     document.documentElement.removeAttribute("data-theme");

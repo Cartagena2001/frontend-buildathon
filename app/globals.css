@@ -1,75 +1,103 @@
 @import "tailwindcss";
 
 /* ══════════════════════════════════════════════════════════
-   THEME TOKENS — raw CSS variables toggled by data-theme
+   BRAND PALETTE — fixed tokens (never change with theme)
    ══════════════════════════════════════════════════════════ */
-
-/* ── Default: Dark ─────────────────────────────────────── */
 :root {
-  --fp-dark:      #040404;
-  --fp-dim:       #0e0e0e;
-  --fp-surface:   rgba(255,255,255,0.05);
-  --fp-border:    rgba(255,255,255,0.10);
-  --fp-cream:     #f0e8ec;
-  --fp-muted:     #de8c9d;
-  --fp-rose:      #de8c9d;
-  --fp-red:       #fe2858;
-  --fp-cyan:      #2af0ea;
-  --fp-teal:      #397684;
-  --fp-cyan-dim:  rgba(42,240,234,0.12);
-
-  /* hero / auth overlay */
-  --hero-overlay-start:  rgba(4,4,4,0.38);
-  --hero-overlay-mid:    rgba(4,4,4,0.22);
-  --hero-overlay-heavy:  rgba(4,4,4,0.60);
-  --hero-overlay-end:    rgba(4,4,4,0.94);
-  --auth-overlay:        rgba(4,4,4,0.75);
-
-  /* glass card */
-  --glass-bg:    rgba(4,4,4,0.80);
-  --glass-border:rgba(222,140,157,0.18);
-
-  /* map bg */
-  --map-bg:      #111518;
-
-  /* field & interactive surfaces */
-  --fp-field-bg:       rgba(255,255,255,0.05);
-  --fp-field-hover-bg: rgba(255,255,255,0.10);
-  --fp-badge-bg:       rgba(4,4,4,0.80);
-  --fp-tooltip-bg:     rgba(14,14,14,0.96);
-  --fp-overlay-close:  rgba(4,4,4,0.80);
+  --fp-brand-orange:   #FF8A00;
+  --fp-brand-coral:    #FF5A5F;
+  --fp-brand-teal:     #00B39F;
+  --fp-brand-blue:     #2563EB;
+  --fp-brand-lavender: #A5A7F6;
+  --fp-brand-yellow:   #FFC83D;
+  --fp-brand-cream:    #FFF6EE;
+  --fp-brand-ink:      #222222;
+  --fp-gray-900:       #111827;
+  --fp-gray-700:       #374151;
+  --fp-gray-500:       #6B7280;
+  --fp-gray-300:       #D1D5DB;
+  --fp-gray-100:       #F3F4F6;
 }
 
-/* ── Light mode ─────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   THEME TOKENS — default: light (brand experience)
+   ══════════════════════════════════════════════════════════ */
+:root,
 [data-theme="light"] {
-  --fp-dark:      #f5eff0;
-  --fp-dim:       #ede5e7;
-  --fp-surface:   rgba(26,5,12,0.05);
-  --fp-border:    rgba(26,5,12,0.12);
-  --fp-cream:     #1a050c;
-  --fp-muted:     #7a4a58;
-  --fp-rose:      #b83a56;
-  --fp-red:       #e0153a;
-  --fp-cyan:      #1799a0;
-  --fp-teal:      #2a5f6e;
-  --fp-cyan-dim:  rgba(23,153,160,0.12);
+  --fp-dark:      var(--fp-brand-cream);
+  --fp-dim:       #FFFFFF;
+  --fp-surface:   rgba(34, 34, 34, 0.04);
+  --fp-border:    rgba(34, 34, 34, 0.12);
+  --fp-cream:     var(--fp-brand-ink);
+  --fp-muted:     var(--fp-gray-500);
+  --fp-rose:      var(--fp-brand-coral);
+  --fp-red:       var(--fp-brand-orange);
+  --fp-cyan:      var(--fp-brand-teal);
+  --fp-teal:      var(--fp-brand-teal);
+  --fp-orange:    var(--fp-brand-orange);
+  --fp-coral:     var(--fp-brand-coral);
+  --fp-highlight: var(--fp-brand-coral);
+  --fp-blue:      var(--fp-brand-blue);
+  --fp-lavender:  var(--fp-brand-lavender);
+  --fp-yellow:    var(--fp-brand-yellow);
+  --fp-ink:       var(--fp-brand-ink);
+  --fp-cyan-dim:  rgba(0, 179, 159, 0.12);
 
-  --hero-overlay-start:  rgba(245,239,240,0.25);
-  --hero-overlay-mid:    rgba(245,239,240,0.10);
-  --hero-overlay-heavy:  rgba(245,239,240,0.45);
-  --hero-overlay-end:    rgba(245,239,240,0.92);
-  --auth-overlay:        rgba(245,239,240,0.80);
+  --hero-overlay-start:  rgba(255, 246, 238, 0.25);
+  --hero-overlay-mid:    rgba(255, 246, 238, 0.10);
+  --hero-overlay-heavy:  rgba(255, 246, 238, 0.45);
+  --hero-overlay-end:    rgba(255, 246, 238, 0.92);
+  --auth-overlay:        rgba(255, 246, 238, 0.80);
 
-  --glass-bg:    rgba(255,255,255,0.90);
-  --glass-border:rgba(180,60,86,0.18);
+  --glass-bg:     rgba(255, 255, 255, 0.90);
+  --glass-border: rgba(255, 90, 95, 0.22);
 
-  --map-bg:      #c8dde3;
+  --map-bg:       #E8F5F3;
 
-  --fp-field-bg:       rgba(26,5,12,0.05);
-  --fp-field-hover-bg: rgba(26,5,12,0.08);
-  --fp-badge-bg:       rgba(255,255,255,0.80);
-  --fp-tooltip-bg:     rgba(237,229,231,0.98);
-  --fp-overlay-close:  rgba(237,229,231,0.90);
+  --fp-field-bg:       rgba(34, 34, 34, 0.04);
+  --fp-field-hover-bg: rgba(34, 34, 34, 0.08);
+  --fp-badge-bg:       rgba(255, 255, 255, 0.85);
+  --fp-tooltip-bg:     rgba(255, 255, 255, 0.98);
+  --fp-overlay-close:  rgba(255, 246, 238, 0.95);
+}
+
+/* ── Dark mode ─────────────────────────────────────────── */
+[data-theme="dark"] {
+  --fp-dark:      var(--fp-gray-900);
+  --fp-dim:       #1F2937;
+  --fp-surface:   rgba(255, 255, 255, 0.05);
+  --fp-border:    rgba(255, 255, 255, 0.10);
+  --fp-cream:     var(--fp-brand-cream);
+  --fp-muted:     #9CA3AF;
+  --fp-rose:      var(--fp-brand-coral);
+  --fp-red:       var(--fp-brand-orange);
+  --fp-cyan:      var(--fp-brand-teal);
+  --fp-teal:      var(--fp-brand-teal);
+  --fp-orange:    var(--fp-brand-orange);
+  --fp-coral:     var(--fp-brand-coral);
+  --fp-highlight: var(--fp-brand-coral);
+  --fp-blue:      var(--fp-brand-blue);
+  --fp-lavender:  var(--fp-brand-lavender);
+  --fp-yellow:    var(--fp-brand-yellow);
+  --fp-ink:       var(--fp-brand-cream);
+  --fp-cyan-dim:  rgba(0, 179, 159, 0.15);
+
+  --hero-overlay-start:  rgba(17, 24, 39, 0.38);
+  --hero-overlay-mid:    rgba(17, 24, 39, 0.22);
+  --hero-overlay-heavy:  rgba(17, 24, 39, 0.60);
+  --hero-overlay-end:    rgba(17, 24, 39, 0.94);
+  --auth-overlay:        rgba(17, 24, 39, 0.75);
+
+  --glass-bg:     rgba(17, 24, 39, 0.85);
+  --glass-border: rgba(255, 90, 95, 0.20);
+
+  --map-bg:       #0F1A18;
+
+  --fp-field-bg:       rgba(255, 255, 255, 0.05);
+  --fp-field-hover-bg: rgba(255, 255, 255, 0.10);
+  --fp-badge-bg:       rgba(17, 24, 39, 0.85);
+  --fp-tooltip-bg:     rgba(31, 41, 55, 0.98);
+  --fp-overlay-close:  rgba(17, 24, 39, 0.90);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -86,10 +114,21 @@
   --color-fp-red:        var(--fp-red);
   --color-fp-cyan:       var(--fp-cyan);
   --color-fp-teal:       var(--fp-teal);
+  --color-fp-orange:     var(--fp-orange);
+  --color-fp-coral:      var(--fp-coral);
+  --color-fp-highlight:  var(--fp-highlight);
+  --color-fp-blue:       var(--fp-blue);
+  --color-fp-lavender:   var(--fp-lavender);
+  --color-fp-yellow:     var(--fp-yellow);
+  --color-fp-ink:        var(--fp-ink);
+  --color-fp-gray-900:   var(--fp-gray-900);
+  --color-fp-gray-700:   var(--fp-gray-700);
+  --color-fp-gray-500:   var(--fp-gray-500);
+  --color-fp-gray-300:   var(--fp-gray-300);
+  --color-fp-gray-100:   var(--fp-gray-100);
   --color-fp-cyan-dim:   var(--fp-cyan-dim);
-  /* Fixed — never change with theme */
-  --color-fp-on-accent:  #ffffff;   /* text on red bg */
-  --color-fp-on-cyan:    #040404;   /* text on cyan bg */
+  --color-fp-on-accent:  #ffffff;
+  --color-fp-on-cyan:    #ffffff;
   --font-display: var(--font-display);
   --font-sans:    var(--font-sans);
 }
@@ -199,13 +238,13 @@ body {
 }
 
 .tag-pill:hover {
-  background: rgba(222,140,157,0.16);
-  border-color: var(--fp-rose);
+  background: rgba(255, 90, 95, 0.12);
+  border-color: var(--fp-coral);
 }
 
 .tag-pill.active {
-  background: var(--fp-red);
-  border-color: var(--fp-red);
+  background: var(--fp-coral);
+  border-color: var(--fp-coral);
   color: #ffffff;
 }
 
@@ -214,14 +253,13 @@ body {
    ══════════════════════════════════════════════════════════ */
 .fp-input:focus {
   outline: none;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fp-cyan) 45%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fp-brand-teal) 45%, transparent);
 }
 
 /* ══════════════════════════════════════════════════════════
    THEME-AWARE UTILITY CLASSES
    ══════════════════════════════════════════════════════════ */
 
-/* Input fields */
 .fp-field {
   background: var(--fp-field-bg);
   color: var(--fp-cream);
@@ -229,10 +267,9 @@ body {
 .fp-field::placeholder { color: var(--fp-muted); }
 .fp-field:focus {
   outline: none;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fp-cyan) 45%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fp-brand-teal) 45%, transparent);
 }
 
-/* Social / secondary buttons (Google, etc.) */
 .fp-btn-secondary {
   background: var(--fp-field-bg);
   border: 1px solid var(--fp-border);
@@ -241,7 +278,6 @@ body {
 }
 .fp-btn-secondary:hover { background: var(--fp-field-hover-bg); }
 
-/* Image overlay badges (rank number on card photos) */
 .fp-badge-overlay {
   background: var(--fp-badge-bg);
   border: 1px solid var(--fp-border);
@@ -249,32 +285,27 @@ body {
   backdrop-filter: blur(8px);
 }
 
-/* Tooltip / popover bg */
 .fp-tooltip {
   background: var(--fp-tooltip-bg);
   border: 1px solid var(--fp-border);
   color: var(--fp-cream);
 }
 
-/* Close button overlay (mobile drawer) */
 .fp-overlay-close-btn {
   background: var(--fp-overlay-close);
   color: var(--fp-muted);
 }
 
-/* Explore search bar */
 .fp-search-bar {
   background: var(--fp-field-bg);
   border: 1px solid var(--fp-border);
 }
 
-/* Legal intro block */
 .fp-legal-intro {
   background: var(--fp-field-bg);
   border: 1px solid var(--fp-border);
 }
 
-/* color-scheme for native inputs */
 [data-theme="light"] input,
 [data-theme="light"] textarea,
 [data-theme="light"] select {

@@ -31,7 +31,7 @@ export default function PopularPlaces() {
         </div>
         <Link
           href="/explore"
-          className="hidden sm:inline-flex items-center gap-1.5 text-fp-cyan text-sm font-medium hover:underline"
+          className="hidden sm:inline-flex items-center gap-1.5 text-fp-coral text-sm font-medium hover:underline"
         >
           {t("viewAll")} →
         </Link>
@@ -58,7 +58,7 @@ export default function PopularPlaces() {
       <div className="sm:hidden mt-10 text-center">
         <Link
           href="/explore"
-          className="inline-flex px-6 py-3 rounded-full border border-fp-border text-fp-cream text-sm font-medium hover:bg-fp-surface transition-colors"
+          className="inline-flex px-6 py-3 rounded-full border border-fp-border text-fp-cream text-sm font-medium hover:border-fp-coral/50 hover:text-fp-coral transition-colors"
         >
           {t("viewAll")}
         </Link>

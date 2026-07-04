@@ -43,7 +43,7 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          className="w-full bg-fp-red text-fp-on-accent font-semibold text-sm rounded-xl py-3.5 hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors mt-2"
+          className="w-full bg-fp-red text-fp-on-accent font-semibold text-sm rounded-xl py-3.5 hover:bg-fp-coral transition-colors mt-2"
         >
           {t("submitButton")}
         </button>

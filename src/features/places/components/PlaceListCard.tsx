@@ -4,15 +4,15 @@ import { useTranslations } from "next-intl";
 import type { PlaceCardData } from "./PlaceCard";
 
 const badgeClasses: Record<PlaceCardData["badgeColor"], string> = {
-  red:  "bg-fp-red text-fp-on-accent",
-  cyan: "bg-fp-cyan text-fp-on-cyan",
-  rose: "border border-fp-rose/50 text-fp-rose",
+  red:  "bg-fp-orange text-fp-on-accent",
+  cyan: "bg-fp-teal text-fp-on-cyan",
+  rose: "border border-fp-coral/50 text-fp-coral",
 };
 
 const sentimentClasses: Record<string, string> = {
-  high:   "text-fp-cyan",
-  medium: "text-fp-rose",
-  low:    "text-fp-red",
+  high:   "text-fp-teal",
+  medium: "text-fp-coral",
+  low:    "text-fp-orange",
 };
 
 export default function PlaceListCard({
@@ -30,8 +30,8 @@ export default function PlaceListCard({
       href={`/explore/${place.id}`}
       className={`group flex flex-col sm:flex-row bg-fp-dim border rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 ${
         selected
-          ? "border-fp-cyan ring-1 ring-fp-cyan/30"
-          : "border-fp-border hover:border-fp-rose/40"
+          ? "border-fp-coral ring-1 ring-fp-coral/30"
+          : "border-fp-border hover:border-fp-coral/50"
       }`}
     >
       {/* Image */}
@@ -54,7 +54,7 @@ export default function PlaceListCard({
         <div>
           {/* Top row: name + badge */}
           <div className="flex items-start justify-between gap-3 mb-1">
-            <h3 className="font-display text-fp-cream text-[1.35rem] leading-tight group-hover:text-fp-rose transition-colors">
+            <h3 className="font-display text-fp-cream text-[1.35rem] leading-tight group-hover:text-fp-coral transition-colors">
               {place.name}
             </h3>
             <span className={`shrink-0 mt-1 px-2.5 py-1 rounded-full text-[0.62rem] font-bold uppercase tracking-wider ${badgeClasses[place.badgeColor]}`}>
