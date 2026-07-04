@@ -5,27 +5,40 @@ import type { PlaceCardData } from "./PlaceCard";
 import SaveButton from "./SaveButton";
 
 const badgeClasses: Record<PlaceCardData["badgeColor"], string> = {
-  red:  "bg-fp-red text-fp-on-accent",
-  cyan: "bg-fp-cyan text-fp-on-cyan",
-  rose: "border border-fp-rose/50 text-fp-rose",
+  red:  "bg-fp-orange text-fp-on-accent",
+  cyan: "bg-fp-teal text-fp-on-cyan",
+  rose: "border border-fp-coral/50 text-fp-coral",
 };
 
 const sentimentClasses: Record<string, string> = {
-  high:   "text-fp-cyan",
-  medium: "text-fp-rose",
-  low:    "text-fp-red",
+  high:   "text-fp-teal",
+  medium: "text-fp-coral",
+  low:    "text-fp-orange",
 };
 
-export default function PlaceListCard({ place, isSaved = false }: { place: PlaceCardData; isSaved?: boolean }) {
+export default function PlaceListCard({
+  place,
+  selected = false,
+  isSaved = false,
+}: {
+  place: PlaceCardData;
+  selected?: boolean;
+  isSaved?: boolean;
+}) {
   const t = useTranslations("explore");
 
   return (
     <Link
+      id={`place-${place.id}`}
       href={`/explore/${place.id}`}
-      className="group flex flex-col sm:flex-row bg-fp-dim border border-fp-border rounded-2xl overflow-hidden hover:border-fp-rose/40 transition-all duration-300 hover:shadow-lg hover:shadow-black/20"
+      className={`group flex flex-col sm:flex-row bg-fp-dim border rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 ${
+        selected
+          ? "border-fp-coral ring-1 ring-fp-coral/30"
+          : "border-fp-border hover:border-fp-coral/50"
+      }`}
     >
       {/* Image */}
-      <div className="relative w-full sm:w-[200px] lg:w-[220px] aspect-[16/9] sm:aspect-auto shrink-0 overflow-hidden">
+      <div className="relative w-full aspect-[16/9] sm:w-[200px] lg:w-[220px] sm:aspect-[5/6] shrink-0 overflow-hidden">
         <Image
           src={place.coverImage}
           alt={place.name}
@@ -56,7 +69,7 @@ export default function PlaceListCard({ place, isSaved = false }: { place: Place
         <div>
           {/* Top row: name + badge */}
           <div className="flex items-start justify-between gap-3 mb-1">
-            <h3 className="font-display text-fp-cream text-[1.35rem] leading-tight group-hover:text-fp-rose transition-colors">
+            <h3 className="font-display text-fp-cream text-[1.35rem] leading-tight group-hover:text-fp-coral transition-colors">
               {place.name}
             </h3>
             <span className={`shrink-0 mt-1 px-2.5 py-1 rounded-full text-[0.62rem] font-bold uppercase tracking-wider ${badgeClasses[place.badgeColor]}`}>

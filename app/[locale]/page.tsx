@@ -1,4 +1,3 @@
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import SearchBar from "@/features/search/components/SearchBar";
@@ -32,37 +31,33 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ── Hero (full screen) ───────────────────────────── */}
       <div className="hero-bg min-h-screen flex flex-col">
-        {/* Nav */}
         <nav className="hero-content w-full flex items-center justify-between px-6 sm:px-8 py-5 sm:py-6 fade-up">
           <Link
             href="/"
             className="text-fp-cream font-sans text-[1.05rem] font-light tracking-wide"
           >
-            findy<span className="text-fp-cyan">.</span>place
+            findy<span className="text-fp-coral">.</span>place
           </Link>
 
-          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
             <ThemeToggle />
             <LocaleSwitcher />
             <Link
               href="/explore"
-              className="text-fp-muted hover:text-fp-cream text-sm font-medium transition-colors"
+              className="text-fp-muted hover:text-fp-coral text-sm font-medium transition-colors"
             >
               {t("nav.destinations")}
             </Link>
             <Link
               href="/explore?sort=trending"
-              className="text-fp-muted hover:text-fp-cream text-sm font-medium transition-colors"
+              className="text-fp-muted hover:text-fp-coral text-sm font-medium transition-colors"
             >
               {t("nav.trending")}
             </Link>
             <NavAuth />
           </div>
 
-          {/* Mobile: theme + locale + hamburger */}
           <div className="flex md:hidden items-center gap-3">
             <ThemeToggle />
             <LocaleSwitcher />
@@ -70,7 +65,6 @@ export default async function HomePage() {
           </div>
         </nav>
 
-        {/* Hero copy + search */}
         <div className="hero-content flex-1 flex flex-col justify-center px-6 sm:px-8 pb-20 sm:pb-24 max-w-4xl">
           <h1 className="font-display text-[clamp(2.8rem,7vw,5.5rem)] leading-[1.05] text-fp-cream mb-10">
             <span className="fade-up delay-100 block">{t("home.headline1")}</span>
@@ -99,14 +93,11 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Bottom fade into next section */}
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-fp-dark to-transparent pointer-events-none" />
       </div>
 
-      {/* ── Popular places ───────────────────────────────── */}
       <PopularPlaces />
 
-      {/* ── Footer ──────────────────────────────────────── */}
       <Footer />
     </>
   );

@@ -6,13 +6,11 @@ import type { NextRequest } from "next/server";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
-// Routes that require authentication
 const PROTECTED = ["/explore", "/profile", "/saved"];
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Skip Next.js internals and static files
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api/auth") ||
@@ -21,7 +19,6 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Strip locale prefix to check if route is protected
   const localeStripped = pathname.replace(/^\/(en|es)/, "");
   const isProtected = PROTECTED.some((p) => localeStripped.startsWith(p));
 
@@ -37,5 +34,7 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|_vercel|.*\\..*).*)"],
+  matcher: [
+    "/((?!_next|_vercel|icon|apple-icon|favicon\\.ico|.*\\..*).*)",
+  ],
 };

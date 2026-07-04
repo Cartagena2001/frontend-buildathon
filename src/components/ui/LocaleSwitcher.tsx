@@ -21,8 +21,8 @@ export default function LocaleSwitcher() {
           onClick={() => switchLocale(loc)}
           className={`px-2 py-1 rounded text-xs font-semibold uppercase tracking-widest transition-colors ${
             loc === locale
-              ? "text-fp-cyan"
-              : "text-fp-muted hover:text-fp-cream"
+              ? "text-fp-coral"
+              : "text-fp-muted hover:text-fp-coral"
           }`}
         >
           {loc}

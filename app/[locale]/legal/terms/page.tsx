@@ -26,11 +26,11 @@ export default function TermsPage() {
             href="/"
             className="text-fp-cream font-sans text-[1.05rem] font-light tracking-wide"
           >
-            findy<span className="text-fp-cyan">.</span>place
+            findy<span className="text-fp-coral">.</span>place
           </Link>
           <Link
             href="/"
-            className="text-fp-muted hover:text-fp-cyan text-sm transition-colors flex items-center gap-1.5"
+            className="text-fp-muted hover:text-fp-teal text-sm transition-colors flex items-center gap-1.5"
           >
             ← {t("backHome")}
           </Link>
@@ -62,13 +62,13 @@ export default function TermsPage() {
         <div className="mt-16 pt-8 border-t border-fp-border flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
           <Link
             href="/legal/privacy"
-            className="text-fp-cyan hover:underline text-sm"
+            className="text-fp-teal hover:underline text-sm"
           >
             Privacy Policy →
           </Link>
           <Link
             href="/register"
-            className="px-5 py-2.5 rounded-full bg-fp-red text-fp-on-accent text-sm font-semibold hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors"
+            className="px-5 py-2.5 rounded-full bg-fp-red text-fp-on-accent text-sm font-semibold hover:bg-fp-coral transition-colors"
           >
             Back to Sign Up
           </Link>
