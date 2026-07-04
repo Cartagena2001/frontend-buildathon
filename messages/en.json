@@ -228,5 +228,17 @@
       "hasAccount": "Already have an account?",
       "signIn": "Sign in"
     }
+  },
+  "loading": {
+    "search": {
+      "title": "Scanning experiences…",
+      "subtitle": "Reading what people are saying"
+    },
+    "slow": {
+      "title": "This might take a moment…",
+      "step1": "Understanding your search…",
+      "step2": "Searching thousands of clips…",
+      "step3": "Analyzing sentiment…"
+    }
   }
 }

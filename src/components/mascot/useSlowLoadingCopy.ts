@@ -1,0 +1,61 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+const SLOW_THRESHOLD_MS = 4000;
+const ROTATE_INTERVAL_MS = 2000;
+
+interface Options {
+  visible: boolean;
+  defaultTitle: string;
+  defaultSubtitle: string;
+  slowTitle: string;
+  slowSteps: [string, string, string];
+}
+
+export function useSlowLoadingCopy({
+  visible,
+  defaultTitle,
+  defaultSubtitle,
+  slowTitle,
+  slowSteps,
+}: Options) {
+  const [elapsed, setElapsed] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
+
+  useEffect(() => {
+    if (!visible) {
+      setElapsed(0);
+      setStepIndex(0);
+      return;
+    }
+
+    const start = Date.now();
+    const tick = setInterval(() => {
+      setElapsed(Date.now() - start);
+    }, 100);
+
+    return () => clearInterval(tick);
+  }, [visible]);
+
+  useEffect(() => {
+    if (!visible || elapsed <= SLOW_THRESHOLD_MS) {
+      setStepIndex(0);
+      return;
+    }
+
+    const rotate = setInterval(() => {
+      setStepIndex((i) => (i + 1) % slowSteps.length);
+    }, ROTATE_INTERVAL_MS);
+
+    return () => clearInterval(rotate);
+  }, [visible, elapsed, slowSteps.length]);
+
+  const isSlow = visible && elapsed > SLOW_THRESHOLD_MS;
+
+  return {
+    title: isSlow ? slowTitle : defaultTitle,
+    subtitle: isSlow ? slowSteps[stepIndex] : defaultSubtitle,
+    isSlow,
+  };
+}

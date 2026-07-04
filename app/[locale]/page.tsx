@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import SearchBar from "@/features/search/components/SearchBar";
+import TagSearchLink from "@/features/search/components/TagSearchLink";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import MobileNav from "@/components/ui/MobileNav";
 import ThemeToggle from "@/components/ui/ThemeToggle";
@@ -32,7 +33,7 @@ export default async function HomePage() {
   return (
     <>
       <div className="hero-bg min-h-screen flex flex-col">
-        <nav className="hero-content w-full flex items-center justify-between px-6 sm:px-8 py-5 sm:py-6 fade-up">
+        <nav className="hero-content relative z-50 w-full flex items-center justify-between px-6 sm:px-8 py-5 sm:py-6 fade-up">
           <Link
             href="/"
             className="text-fp-cream font-sans text-[1.05rem] font-light tracking-wide"
@@ -81,13 +82,13 @@ export default async function HomePage() {
             </p>
             <div className="flex flex-wrap gap-2">
               {TAG_KEYS.map((key) => (
-                <Link
+                <TagSearchLink
                   key={key}
-                  href={`/explore?q=${encodeURIComponent(t(`home.tags.${key}`))}`}
+                  query={t(`home.tags.${key}`)}
                   className={`tag-pill ${key === ACTIVE_TAG ? "active" : ""}`}
                 >
                   {t(`home.tags.${key}`)}
-                </Link>
+                </TagSearchLink>
               ))}
             </div>
           </div>

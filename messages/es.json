@@ -228,5 +228,17 @@
       "hasAccount": "¿Ya tienes una cuenta?",
       "signIn": "Inicia sesión"
     }
+  },
+  "loading": {
+    "search": {
+      "title": "Rastreando experiencias…",
+      "subtitle": "Leyendo lo que dicen en redes"
+    },
+    "slow": {
+      "title": "Esto puede tardar un poco…",
+      "step1": "Entendiendo tu búsqueda…",
+      "step2": "Buscando en miles de clips…",
+      "step3": "Analizando sentimiento…"
+    }
   }
 }

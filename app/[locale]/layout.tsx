@@ -3,6 +3,7 @@ import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import ThemeProvider from "@/components/ui/ThemeProvider";
+import SearchLoadingRoot from "@/features/search/components/SearchLoadingRoot";
 import { getTheme } from "@/lib/theme";
 
 type Props = {
@@ -21,7 +22,9 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <ThemeProvider initialTheme={theme}>{children}</ThemeProvider>
+      <ThemeProvider initialTheme={theme}>
+        <SearchLoadingRoot>{children}</SearchLoadingRoot>
+      </ThemeProvider>
     </NextIntlClientProvider>
   );
 }
