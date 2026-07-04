@@ -47,8 +47,8 @@
     }
   },
   "explore": {
-    "title": "The Heat Map",
-    "subtitle": "{count} locations resolved from {clips} viral clips this week.",
+    "title": "Explore El Salvador",
+    "subtitle": "{count} places · {clips} viral clips this week",
     "sortedBy": "Sorted by",
     "sortOptions": {
       "viral": "Viral Momentum",

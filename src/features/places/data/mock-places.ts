@@ -9,15 +9,18 @@ export const BEACHES: PlaceCardData[] = [
     lat: 13.4922,
     lng: -89.3856,
     categories: ["Beach", "Nightlife"],
+    categoryType: "beach",
     description:
       "The definitive ground zero for Salvadoran surf culture. Currently peaking on TikTok for the new boardwalk nightlife and sunset drum circles.",
     viralScore: "1.2M",
+    likes: 420000,
+    comments: 38500,
+    views: 1200000,
     sentiment: "high",
     sentimentLabel: "High Vibe",
     badge: "Explosive",
     badgeColor: "red",
-    coverImage:
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=75",
+    coverImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=75",
     thumbnails: [
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=80&q=60",
       "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=80&q=60",
@@ -33,15 +36,18 @@ export const BEACHES: PlaceCardData[] = [
     lat: 13.5426,
     lng: -89.4263,
     categories: ["Beach", "Culture"],
+    categoryType: "beach",
     description:
       "The original Bitcoin Beach. Trending hard on Instagram for its bohemian vibe, surf lessons, and legendary fish tacos at sunset.",
     viralScore: "890K",
+    likes: 310000,
+    comments: 22400,
+    views: 890000,
     sentiment: "high",
     sentimentLabel: "High Vibe",
     badge: "Trending",
     badgeColor: "cyan",
-    coverImage:
-      "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&q=75",
+    coverImage: "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&q=75",
     thumbnails: [
       "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=80&q=60",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=80&q=60",
@@ -56,15 +62,18 @@ export const BEACHES: PlaceCardData[] = [
     lat: 13.4975,
     lng: -89.3831,
     categories: ["Beach", "Surf"],
+    categoryType: "beach",
     description:
       "World-class right-hand point break. Viral for drone footage catching perfect sets at dawn. A pilgrimage spot for serious surfers.",
     viralScore: "670K",
+    likes: 240000,
+    comments: 15800,
+    views: 670000,
     sentiment: "high",
     sentimentLabel: "High Vibe",
     badge: "Rising",
     badgeColor: "rose",
-    coverImage:
-      "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=600&q=75",
+    coverImage: "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=600&q=75",
     thumbnails: [
       "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=80&q=60",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=80&q=60",
@@ -78,21 +87,23 @@ export const BEACHES: PlaceCardData[] = [
     lat: 13.3897,
     lng: -89.0542,
     categories: ["Beach", "Family"],
+    categoryType: "beach",
     description:
       "El Salvador's most beloved weekend escape. Trending for cabana culture, fresh ceviche and those impossible Pacific sunsets.",
     viralScore: "510K",
+    likes: 185000,
+    comments: 9200,
+    views: 510000,
     sentiment: "medium",
     sentimentLabel: "Good Vibes",
     badge: "Popular",
     badgeColor: "cyan",
-    coverImage:
-      "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=75",
+    coverImage: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=75",
     thumbnails: [
       "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=80&q=60",
       "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=80&q=60",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=80&q=60",
       "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=80&q=60",
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=80&q=60",
     ],
   },
 ];
@@ -106,15 +117,18 @@ export const RESTAURANTS: PlaceCardData[] = [
     lat: 13.6929,
     lng: -89.2182,
     categories: ["Food", "Traditional"],
+    categoryType: "restaurant",
     description:
       "Going viral for the curtido recipe that's been in the family for 60 years. TikTok creators can't stop posting the cheese-pull videos.",
     viralScore: "980K",
+    likes: 362000,
+    comments: 41200,
+    views: 980000,
     sentiment: "high",
     sentimentLabel: "High Vibe",
     badge: "Explosive",
     badgeColor: "red",
-    coverImage:
-      "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=75",
+    coverImage: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=75",
     thumbnails: [
       "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=80&q=60",
       "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=80&q=60",
@@ -129,15 +143,18 @@ export const RESTAURANTS: PlaceCardData[] = [
     lat: 13.4901,
     lng: -89.3829,
     categories: ["Seafood", "Casual"],
+    categoryType: "restaurant",
     description:
       "Fresh tuna straight off the boat. The TikTok of the grilled marlin platter has 4M views and counting.",
     viralScore: "760K",
+    likes: 280000,
+    comments: 29800,
+    views: 760000,
     sentiment: "high",
     sentimentLabel: "High Vibe",
     badge: "Trending",
     badgeColor: "cyan",
-    coverImage:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=75",
+    coverImage: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=75",
     thumbnails: [
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=80&q=60",
       "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=80&q=60",
@@ -151,15 +168,18 @@ export const RESTAURANTS: PlaceCardData[] = [
     lat: 13.6989,
     lng: -89.2489,
     categories: ["Café", "Brunch"],
+    categoryType: "restaurant",
     description:
       "The Salvadoran specialty coffee scene in one room. Trending for the aesthetics, pour-overs and the banana bread that sells out every morning.",
     viralScore: "430K",
+    likes: 158000,
+    comments: 12600,
+    views: 430000,
     sentiment: "high",
     sentimentLabel: "High Vibe",
     badge: "Rising",
     badgeColor: "rose",
-    coverImage:
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=75",
+    coverImage: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=75",
     thumbnails: [
       "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=80&q=60",
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=80&q=60",
@@ -174,43 +194,177 @@ export const RESTAURANTS: PlaceCardData[] = [
     lat: 13.5412,
     lng: -89.0756,
     categories: ["Food", "Market"],
+    categoryType: "restaurant",
     description:
       "The undisputed pupusa capital. Queues form at 7am on weekends. Every foodie reel about El Salvador passes through here.",
     viralScore: "1.1M",
+    likes: 390000,
+    comments: 35700,
+    views: 1100000,
     sentiment: "high",
     sentimentLabel: "High Vibe",
     badge: "Iconic",
     badgeColor: "cyan",
-    coverImage:
-      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=75",
+    coverImage: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=75",
     thumbnails: [
       "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=80&q=60",
       "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=80&q=60",
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=80&q=60",
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=80&q=60",
     ],
   },
 ];
 
-/** Extra place shown on explore (not in homepage grid). */
-const EXPLORE_ONLY: PlaceCardData[] = [
+export const NIGHTLIFE: PlaceCardData[] = [
+  {
+    rank: 1,
+    id: "zona-rosa",
+    name: "Zona Rosa",
+    location: "San Salvador, El Salvador",
+    lat: 13.7012,
+    lng: -89.2365,
+    categories: ["Nightlife", "Bars"],
+    categoryType: "nightlife",
+    description:
+      "The beating heart of San Salvador's nightlife. Viral for rooftop cocktail bars and live cumbia nights that go until sunrise.",
+    viralScore: "830K",
+    likes: 305000,
+    comments: 27400,
+    views: 830000,
+    sentiment: "high",
+    sentimentLabel: "High Vibe",
+    badge: "Trending",
+    badgeColor: "red",
+    coverImage: "https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=75",
+    thumbnails: [
+      "https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=80&q=60",
+      "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=80&q=60",
+    ],
+  },
   {
     rank: 2,
+    id: "el-tunco-night",
+    name: "El Tunco After Dark",
+    location: "La Libertad, El Salvador",
+    lat: 13.4930,
+    lng: -89.3860,
+    categories: ["Nightlife", "Beach Bars"],
+    categoryType: "nightlife",
+    description:
+      "Fire pits on the sand, reggae bass lines, and cold Pilsener. The go-to for surfers when the sun goes down.",
+    viralScore: "540K",
+    likes: 198000,
+    comments: 19200,
+    views: 540000,
+    sentiment: "high",
+    sentimentLabel: "High Vibe",
+    badge: "Rising",
+    badgeColor: "cyan",
+    coverImage: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=75",
+    thumbnails: [
+      "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=80&q=60",
+    ],
+  },
+];
+
+export const SHOPPING: PlaceCardData[] = [
+  {
+    rank: 1,
+    id: "mercado-central",
+    name: "Mercado Central",
+    location: "San Salvador, El Salvador",
+    lat: 13.6982,
+    lng: -89.1910,
+    categories: ["Shopping", "Crafts"],
+    categoryType: "shopping",
+    description:
+      "A labyrinth of stalls overflowing with handmade textiles, hammocks, and street food. Viral on YouTube travel vlogs weekly.",
+    viralScore: "490K",
+    likes: 172000,
+    comments: 14800,
+    views: 490000,
+    sentiment: "medium",
+    sentimentLabel: "Good Vibes",
+    badge: "Popular",
+    badgeColor: "cyan",
+    coverImage: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=600&q=75",
+    thumbnails: [
+      "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=80&q=60",
+    ],
+  },
+];
+
+export const ACTIVE: PlaceCardData[] = [
+  {
+    rank: 1,
+    id: "volcan-santa-ana",
+    name: "Volcán Santa Ana",
+    location: "Santa Ana, El Salvador",
+    lat: 13.8536,
+    lng: -89.6305,
+    categories: ["Hiking", "Nature"],
+    categoryType: "active",
+    description:
+      "El Salvador's highest volcano. TikTok hikers are obsessed with the turquoise crater lake. A permit lottery now required on weekends.",
+    viralScore: "720K",
+    likes: 265000,
+    comments: 21000,
+    views: 720000,
+    sentiment: "high",
+    sentimentLabel: "High Vibe",
+    badge: "Trending",
+    badgeColor: "cyan",
+    coverImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=75",
+    thumbnails: [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=80&q=60",
+    ],
+  },
+  {
+    rank: 2,
+    id: "lago-coatepeque",
+    name: "Lago Coatepeque",
+    location: "Santa Ana, El Salvador",
+    lat: 13.8714,
+    lng: -89.5428,
+    categories: ["Lake", "Water Sports"],
+    categoryType: "active",
+    description:
+      "A volcanic crater lake ringed by weekend chalets. Trending for kayaking and paddleboard content. The water is impossibly blue.",
+    viralScore: "390K",
+    likes: 143000,
+    comments: 11300,
+    views: 390000,
+    sentiment: "high",
+    sentimentLabel: "High Vibe",
+    badge: "Rising",
+    badgeColor: "rose",
+    coverImage: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=75",
+    thumbnails: [
+      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=80&q=60",
+    ],
+  },
+];
+
+const EXPLORE_ONLY: PlaceCardData[] = [
+  {
+    rank: 5,
     id: "nawi-beach",
     name: "Nawi Beach House",
     location: "Mizata, La Libertad",
     lat: 13.4785,
     lng: -89.3912,
     categories: ["Beach Club", "Stay"],
+    categoryType: "beach",
     description:
       "The boutique hideaway that blew up on Instagram for its infinity pool overlooking the Pacific. A word-of-mouth favourite now going completely mainstream.",
     viralScore: "740K",
+    likes: 271000,
+    comments: 23400,
+    views: 740000,
     sentiment: "high",
     sentimentLabel: "High Vibe",
     badge: "Steady Rise",
     badgeColor: "rose",
-    coverImage:
-      "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=600&q=75",
+    coverImage: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=600&q=75",
     thumbnails: [
       "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=80&q=60",
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=80&q=60",
@@ -221,16 +375,19 @@ const EXPLORE_ONLY: PlaceCardData[] = [
 export const MOCK_PLACES: PlaceCardData[] = [
   ...BEACHES,
   ...RESTAURANTS,
+  ...NIGHTLIFE,
+  ...SHOPPING,
+  ...ACTIVE,
   ...EXPLORE_ONLY,
 ];
 
-/** Default explore listing — beaches + Nawi, ranked by viral momentum. */
 export const EXPLORE_PLACES: PlaceCardData[] = [
-  BEACHES[0],
-  EXPLORE_ONLY[0],
-  BEACHES[1],
-  BEACHES[2],
-  BEACHES[3],
+  ...BEACHES,
+  ...RESTAURANTS,
+  ...NIGHTLIFE,
+  ...SHOPPING,
+  ...ACTIVE,
+  ...EXPLORE_ONLY,
 ].map((place, index) => ({ ...place, rank: index + 1 }));
 
 export function findPlaceById(id: string): PlaceCardData | undefined {

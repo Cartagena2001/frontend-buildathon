@@ -1,6 +1,45 @@
 @import "tailwindcss";
 
 /* ══════════════════════════════════════════════════════════
+   SF PRO DISPLAY — local OTF files
+   ══════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/fonts/sf-pro/SFPRODISPLAYREGULAR.OTF") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/fonts/sf-pro/SFPRODISPLAYMEDIUM.OTF") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/fonts/sf-pro/SFPRODISPLAYBOLD.OTF") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/fonts/sf-pro/SFPRODISPLAYSEMIBOLDITALIC.OTF") format("opentype");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/fonts/sf-pro/SFPRODISPLAYLIGHTITALIC.OTF") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ══════════════════════════════════════════════════════════
    BRAND PALETTE — fixed tokens (never change with theme)
    ══════════════════════════════════════════════════════════ */
 :root {
@@ -132,8 +171,8 @@
   --color-fp-cyan-dim:   var(--fp-cyan-dim);
   --color-fp-on-accent:  #ffffff;
   --color-fp-on-cyan:    #ffffff;
-  --font-display: var(--font-display);
-  --font-sans:    var(--font-sans);
+  --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:    "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -143,10 +182,12 @@
 html, body { height: 100%; }
 
 body {
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   background-color: var(--fp-dark);
   color: var(--fp-cream);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   transition: background-color 0.25s, color 0.25s;
 }
 

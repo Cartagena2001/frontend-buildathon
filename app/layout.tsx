@@ -1,22 +1,10 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, DM_Sans } from "next/font/google";
 import { getLocale } from "next-intl/server";
 import { getTheme } from "@/lib/theme";
 import { MASCOT_VERSION } from "@/components/mascot/types";
 import "./globals.css";
 
-const dmSerifDisplay = DM_Serif_Display({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-});
-
-const dmSans = DM_Sans({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-});
+// SF Pro Display loaded via @font-face in globals.css (local OTF files in public/fonts/sf-pro)
 
 export const metadata: Metadata = {
   title: "findy.place — Tu guía de experiencias",
@@ -35,7 +23,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${dmSerifDisplay.variable} ${dmSans.variable} h-full`}
+      className="h-full"
     >
       <head>
         <link rel="preload" href="/mascot/hero-cat.webp" as="image" type="image/webp" />
