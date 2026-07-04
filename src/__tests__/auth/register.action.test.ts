@@ -52,6 +52,12 @@ vi.mock("next-auth", () => ({
 vi.mock("@/lib/auth", () => ({ signIn: mockSignIn }));
 vi.mock("next/navigation", () => ({ redirect: mockRedirect }));
 vi.mock("next-intl/server", () => ({ getLocale: vi.fn().mockResolvedValue("es") }));
+vi.mock("@/lib/auth/password-reset", () => ({
+  sendWelcomeEmail: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock("@/lib/auth/password-reset-actions", () => ({
+  getAppBaseUrl: vi.fn().mockResolvedValue("http://localhost:3000"),
+}));
 
 // ── Import under test (after mocks) ───────────────────────────────────────
 

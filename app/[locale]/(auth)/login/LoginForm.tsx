@@ -3,16 +3,24 @@
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { loginUser } from "@/lib/auth/actions";
 
 const initialState = { error: undefined };
 
 export default function LoginForm() {
   const t = useTranslations("auth.login");
+  const searchParams = useSearchParams();
+  const resetSuccess = searchParams.get("reset") === "success";
   const [state, action, pending] = useActionState(loginUser, initialState);
 
   return (
     <form action={action} className="space-y-4">
+      {resetSuccess && (
+        <p className="text-fp-cyan text-xs px-1 py-2 rounded-lg bg-fp-cyan/10 border border-fp-cyan/20">
+          {t("resetSuccess")}
+        </p>
+      )}
       <div>
         <label htmlFor="email" className="block text-fp-muted text-xs font-semibold uppercase tracking-widest mb-2">
           {t("emailLabel")}
@@ -44,7 +52,7 @@ export default function LoginForm() {
       </div>
 
       <div className="flex items-center justify-end">
-        <Link href="#" className="text-fp-muted hover:text-fp-cyan text-xs transition-colors">
+        <Link href="/forgot-password" className="text-fp-muted hover:text-fp-cyan text-xs transition-colors">
           {t("forgotPassword")}
         </Link>
       </div>

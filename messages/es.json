@@ -161,7 +161,39 @@
       "googleButton": "Continuar con Google",
       "googleUnavailable": "Inicio con Google no configurado. Agrega GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET en .env.",
       "noAccount": "¿Sin cuenta?",
-      "createOne": "Créala aquí"
+      "createOne": "Créala aquí",
+      "resetSuccess": "Contraseña actualizada. Ya puedes iniciar sesión."
+    },
+    "forgotPassword": {
+      "title": "Restablecer contraseña",
+      "subtitle": "Ingresa tu correo y te enviaremos un código de 6 dígitos válido por 1 hora.",
+      "emailLabel": "Correo",
+      "emailPlaceholder": "tu@correo.com",
+      "submitButton": "Enviar código",
+      "backToLogin": "Volver a iniciar sesión"
+    },
+    "resetPassword": {
+      "title": "Ingresa tu código",
+      "subtitle": "Revisa tu bandeja de entrada por el código de 6 dígitos que te enviamos.",
+      "otpLabel": "Código de verificación",
+      "otpPlaceholder": "000000",
+      "otpHint": "Válido por 1 hora.",
+      "verifyButton": "Verificar código",
+      "resendCode": "Reenviar código",
+      "backToLogin": "Volver a iniciar sesión"
+    },
+    "newPassword": {
+      "title": "Nueva contraseña",
+      "subtitle": "Elige una contraseña segura para tu cuenta.",
+      "passwordLabel": "Nueva contraseña",
+      "passwordPlaceholder": "Mín. 8 caracteres",
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Repite tu contraseña",
+      "passwordMismatch": "Las contraseñas no coinciden.",
+      "submitButton": "Actualizar contraseña",
+      "backToLogin": "Volver a iniciar sesión",
+      "sessionExpired": "Tu sesión de verificación expiró.",
+      "requestNewCode": "Solicitar nuevo código"
     },
     "register": {
       "title": "Únete a findy.place",

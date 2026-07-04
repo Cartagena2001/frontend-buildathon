@@ -38,3 +38,14 @@ export const savedPlaces = pgTable(
 
 export type SavedPlace    = typeof savedPlaces.$inferSelect;
 export type NewSavedPlace = typeof savedPlaces.$inferInsert;
+
+export const passwordResetOtps = pgTable("password_reset_otps", {
+  id:        uuid("id").primaryKey().defaultRandom(),
+  userId:    uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  otpHash:   text("otp_hash").notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  usedAt:    timestamp("used_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export type PasswordResetOtp = typeof passwordResetOtps.$inferSelect;

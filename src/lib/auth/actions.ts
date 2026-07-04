@@ -8,6 +8,8 @@ import { signIn } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { AuthError } from "next-auth";
+import { sendWelcomeEmail } from "@/lib/auth/password-reset";
+import { getAppBaseUrl } from "@/lib/auth/password-reset-actions";
 
 // ── Register ──────────────────────────────────────────────
 
@@ -56,6 +58,15 @@ export async function registerUser(
     passwordHash,
     authProvider: "credentials",
   });
+
+  // Welcome email (non-blocking for registration flow)
+  try {
+    const locale = (await getLocale()) as "en" | "es";
+    const baseUrl = await getAppBaseUrl();
+    await sendWelcomeEmail({ email, firstName }, locale, baseUrl);
+  } catch (err) {
+    console.error("[register:welcome-email]", err);
+  }
 
   // Auto-login after register
   await signIn("credentials", { email, password, redirect: false });

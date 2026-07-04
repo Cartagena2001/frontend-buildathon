@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import LoginForm from "./LoginForm";
@@ -13,7 +14,9 @@ export default function LoginPage() {
         <p className="text-fp-muted text-sm">{t("subtitle")}</p>
       </div>
 
-      <LoginForm />
+      <Suspense fallback={<p className="text-fp-muted text-sm">…</p>}>
+        <LoginForm />
+      </Suspense>
 
       <GoogleAuthButton namespace="auth.login" />
 

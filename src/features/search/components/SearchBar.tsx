@@ -27,7 +27,7 @@ export default function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t("searchPlaceholder")}
-        className="fp-input flex-1 bg-transparent text-fp-dark placeholder:text-gray-400 text-[0.95rem] px-6 py-4 font-sans"
+        className="fp-input flex-1 bg-transparent text-fp-cream placeholder:text-fp-muted text-[0.95rem] px-6 py-4 font-sans"
       />
       <button
         type="submit"
