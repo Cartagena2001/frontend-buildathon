@@ -12,8 +12,9 @@ export const users = pgTable("users", {
   lastName:  text("last_name").notNull(),
   email:     text("email").unique().notNull(),
   passwordHash: text("password_hash"),
-  image:        text("image"),
-  authProvider: text("auth_provider").notNull().default("credentials"),
+  image:          text("image"),
+  supabaseUserId: uuid("supabase_user_id").unique(),
+  authProvider:   text("auth_provider").notNull().default("credentials"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

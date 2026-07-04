@@ -1,15 +1,20 @@
 /**
- * Google OAuth feature flag.
- * Set to true + add GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET to enable.
+ * Google OAuth via Supabase.
  */
-export const GOOGLE_AUTH_ENABLED = false;
+export const GOOGLE_AUTH_ENABLED = true;
 
-/** True when Google OAuth is enabled and env vars are configured. */
+/** Whether the Google sign-in UI should be shown. */
 export function isGoogleAuthEnabled() {
-  if (!GOOGLE_AUTH_ENABLED) return false;
+  return GOOGLE_AUTH_ENABLED;
+}
 
-  return Boolean(
-    process.env.GOOGLE_CLIENT_ID?.trim() &&
-    process.env.GOOGLE_CLIENT_SECRET?.trim()
-  );
+/** Whether Supabase env vars are configured (required for OAuth to work). */
+export function isSupabaseConfigured() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const key = (
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  )?.trim();
+
+  return Boolean(url && key);
 }
