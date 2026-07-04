@@ -21,10 +21,6 @@ export const metadata: Metadata = {
   title: "findy.place — Tu guía de experiencias",
   description:
     "Descubre, explora y recomienda los lugares más virales de El Salvador, impulsados por datos de TikTok e Instagram.",
-  icons: {
-    icon: [{ url: "/icon.png", sizes: "512x512", type: "image/png" }],
-    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
-  },
 };
 
 export default async function RootLayout({

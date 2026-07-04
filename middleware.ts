@@ -5,7 +5,7 @@ export default createMiddleware(routing);
 
 export const config = {
   matcher: [
-    // Match all paths except Next.js internals and static files
-    "/((?!_next|_vercel|.*\\..*).*)",
+    // Skip Next.js internals, static files (with extension), and metadata icon routes
+    "/((?!_next|_vercel|icon|apple-icon|favicon\\.ico|.*\\..*).*)",
   ],
 };
