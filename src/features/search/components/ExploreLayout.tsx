@@ -1,19 +1,9 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useState } from "react";
 import ExploreFilters from "./ExploreFilters";
 import PlaceListCard from "@/features/places/components/PlaceListCard";
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
-
-const MapView = dynamic(() => import("@/features/map/components/MapView"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-full items-center justify-center bg-fp-dim text-fp-muted text-sm">
-      …
-    </div>
-  ),
-});
 
 interface Props {
   places: PlaceCardData[];
@@ -24,12 +14,6 @@ export default function ExploreLayout({ places }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(
     places[0]?.id ?? null,
   );
-
-  function handleSelectPlace(id: string) {
-    setSelectedId(id);
-    const element = document.getElementById(`place-${id}`);
-    element?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
 
   return (
     <div className="flex flex-1 overflow-hidden relative">
@@ -77,18 +61,6 @@ export default function ExploreLayout({ places }: Props) {
           ))}
         </div>
       </main>
-
-      {/* ── Desktop map panel (lg+) — hidden on mobile ── */}
-      <aside
-        aria-hidden
-        className="hidden lg:block lg:w-[380px] xl:w-[480px] 2xl:w-[560px] shrink-0 border-l border-fp-border"
-      >
-        <MapView
-          places={places}
-          selectedId={selectedId}
-          onSelectPlace={handleSelectPlace}
-        />
-      </aside>
     </div>
   );
 }

@@ -35,7 +35,7 @@ export default function PlaceListCard({
       }`}
     >
       {/* Image */}
-      <div className="relative w-full sm:w-[200px] lg:w-[220px] aspect-[16/9] sm:aspect-auto shrink-0 overflow-hidden">
+      <div className="relative w-full aspect-[16/9] sm:w-[200px] lg:w-[220px] sm:aspect-[5/6] shrink-0 overflow-hidden">
         <Image
           src={place.coverImage}
           alt={place.name}
