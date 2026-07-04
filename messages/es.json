@@ -55,6 +55,14 @@
     "sentiment": "Sentimiento",
     "hits": "hits"
   },
+  "place": {
+    "backToExplore": "Volver a explorar",
+    "about": "Sobre este lugar",
+    "socialProof": "Señales virales",
+    "clips": "Clips en tendencia",
+    "location": "Ubicación",
+    "rank": "Ranking"
+  },
   "footer": {
     "tagline": "El primer motor de descubrimiento de viajes con análisis de sentimiento. Impulsado por señales públicas, curado por la multitud, mapeado para ti.",
     "exploreTitle": "Explorar",

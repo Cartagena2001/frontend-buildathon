@@ -15,13 +15,24 @@ const sentimentClasses: Record<string, string> = {
   low:    "text-fp-red",
 };
 
-export default function PlaceListCard({ place }: { place: PlaceCardData }) {
+export default function PlaceListCard({
+  place,
+  selected = false,
+}: {
+  place: PlaceCardData;
+  selected?: boolean;
+}) {
   const t = useTranslations("explore");
 
   return (
     <Link
+      id={`place-${place.id}`}
       href={`/explore/${place.id}`}
-      className="group flex flex-col sm:flex-row bg-fp-dim border border-fp-border rounded-2xl overflow-hidden hover:border-fp-rose/40 transition-all duration-300 hover:shadow-lg hover:shadow-black/20"
+      className={`group flex flex-col sm:flex-row bg-fp-dim border rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 ${
+        selected
+          ? "border-fp-cyan ring-1 ring-fp-cyan/30"
+          : "border-fp-border hover:border-fp-rose/40"
+      }`}
     >
       {/* Image */}
       <div className="relative w-full sm:w-[200px] lg:w-[220px] aspect-[16/9] sm:aspect-auto shrink-0 overflow-hidden">

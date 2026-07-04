@@ -1,89 +1,9 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import PlaceListCard from "@/features/places/components/PlaceListCard";
 import ExploreLayout from "@/features/search/components/ExploreLayout";
+import { EXPLORE_PLACES } from "@/features/places/data/mock-places";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import ThemeToggle from "@/components/ui/ThemeToggle";
-import type { PlaceCardData } from "@/features/places/components/PlaceCard";
-
-const PLACES: PlaceCardData[] = [
-  {
-    rank: 1, id: "el-tunco",
-    name: "El Tunco Surf Hub",
-    location: "La Libertad, El Salvador",
-    categories: ["Beach", "Nightlife"],
-    description: "The definitive ground zero for Salvadoran surf culture. Currently peaking on TikTok for the new boardwalk nightlife and sunset drum circles.",
-    viralScore: "1.2M", sentiment: "high", sentimentLabel: "High Vibe",
-    badge: "Explosive", badgeColor: "red",
-    coverImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=75",
-    thumbnails: [
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=80&q=60",
-      "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=80&q=60",
-      "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=80&q=60",
-      "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=80&q=60",
-    ],
-  },
-  {
-    rank: 2, id: "nawi-beach",
-    name: "Nawi Beach House",
-    location: "Mizata, La Libertad",
-    categories: ["Beach Club", "Stay"],
-    description: "The boutique hideaway that blew up on Instagram for its infinity pool overlooking the Pacific. A word-of-mouth favourite now going completely mainstream.",
-    viralScore: "740K", sentiment: "high", sentimentLabel: "High Vibe",
-    badge: "Steady Rise", badgeColor: "rose",
-    coverImage: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=600&q=75",
-    thumbnails: [
-      "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=80&q=60",
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=80&q=60",
-    ],
-  },
-  {
-    rank: 3, id: "el-zonte",
-    name: "El Zonte Bitcoin Beach",
-    location: "La Libertad, El Salvador",
-    categories: ["Beach", "Culture"],
-    description: "The original Bitcoin Beach. Trending hard on Instagram for bohemian vibe, surf lessons, and legendary fish tacos at sunset.",
-    viralScore: "890K", sentiment: "high", sentimentLabel: "High Vibe",
-    badge: "Trending", badgeColor: "cyan",
-    coverImage: "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&q=75",
-    thumbnails: [
-      "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=80&q=60",
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=80&q=60",
-      "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=80&q=60",
-    ],
-  },
-  {
-    rank: 4, id: "el-sunzal",
-    name: "El Sunzal Point Break",
-    location: "La Libertad, El Salvador",
-    categories: ["Beach", "Surf"],
-    description: "World-class right-hand point break. Viral for drone footage catching perfect sets at dawn. A pilgrimage spot for serious surfers.",
-    viralScore: "670K", sentiment: "high", sentimentLabel: "High Vibe",
-    badge: "Rising", badgeColor: "rose",
-    coverImage: "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=600&q=75",
-    thumbnails: [
-      "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=80&q=60",
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=80&q=60",
-    ],
-  },
-  {
-    rank: 5, id: "costa-del-sol",
-    name: "Costa del Sol",
-    location: "La Paz, El Salvador",
-    categories: ["Beach", "Family"],
-    description: "El Salvador's most beloved weekend escape. Trending for cabana culture, fresh ceviche and those impossible Pacific sunsets.",
-    viralScore: "510K", sentiment: "medium", sentimentLabel: "Good Vibes",
-    badge: "Popular", badgeColor: "cyan",
-    coverImage: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=75",
-    thumbnails: [
-      "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=80&q=60",
-      "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=80&q=60",
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=80&q=60",
-      "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=80&q=60",
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=80&q=60",
-    ],
-  },
-];
 
 export default function ExplorePage() {
   const t = useTranslations("explore");
@@ -116,7 +36,7 @@ export default function ExplorePage() {
         </div>
       </nav>
 
-      {/* ── Results header (inside scroll area frame) ─── */}
+      {/* ── Results header ─── */}
       <div className="shrink-0 flex items-center justify-between px-4 sm:px-6 py-3 border-b border-fp-border">
         <div>
           <h1 className="font-display text-fp-cream text-xl sm:text-2xl leading-tight">
@@ -132,14 +52,7 @@ export default function ExplorePage() {
         </div>
       </div>
 
-      {/* ── 3-col layout ─────────────────────────────── */}
-      <ExploreLayout places={PLACES}>
-        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-3">
-          {PLACES.map((place) => (
-            <PlaceListCard key={place.id} place={place} />
-          ))}
-        </div>
-      </ExploreLayout>
+      <ExploreLayout places={EXPLORE_PLACES} />
     </div>
   );
 }

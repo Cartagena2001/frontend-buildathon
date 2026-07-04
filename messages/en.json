@@ -55,6 +55,14 @@
     "sentiment": "Sentiment",
     "hits": "hits"
   },
+  "place": {
+    "backToExplore": "Back to explore",
+    "about": "About this place",
+    "socialProof": "Viral signals",
+    "clips": "Trending clips",
+    "location": "Location",
+    "rank": "Rank"
+  },
   "footer": {
     "tagline": "The first sentiment-aware travel discovery engine. Powered by public signals, curated by the crowd, mapped for you.",
     "exploreTitle": "Explore",

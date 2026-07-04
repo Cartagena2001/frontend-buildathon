@@ -6,6 +6,8 @@ export interface PlaceCardData {
   id: string;
   name: string;
   location: string;
+  lat: number;
+  lng: number;
   categories: string[];
   description: string;
   viralScore: string;
