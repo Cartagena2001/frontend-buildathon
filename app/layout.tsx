@@ -38,6 +38,7 @@ export default async function RootLayout({
       className={`${dmSerifDisplay.variable} ${dmSans.variable} h-full`}
     >
       <head>
+        <link rel="preload" href="/mascot/hero-cat.webp" as="image" type="image/webp" />
         <link
           rel="preload"
           href={`/mascot/loading-search-poster.png?v=${MASCOT_VERSION}`}
