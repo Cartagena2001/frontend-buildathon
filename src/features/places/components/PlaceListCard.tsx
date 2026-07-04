@@ -20,10 +20,12 @@ export default function PlaceListCard({
   place,
   selected = false,
   isSaved = false,
+  priority = false,
 }: {
   place: PlaceCardData;
   selected?: boolean;
   isSaved?: boolean;
+  priority?: boolean;
 }) {
   const t = useTranslations("explore");
 
@@ -43,8 +45,9 @@ export default function PlaceListCard({
           src={place.coverImage}
           alt={place.name}
           fill
+          priority={priority}
           className="object-cover group-hover:scale-105 transition-transform duration-500"
-          sizes="220px"
+          sizes="(min-width: 1024px) 220px, (min-width: 640px) 200px, 100vw"
         />
         {/* Rank */}
         <span className="absolute top-3 left-3 w-8 h-8 rounded-full fp-badge-overlay flex items-center justify-center text-xs font-semibold">
