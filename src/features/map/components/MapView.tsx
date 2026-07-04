@@ -46,6 +46,29 @@ const selectedMarkerIcon = L.divIcon({
   popupAnchor: [0, -12],
 });
 
+function MapResize() {
+  const map = useMap();
+
+  useEffect(() => {
+    const invalidate = () => map.invalidateSize();
+
+    const timer = window.setTimeout(invalidate, 0);
+    window.addEventListener("resize", invalidate);
+
+    const container = map.getContainer();
+    const observer = new ResizeObserver(invalidate);
+    observer.observe(container.parentElement ?? container);
+
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("resize", invalidate);
+      observer.disconnect();
+    };
+  }, [map]);
+
+  return null;
+}
+
 function FitBounds({ places }: { places: PlaceCardData[] }) {
   const map = useMap();
 
@@ -82,17 +105,19 @@ export default function MapView({
   onSelectPlace,
 }: MapViewProps) {
   return (
-    <MapContainer
-      center={EL_SALVADOR_CENTER}
-      zoom={8}
-      className="h-full w-full"
-      scrollWheelZoom
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <FitBounds places={places} />
+    <div className="h-full w-full min-h-[inherit]">
+      <MapContainer
+        center={EL_SALVADOR_CENTER}
+        zoom={8}
+        className="h-full w-full"
+        scrollWheelZoom
+      >
+        <MapResize />
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <FitBounds places={places} />
       {places.map((place) => (
         <Marker
           key={place.id}
@@ -111,6 +136,7 @@ export default function MapView({
           </Popup>
         </Marker>
       ))}
-    </MapContainer>
+      </MapContainer>
+    </div>
   );
 }

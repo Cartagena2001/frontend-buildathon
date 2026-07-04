@@ -285,3 +285,13 @@ body {
 [data-theme="dark"] select {
   color-scheme: dark;
 }
+
+/* ══════════════════════════════════════════════════════════
+   LEAFLET MAP
+   ══════════════════════════════════════════════════════════ */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: var(--map-bg);
+  z-index: 0;
+}
