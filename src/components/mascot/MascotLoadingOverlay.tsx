@@ -28,41 +28,41 @@ function OverlayContent({ variant = "search" }: Props) {
 
   return (
     <div
-      className="mascot-loading-overlay"
+      className="mascot-loading-overlay fixed inset-0 z-[10050] overflow-y-auto overscroll-none bg-[var(--mascot-loading-bg)]"
       role="status"
       aria-live="polite"
       aria-busy="true"
     >
-      <div
-        className={`mascot-loading-overlay__shell${videoAvailable ? "" : " mascot-loading-overlay__shell--text-only"}`}
-      >
-        {videoAvailable ? (
-          <div className="mascot-loading-overlay__media">
-            <img
-              src={assets.poster}
-              alt=""
-              aria-hidden="true"
-              className={`mascot-loading-video mascot-loading-video__poster${videoPlaying ? " mascot-loading-video__poster--hidden" : ""}`}
-            />
-            <MascotVideo
-              variant={variant}
-              essential
-              className={`mascot-loading-video mascot-loading-video__player${videoPlaying ? " mascot-loading-video--playing" : ""}`}
-              onUnavailable={() => setVideoAvailable(false)}
-              onPlaying={() => setVideoPlaying(true)}
-            />
+      <div className="mascot-loading-overlay__viewport">
+        <div
+          className={`mascot-loading-overlay__shell${videoAvailable ? "" : " mascot-loading-overlay__shell--text-only"}`}
+        >
+          {videoAvailable ? (
+            <div className="mascot-loading-overlay__media">
+              <img
+                src={assets.poster}
+                alt=""
+                aria-hidden="true"
+                className={`mascot-loading-video mascot-loading-video__poster${videoPlaying ? " mascot-loading-video__poster--hidden" : ""}`}
+              />
+              <MascotVideo
+                variant={variant}
+                essential
+                className={`mascot-loading-video mascot-loading-video__player${videoPlaying ? " mascot-loading-video--playing" : ""}`}
+                onUnavailable={() => setVideoAvailable(false)}
+                onPlaying={() => setVideoPlaying(true)}
+              />
+            </div>
+          ) : null}
+          <div className="mascot-loading-overlay__footer">
+            <div className="mascot-loading-overlay__copy">
+              <p className="font-display text-xl sm:text-2xl leading-tight">
+                {title}
+              </p>
+              <p className="font-sans text-sm sm:text-base">{subtitle}</p>
+            </div>
+            <LoadingProgressBar />
           </div>
-        ) : null}
-        <div className="mascot-loading-overlay__footer">
-          <div className="mascot-loading-overlay__copy">
-            <p className="font-display text-xl sm:text-2xl leading-tight">
-              {title}
-            </p>
-            <p className="font-sans text-sm sm:text-base">
-              {subtitle}
-            </p>
-          </div>
-          <LoadingProgressBar />
         </div>
       </div>
     </div>

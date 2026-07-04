@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useRouter } from "@/i18n/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
 
 /** Tiempo mínimo visible antes de navegar a /explore */
 const MIN_OVERLAY_MS = 3200;
@@ -35,11 +35,24 @@ export function useSearchNavigation() {
   return ctx;
 }
 
+function lockPageScroll() {
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+}
+
+function unlockPageScroll() {
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+}
+
 export function SearchNavigationProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isSearching, setIsSearching] = useState(false);
   const [searchSession, setSearchSession] = useState(0);
   const isSearchingRef = useRef(false);
+  const destinationRef = useRef<string | null>(null);
+  const hasNavigatedRef = useRef(false);
   const navigateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const failsafeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -54,21 +67,28 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
     }
   }, []);
 
-  const finishSearch = useCallback(
-    (destination: string) => {
-      if (!isSearchingRef.current) return;
+  const dismissOverlay = useCallback(() => {
+    clearSearchTimers();
+    destinationRef.current = null;
+    hasNavigatedRef.current = false;
+    isSearchingRef.current = false;
+    setIsSearching(false);
+  }, [clearSearchTimers]);
 
-      clearSearchTimers();
-      isSearchingRef.current = false;
-      setIsSearching(false);
+  const navigateToDestination = useCallback(
+    (destination: string) => {
+      if (hasNavigatedRef.current) return;
+
+      hasNavigatedRef.current = true;
+      destinationRef.current = destination;
 
       try {
         router.push(destination);
       } catch {
-        // Overlay already dismissed; navigation failure is non-fatal.
+        dismissOverlay();
       }
     },
-    [router, clearSearchTimers],
+    [router, dismissOverlay],
   );
 
   const startSearch = useCallback(
@@ -80,29 +100,41 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
 
       const destination = `/explore?q=${encodeURIComponent(trimmed)}`;
 
-      document.body.style.overflow = "hidden";
+      lockPageScroll();
 
       setSearchSession((s) => s + 1);
+      destinationRef.current = destination;
+      hasNavigatedRef.current = false;
       isSearchingRef.current = true;
       setIsSearching(true);
 
       navigateTimer.current = setTimeout(() => {
-        finishSearch(destination);
+        navigateToDestination(destination);
       }, MIN_OVERLAY_MS);
 
       failsafeTimer.current = setTimeout(() => {
-        finishSearch(destination);
+        navigateToDestination(destination);
+        dismissOverlay();
       }, MAX_OVERLAY_MS);
     },
-    [finishSearch, clearSearchTimers],
+    [navigateToDestination, dismissOverlay, clearSearchTimers],
   );
 
   useEffect(() => {
+    if (!isSearching || !destinationRef.current) return;
+
+    const targetPath = destinationRef.current.split("?")[0] ?? destinationRef.current;
+    if (pathname === targetPath || pathname.startsWith(`${targetPath}/`)) {
+      dismissOverlay();
+    }
+  }, [pathname, isSearching, dismissOverlay]);
+
+  useEffect(() => {
     if (!isSearching) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    lockPageScroll();
     return () => {
-      document.body.style.overflow = prev;
+      unlockPageScroll();
     };
   }, [isSearching]);
 
@@ -110,6 +142,7 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
     return () => {
       clearSearchTimers();
       isSearchingRef.current = false;
+      unlockPageScroll();
     };
   }, [clearSearchTimers]);
 
