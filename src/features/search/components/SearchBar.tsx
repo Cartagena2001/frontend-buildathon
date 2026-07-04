@@ -4,8 +4,12 @@ import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 
-export default function SearchBar() {
-  const [query, setQuery] = useState("");
+interface SearchBarProps {
+  initialQuery?: string;
+}
+
+export default function SearchBar({ initialQuery = "" }: SearchBarProps) {
+  const [query, setQuery] = useState(initialQuery);
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const t = useTranslations("home");

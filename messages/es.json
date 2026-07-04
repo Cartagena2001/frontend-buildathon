@@ -4,6 +4,27 @@
     "trending": "Tendencias",
     "signIn": "Iniciar sesión"
   },
+  "explore": {
+    "backHome": "Volver al inicio",
+    "emptyQueryTitle": "Empieza con una búsqueda",
+    "emptyQueryBody": "Busca un lugar, categoría o vibe viral para ver resultados en el mapa.",
+    "noResultsTitle": "Sin resultados",
+    "noResultsBody": "No encontramos lugares para esta búsqueda. Prueba con otra palabra clave.",
+    "tryAnotherSearch": "Probar otra búsqueda",
+    "resultsFor": "Resultados para",
+    "resultCount": "{count, plural, =0 {0 lugares} one {# lugar} other {# lugares}}",
+    "mapLabel": "Mapa de resultados",
+    "categories": {
+      "beach": "Playa",
+      "restaurant": "Comida",
+      "nightlife": "Vida nocturna",
+      "other": "Otro"
+    },
+    "stats": {
+      "views": "{count}K vistas",
+      "sentiment": "{score}% positivo"
+    }
+  },
   "home": {
     "headline1": "No el mejor calificado.",
     "headline2": "El más comentado.",
