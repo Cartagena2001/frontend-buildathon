@@ -1,0 +1,112 @@
+{
+  "nav": {
+    "destinations": "Destinos",
+    "trending": "Tendencias",
+    "signIn": "Iniciar sesión"
+  },
+  "home": {
+    "headline1": "No el mejor calificado.",
+    "headline2": "El más comentado.",
+    "searchPlaceholder": "¿Dónde está lo viral en El Salvador?",
+    "searchButton": "Buscar",
+    "viralLabel": "Viral ahora mismo",
+    "tags": {
+      "surfing": "Surf en El Zonte",
+      "pupusas": "Pupusas en Olocuilta",
+      "nightlife": "Vida nocturna en Escalón",
+      "beaches": "Playas en La Libertad",
+      "coffee": "Café en Santa Ana"
+    }
+  },
+  "legal": {
+    "backHome": "Volver al inicio",
+    "lastUpdated": "Última actualización",
+    "terms": {
+      "title": "Términos de Servicio",
+      "date": "4 de julio de 2026",
+      "s1title": "1. Aceptación de los Términos",
+      "s1body": "Al acceder o utilizar findy.place (\"el Servicio\"), aceptas quedar vinculado por estos Términos de Servicio. Si no estás de acuerdo, por favor no uses el Servicio.",
+      "s2title": "2. Descripción del Servicio",
+      "s2body": "findy.place es una plataforma de descubrimiento que agrega contenido público de redes sociales (TikTok, Instagram) para mostrar los lugares más virales de El Salvador. No somos propietarios, no controlamos ni respaldamos el contenido de terceros mostrado en la plataforma.",
+      "s3title": "3. Cuentas de Usuario",
+      "s3body": "Debes proporcionar información precisa y completa al crear una cuenta. Eres responsable de mantener la confidencialidad de tus credenciales y de toda actividad bajo tu cuenta. Debes tener al menos 13 años para usar el Servicio.",
+      "s4title": "4. Uso Aceptable",
+      "s4body": "Aceptas no hacer mal uso del Servicio. Las actividades prohibidas incluyen: extraer o recopilar datos sin permiso, publicar contenido ilegal o dañino, intentar acceder sin autorización a cualquier sistema, o usar el Servicio para violar cualquier ley aplicable.",
+      "s5title": "5. Propiedad Intelectual",
+      "s5body": "Todo el contenido original, marca y funcionalidades de findy.place son propiedad exclusiva de findy.place y sus creadores. El contenido de terceros sigue siendo propiedad de sus respectivos dueños.",
+      "s6title": "6. Renuncia de Garantías",
+      "s6body": "El Servicio se proporciona \"tal cual\" sin garantías de ningún tipo. No garantizamos la exactitud, integridad o disponibilidad de ninguna información mostrada en la plataforma.",
+      "s7title": "7. Limitación de Responsabilidad",
+      "s7body": "En la máxima medida permitida por la ley, findy.place no será responsable por daños indirectos, incidentales, especiales o consecuentes derivados del uso del Servicio.",
+      "s8title": "8. Cambios en los Términos",
+      "s8body": "Nos reservamos el derecho de modificar estos Términos en cualquier momento. El uso continuado del Servicio después de publicar los cambios constituye la aceptación de los nuevos Términos.",
+      "s9title": "9. Contacto",
+      "s9body": "Para cualquier pregunta sobre estos Términos, contáctanos en legal@findy.place."
+    },
+    "privacy": {
+      "title": "Política de Privacidad",
+      "date": "4 de julio de 2026",
+      "intro": "En findy.place, nos tomamos tu privacidad en serio. Esta Política de Privacidad explica qué datos recopilamos, cómo los usamos y tus derechos como usuario.",
+      "s1title": "1. Información que Recopilamos",
+      "s1body": "Recopilamos información que proporcionas directamente (nombre, correo, contraseña al registrarte), información generada por tu uso del Servicio (búsquedas, clics, lugares guardados) y contenido público de redes sociales (publicaciones de TikTok/Instagram) procesado para alimentar nuestro motor de descubrimiento.",
+      "s2title": "2. Cómo Usamos tu Información",
+      "s2body": "Usamos tu información para: proporcionar y mejorar el Servicio, personalizar tu experiencia, enviarte notificaciones relevantes (solo con tu consentimiento), analizar patrones de uso para mejorar el rendimiento y cumplir con obligaciones legales.",
+      "s3title": "3. Compartición de Datos",
+      "s3body": "No vendemos tus datos personales. Podemos compartir datos con proveedores de servicios de confianza (como hosting en la nube, analíticas) estrictamente para operar el Servicio. Todos los proveedores están obligados a proteger tus datos bajo acuerdos de confidencialidad.",
+      "s4title": "4. Cookies y Seguimiento",
+      "s4body": "Usamos cookies esenciales para mantenerte conectado y recordar tus preferencias. Podemos usar cookies de analítica para entender cómo los usuarios interactúan con el Servicio. Puedes desactivar las cookies no esenciales en la configuración de tu navegador.",
+      "s5title": "5. Retención de Datos",
+      "s5body": "Conservamos los datos de tu cuenta mientras esté activa. Puedes solicitar la eliminación de tu cuenta y los datos asociados en cualquier momento contactándonos.",
+      "s6title": "6. Tus Derechos",
+      "s6body": "Dependiendo de tu ubicación, puedes tener derecho a acceder, corregir o eliminar tus datos personales; objetar o restringir el procesamiento; y solicitar la portabilidad de datos. Para ejercer estos derechos, contáctanos en privacy@findy.place.",
+      "s7title": "7. Seguridad",
+      "s7body": "Implementamos medidas de seguridad estándar de la industria, incluidas conexiones cifradas (HTTPS), contraseñas hasheadas y controles de acceso. Ningún método de transmisión por internet es 100% seguro; no podemos garantizar seguridad absoluta.",
+      "s8title": "8. Privacidad de Menores",
+      "s8body": "El Servicio no está dirigido a menores de 13 años. No recopilamos intencionalmente información personal de niños. Si crees que un niño nos ha proporcionado datos personales, contáctanos de inmediato.",
+      "s9title": "9. Cambios en esta Política",
+      "s9body": "Podemos actualizar esta Política de Privacidad periódicamente. Notificaremos a los usuarios registrados sobre cambios importantes por correo electrónico o mediante un aviso en la app.",
+      "s10title": "10. Contacto",
+      "s10body": "Para preguntas relacionadas con la privacidad, contáctanos en privacy@findy.place."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenido de vuelta.",
+      "subtitle": "Inicia sesión para descubrir lo que está de moda.",
+      "emailLabel": "Correo",
+      "emailPlaceholder": "tu@correo.com",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "submitButton": "Iniciar sesión",
+      "orDivider": "o",
+      "googleButton": "Continuar con Google",
+      "noAccount": "¿Sin cuenta?",
+      "createOne": "Créala aquí"
+    },
+    "register": {
+      "title": "Únete a findy.place",
+      "subtitle": "Descubre los lugares más virales de El Salvador.",
+      "firstNameLabel": "Nombre",
+      "firstNamePlaceholder": "Ana",
+      "lastNameLabel": "Apellido",
+      "lastNamePlaceholder": "García",
+      "emailLabel": "Correo",
+      "emailPlaceholder": "tu@correo.com",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Mín. 8 caracteres",
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Repite tu contraseña",
+      "passwordMismatch": "Las contraseñas no coinciden.",
+      "termsText": "Al crear una cuenta aceptas nuestros",
+      "termsLink": "Términos de servicio",
+      "andText": "y la",
+      "privacyLink": "Política de privacidad",
+      "submitButton": "Crear cuenta",
+      "orDivider": "o",
+      "googleButton": "Continuar con Google",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signIn": "Inicia sesión"
+    }
+  }
+}

@@ -1,0 +1,217 @@
+---
+description: Architecture rules, folder structure and Next.js code standards for findy.place — a viral places discovery app powered by TikTok/Instagram data, vector search and AI.
+globs: src/**/*
+alwaysApply: true
+---
+
+# 🏗️ Architecture Rules: findy.place
+
+## 1. Architectural Pattern (Feature-Sliced Design)
+
+You are a Software Architect. This project uses strict Next.js 16+ (App Router). The structure is divided by business domains (Features). The core product is a **place-centric** discovery app: the atomic unit is always a `Place`, never a raw post or video.
+
+```
+src/
+├── app/                              # Routing ONLY
+│   ├── layout.tsx                    # Minimal root layout (no html/body — delegated to [locale])
+│   ├── [locale]/                     # i18n — ALL pages live here
+│   │   ├── layout.tsx                # Locale layout: html lang, fonts, NextIntlClientProvider
+│   │   ├── page.tsx                  # Homepage / hero search
+│   │   ├── explore/                  # Main discovery experience
+│   │   │   ├── layout.tsx            # List + map split layout
+│   │   │   ├── page.tsx              # SSR: initial place results
+│   │   │   └── [placeId]/page.tsx    # Place detail page
+│   │   └── (auth)/                   # Route group – auth pages
+│   │       ├── layout.tsx
+│   │       ├── login/page.tsx
+│   │       └── register/page.tsx
+│   └── api/                          # API Routes (NOT locale-prefixed — server-side only)
+│       ├── search/route.ts           # Vector search endpoint → Upstash
+│       └── places/route.ts           # Place CRUD / upsert
+│
+├── features/                         # Business domain modules
+│   ├── places/                       # Core domain — Place entity
+│   │   ├── components/               # PlaceCard, PlaceDetail, PlaceGrid
+│   │   ├── hooks/                    # usePlaces, usePlaceDetail
+│   │   ├── actions/                  # Server Actions: upsertPlace, resolvePlace
+│   │   ├── services/                 # Upstash place storage, dedup logic, geocoding calls
+│   │   └── types.ts                  # Place, PlaceCategory, TrendingScore
+│   │
+│   ├── search/                       # AI chat + semantic search
+│   │   ├── components/               # SearchBar, SearchResults, AIChat
+│   │   ├── hooks/                    # useSearch, useAIChat
+│   │   ├── actions/                  # Server Actions: vectorSearch, rerank
+│   │   ├── services/                 # Upstash vector client, reranking logic
+│   │   └── types.ts                  # SearchQuery, SearchResult, RerankPayload
+│   │
+│   ├── map/                          # Map view (Mapbox / OSM)
+│   │   ├── components/               # MapView, MapPin, MapPopup
+│   │   ├── hooks/                    # useMapBounds, useMapPins  ("use client" lives here)
+│   │   └── types.ts                  # MapPin, Bounds
+│   │
+│   └── ingestion/                    # Data pipeline (Apify → resolve → embed)
+│       ├── services/                 # apify.ts, geocoding.ts, sentiment.ts, embeddings.ts
+│       └── types.ts                  # RawApifyVideo, ResolvedPlace, EmbeddingDoc
+│
+├── i18n/                             # next-intl configuration
+│   ├── routing.ts                    # defineRouting — locales: ['en','es'], defaultLocale: 'es'
+│   ├── request.ts                    # getRequestConfig — loads messages per locale
+│   └── navigation.ts                 # Re-exports Link, useRouter, usePathname (locale-aware)
+│
+├── components/
+│   └── ui/                           # Reusable, stateless, domain-agnostic primitives
+│       ├── Button.tsx
+│       ├── Card.tsx
+│       ├── Badge.tsx                 # For category / trending tags
+│       └── Modal.tsx
+│
+├── lib/                              # External client configurations
+│   ├── mongodb/                      # MongoDB client + connection
+│   ├── upstash/                      # Upstash Vector client
+│   ├── openai/                       # OpenAI embeddings client
+│   ├── gemini/                       # Gemini sentiment / extraction client
+│   └── geocoding/                    # Google Geocoding API wrapper
+│
+├── types/                            # Global shared TypeScript types
+│   └── index.ts
+│
+└── middleware.ts                     # Route protection (if auth is added)
+```
+
+### Placement Rules
+
+| Concern | Where it lives |
+|---|---|
+| Page routing / layout | `src/app/` |
+| Place business logic, UI | `src/features/places/` |
+| Semantic search + AI chat | `src/features/search/` |
+| Map rendering (client-heavy) | `src/features/map/` |
+| Apify ingest + resolve pipeline | `src/features/ingestion/services/` |
+| External service clients | `src/lib/` |
+| Generic reusable UI primitives | `src/components/ui/` |
+| Global shared types | `src/types/` |
+
+---
+
+## 2. Data Model — Place is the Atomic Unit
+
+**Never expose raw Apify video records to the UI.** Every piece of data rendered must come from a resolved `Place` document.
+
+```ts
+// src/features/places/types.ts
+interface Place {
+  id_place: string           // Google Place ID (primary) or local UUID (fallback)
+  name: string               // Canonical resolved name
+  location: {
+    address: string          // Human-readable: "El Tunco, La Libertad, El Salvador"
+    lat: number
+    lng: number
+  }
+  category: PlaceCategory    // 'beach' | 'restaurant' | 'nightlife' | 'other'
+  videos: RawApifyVideo[]    // Evidence — never rendered directly
+  trending: {
+    likes: number
+    views: number
+    normalized: number       // 0–1 for reranking
+  }
+  sentiment: {
+    score: number            // 0–1 composite
+    summary: string          // LLM-generated human-readable summary (gets embedded)
+  }
+  description: string        // AI-generated summary of food, services, vibe
+  embedding_text: string     // The string vectorised and stored in Upstash
+  updatedAt: Date
+}
+```
+
+---
+
+## 3. Retrieval Flow — Retrieve → Rerank
+
+The search pipeline is **always two stages**. Never return raw vector results to the UI without reranking.
+
+```
+user query (natural language)
+  → embed with OpenAI (src/lib/openai)
+  → Upstash vector search → top 30 candidates   (src/features/search/services)
+  → rerank by composite score:
+      0.5 × semantic_similarity
+      0.3 × normalized_trending
+      0.2 × sentiment_score
+  → return top 10 to the UI
+```
+
+Sentiment weighting rule: negative comment sentiment acts as a **penalty**, not just a weak positive. A place the crowd trashes must be docked even if the creator hyped it.
+
+---
+
+## 4. Next.js 16 Paradigm (React Server Components)
+
+- **Server Components by default.** Fetch place data and run vector queries directly in server components. Do not move fetching to the client.
+- **Client Components (`"use client"`):** Required for the map (`features/map/`), search input interactions, and the AI chat box. Push the directive to the leaf level — wrap only the interactive part, not the whole page.
+- **The explore page** (`app/explore/page.tsx`) renders the initial list server-side (SSR) for SEO. The map panel is a client island mounted alongside it.
+
+---
+
+## 5. Code & TypeScript Standards
+
+- **Strict typing:** Every value must have an interface or type in `src/types/` or in its feature's `types.ts`. Never use `any`. The `Place` type is the source of truth — any field stored in Upstash metadata must be reflected here first.
+- **Styles:** Tailwind CSS exclusively. Use `cn()` (clsx + tailwind-merge) for conditional class concatenation.
+- **Embedding text is immutable at query time.** Never mutate `embedding_text` after it has been vectorised without also re-running the OpenAI embedding and upserting the new vector to Upstash.
+
+---
+
+## 6. External Services — Client Responsibility
+
+Each `src/lib/` module owns exactly one external dependency. No feature may import an SDK directly; it must go through `src/lib/`.
+
+| Service | Module | Used by |
+|---|---|---|
+| MongoDB | `src/lib/mongodb/` | `features/users/services` (app: usuarios, sesiones, etc.) |
+| Upstash Vector | `src/lib/upstash/` | `features/places/services`, `features/search/services`, `features/ingestion/services` |
+| OpenAI Embeddings | `src/lib/openai/` | `features/ingestion/services`, `features/search/services` |
+| Gemini | `src/lib/gemini/` | `features/ingestion/services` |
+| Google Geocoding | `src/lib/geocoding/` | `features/ingestion/services` |
+
+---
+
+## 7. Ingestion Pipeline Rules
+
+The pipeline lives entirely in `src/features/ingestion/services/`. It is a **batch script**, not a live API route.
+
+1. `apify.ts` — fetches raw video records; outputs `RawApifyVideo[]`
+2. `geocoding.ts` — resolves place name → `place_id` + `lat/lng` via `src/lib/geocoding`
+3. `sentiment.ts` — calls Gemini on aggregated captions + comments; outputs `{ score, summary }`
+4. `embeddings.ts` — builds `embedding_text`, calls OpenAI, upserts vector to Upstash using `place_id` as the vector ID
+
+**Upsert rule:** always upsert by `place_id` in Upstash. Re-running is idempotent. Never insert a duplicate place — resolve/dedup via `findPlaceByIdPlace` / `findPlaceNearby` before upsert.
+
+---
+
+## 8. Internationalisation (i18n) — next-intl
+
+The project supports **English (`en`) and Spanish (`es`)**. Spanish is the default locale. Every user-facing string must be translated — no hardcoded text in components.
+
+### URL structure
+
+```
+/es/           → Homepage (Spanish — default)
+/en/           → Homepage (English)
+/es/explore    → Explore (Spanish)
+/en/login      → Login (English)
+```
+
+### Rules
+
+- **All pages live under `app/[locale]/`** — never create a page directly in `app/` (except `layout.tsx` root stub and `api/` routes).
+- **`api/` routes are NOT locale-prefixed** — server routes live at `app/api/` directly.
+- **Translations live in `messages/`** — one file per locale: `messages/en.json`, `messages/es.json`. Use nested namespaces matching the feature: `home.*`, `nav.*`, `auth.login.*`, `auth.register.*`, `explore.*`, `place.*`.
+- **Server components** use `useTranslations()` from `next-intl` (works in both server and client).
+- **Client components** use `useTranslations()` from `next-intl` — no difference in API.
+- **Never import `next/link` or `next/navigation` directly.** Always use the locale-aware wrappers from `@/i18n/navigation` (`Link`, `useRouter`, `usePathname`).
+- **`LocaleSwitcher`** (`src/components/ui/LocaleSwitcher.tsx`) is the only component that touches locale switching. Reuse it everywhere a language toggle is needed.
+- **Adding a new page checklist:**
+  1. Create the page under `app/[locale]/your-path/page.tsx`
+  2. Add all user-facing strings to both `messages/en.json` and `messages/es.json` under an appropriate namespace
+  3. Use `useTranslations("your.namespace")` at the top of the component
+  4. Use `Link` from `@/i18n/navigation` for all internal links

@@ -1,26 +1,132 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand palette */
+  --color-fp-dark:    #040404;
+  --color-fp-dim:     #0e0e0e;
+  --color-fp-surface: rgba(255,255,255,0.05);
+  --color-fp-border:  rgba(255,255,255,0.10);
+  --color-fp-cream:   #f0e8ec;
+  --color-fp-muted:   #de8c9d;
+  --color-fp-rose:    #de8c9d;
+  --color-fp-red:     #fe2858;
+  --color-fp-cyan:    #2af0ea;
+  --color-fp-teal:    #397684;
+  --color-fp-cyan-dim: rgba(42,240,234,0.12);
+
+  /* Typography */
+  --font-display: var(--font-display);
+  --font-sans:    var(--font-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ── Base ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  background-color: #040404;
+  color: #f0e8ec;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* ── Hero background blend ────────────────────────────── */
+.hero-bg {
+  position: relative;
+  background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80');
+  background-size: cover;
+  background-position: center 40%;
+}
+
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(4, 4, 4, 0.38) 0%,
+    rgba(4, 4, 4, 0.22) 35%,
+    rgba(4, 4, 4, 0.60) 70%,
+    rgba(4, 4, 4, 0.94) 100%
+  );
+  z-index: 1;
+}
+
+.hero-content { position: relative; z-index: 2; }
+
+/* ── Auth background ──────────────────────────────────── */
+.auth-bg {
+  position: relative;
+  background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80');
+  background-size: cover;
+  background-position: center 30%;
+}
+
+.auth-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 4, 4, 0.75);
+  backdrop-filter: blur(2px);
+  z-index: 1;
+}
+
+.auth-content { position: relative; z-index: 2; }
+
+/* ── Glass card ───────────────────────────────────────── */
+.glass {
+  background: rgba(4, 4, 4, 0.80);
+  border: 1px solid rgba(222, 140, 157, 0.18);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* ── Fade-up entrance ─────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+.delay-100 { animation-delay: 0.10s; }
+.delay-200 { animation-delay: 0.20s; }
+.delay-300 { animation-delay: 0.32s; }
+.delay-400 { animation-delay: 0.44s; }
+.delay-500 { animation-delay: 0.56s; }
+
+/* ── Pill tags ────────────────────────────────────────── */
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border: 1px solid rgba(222,140,157,0.30);
+  background: rgba(222,140,157,0.08);
+  color: #f0e8ec;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.tag-pill:hover {
+  background: rgba(222,140,157,0.16);
+  border-color: rgba(222,140,157,0.50);
+}
+
+.tag-pill.active {
+  background: #fe2858;
+  border-color: #fe2858;
+  color: #f0e8ec;
+}
+
+/* ── Focus ring (cyan) ────────────────────────────────── */
+.fp-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(42,240,234,0.45);
+}
+

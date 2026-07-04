@@ -1,0 +1,1 @@
+export { getPlacesIndex } from "./client";
