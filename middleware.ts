@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/edge";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "./src/i18n/routing";
 import { NextResponse } from "next/server";
@@ -14,6 +14,7 @@ export default async function middleware(req: NextRequest) {
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/auth/") ||
     /\.(.+)$/.test(pathname)
   ) {
     return NextResponse.next();

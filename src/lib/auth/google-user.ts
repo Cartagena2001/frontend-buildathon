@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 
 function splitName(name?: string | null) {
   if (!name?.trim()) return { firstName: "User", lastName: "" };
@@ -13,8 +13,9 @@ function splitName(name?: string | null) {
 
 export async function upsertGoogleUser(params: {
   email: string;
-  name?:  string | null;
+  name?: string | null;
   image?: string | null;
+  supabaseUserId?: string;
 }) {
   const email = params.email.trim().toLowerCase();
   const { firstName, lastName } = splitName(params.name);
@@ -22,25 +23,34 @@ export async function upsertGoogleUser(params: {
   const [existing] = await db
     .select()
     .from(users)
-    .where(eq(users.email, email))
+    .where(
+      params.supabaseUserId
+        ? or(
+            eq(users.email, email),
+            eq(users.supabaseUserId, params.supabaseUserId),
+          )
+        : eq(users.email, email),
+    )
     .limit(1);
 
   if (existing) {
     await db
       .update(users)
       .set({
-        image:     params.image ?? existing.image,
-        firstName: existing.firstName || firstName,
-        lastName:  existing.lastName  || lastName,
-        updatedAt: new Date(),
+        image:          params.image ?? existing.image,
+        firstName:      existing.firstName || firstName,
+        lastName:       existing.lastName  || lastName,
+        supabaseUserId: params.supabaseUserId ?? existing.supabaseUserId,
+        updatedAt:      new Date(),
       })
       .where(eq(users.id, existing.id));
 
     return {
       ...existing,
-      image:     params.image ?? existing.image,
-      firstName: existing.firstName || firstName,
-      lastName:  existing.lastName  || lastName,
+      image:          params.image ?? existing.image,
+      firstName:      existing.firstName || firstName,
+      lastName:       existing.lastName  || lastName,
+      supabaseUserId: params.supabaseUserId ?? existing.supabaseUserId,
     };
   }
 
@@ -50,9 +60,10 @@ export async function upsertGoogleUser(params: {
       firstName,
       lastName,
       email,
-      passwordHash: null,
-      image:        params.image ?? null,
-      authProvider: "google",
+      passwordHash:   null,
+      image:          params.image ?? null,
+      authProvider:   "google",
+      supabaseUserId: params.supabaseUserId ?? null,
     })
     .returning();
 

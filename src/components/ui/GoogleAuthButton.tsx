@@ -6,7 +6,7 @@ interface Props {
   namespace: "auth.login" | "auth.register";
 }
 
-/** Divider + Google button. Hidden until GOOGLE_AUTH_ENABLED is true. */
+/** Divider + Google button. Hidden until Supabase Google OAuth is configured. */
 export default async function GoogleAuthButton({ namespace }: Props) {
   if (!isGoogleAuthEnabled()) return null;
 
