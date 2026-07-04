@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import type { PlaceCardData } from "./PlaceCard";
+import SaveButton from "./SaveButton";
 
 const badgeClasses: Record<PlaceCardData["badgeColor"], string> = {
   red:  "bg-fp-orange text-fp-on-accent",
@@ -18,10 +19,12 @@ const sentimentClasses: Record<string, string> = {
 export default function PlaceListCard({
   place,
   selected = false,
+  isSaved = false,
   priority = false,
 }: {
   place: PlaceCardData;
   selected?: boolean;
+  isSaved?: boolean;
   priority?: boolean;
 }) {
   const t = useTranslations("explore");
@@ -50,6 +53,18 @@ export default function PlaceListCard({
         <span className="absolute top-3 left-3 w-8 h-8 rounded-full fp-badge-overlay flex items-center justify-center text-xs font-semibold">
           {String(place.rank).padStart(2, "0")}
         </span>
+        {/* Save */}
+        <SaveButton
+          isSaved={isSaved}
+          className="absolute top-3 right-3"
+          place={{
+            placeId:         place.id,
+            placeName:       place.name,
+            placeLocation:   place.location,
+            placeImage:      place.coverImage,
+            placeCategories: place.categories,
+          }}
+        />
       </div>
 
       {/* Content */}

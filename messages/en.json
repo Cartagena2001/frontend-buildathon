@@ -2,7 +2,30 @@
   "nav": {
     "destinations": "Destinations",
     "trending": "Trending",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "profile": "My Profile",
+    "saved": "Saved Places"
+  },
+  "profile": {
+    "title": "My Profile",
+    "memberSince": "Member since",
+    "editProfile": "Edit profile",
+    "savedPlaces": "Saved Places",
+    "reviews": "My Reviews",
+    "noSaved": "No saved places yet. Start exploring!",
+    "noReviews": "No reviews yet. Share your experience!",
+    "exploreNow": "Explore now"
+  },
+  "saved": {
+    "title": "Saved Places",
+    "subtitle": "Your future adventures, all in one place.",
+    "empty": "No saved places yet.",
+    "emptySub": "Browse places and tap the bookmark to save them here.",
+    "exploreNow": "Explore places",
+    "remove": "Remove",
+    "visitNow": "View details",
+    "savedOn": "Saved"
   },
   "home": {
     "headline1": "Not the best rated.",
@@ -144,8 +167,41 @@
       "submitButton": "Sign In",
       "orDivider": "or",
       "googleButton": "Continue with Google",
+      "googleUnavailable": "Google sign-in is not configured. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to .env.",
       "noAccount": "No account?",
-      "createOne": "Create one"
+      "createOne": "Create one",
+      "resetSuccess": "Password updated successfully. You can sign in now."
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email and we'll send you a 6-digit code valid for 1 hour.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "submitButton": "Send code",
+      "backToLogin": "Back to sign in"
+    },
+    "resetPassword": {
+      "title": "Enter your code",
+      "subtitle": "Check your inbox for the 6-digit code we sent you.",
+      "otpLabel": "Verification code",
+      "otpPlaceholder": "000000",
+      "otpHint": "Valid for 1 hour.",
+      "verifyButton": "Verify code",
+      "resendCode": "Resend code",
+      "backToLogin": "Back to sign in"
+    },
+    "newPassword": {
+      "title": "New password",
+      "subtitle": "Choose a secure password for your account.",
+      "passwordLabel": "New password",
+      "passwordPlaceholder": "Min. 8 characters",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat your password",
+      "passwordMismatch": "Passwords do not match.",
+      "submitButton": "Update password",
+      "backToLogin": "Back to sign in",
+      "sessionExpired": "Your verification session expired.",
+      "requestNewCode": "Request a new code"
     },
     "register": {
       "title": "Join findy.place",
@@ -168,6 +224,7 @@
       "submitButton": "Create Account",
       "orDivider": "or",
       "googleButton": "Continue with Google",
+      "googleUnavailable": "Google sign-in is not configured. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to .env.",
       "hasAccount": "Already have an account?",
       "signIn": "Sign in"
     }

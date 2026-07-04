@@ -7,9 +7,10 @@ import type { PlaceCardData } from "@/features/places/components/PlaceCard";
 
 interface Props {
   places: PlaceCardData[];
+  savedPlaceIds?: string[];
 }
 
-export default function ExploreLayout({ places }: Props) {
+export default function ExploreLayout({ places, savedPlaceIds = [] }: Props) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(
     places[0]?.id ?? null,
@@ -57,6 +58,7 @@ export default function ExploreLayout({ places }: Props) {
               key={place.id}
               place={place}
               selected={selectedId === place.id}
+              isSaved={savedPlaceIds.includes(place.id)}
               priority={index === 0}
             />
           ))}

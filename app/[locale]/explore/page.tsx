@@ -1,18 +1,21 @@
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import ExploreLayout from "@/features/search/components/ExploreLayout";
 import { EXPLORE_PLACES } from "@/features/places/data/mock-places";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import NavAuth from "@/components/ui/NavAuth";
+import { getSavedPlaceIds } from "@/lib/saved/actions";
 
-export default function ExplorePage() {
-  const t = useTranslations("explore");
-  const nav = useTranslations("nav");
+export default async function ExplorePage() {
+  const [t, savedIds] = await Promise.all([
+    getTranslations("explore"),
+    getSavedPlaceIds(),
+  ]);
 
   return (
     <div className="flex flex-col h-screen bg-fp-dark overflow-hidden">
-      {/* ── Top nav ──────────────────────────────────────── */}
-      <nav className="shrink-0 flex items-center justify-between gap-4 px-4 sm:px-6 py-3 border-b border-fp-border bg-fp-dark z-30">
+      <nav className="shrink-0 flex items-center justify-between gap-4 px-4 sm:px-6 py-3 border-b border-fp-border bg-fp-dark z-30 overflow-visible">
         <Link
           href="/"
           className="text-fp-cream font-sans text-[1rem] font-light tracking-wide shrink-0"
@@ -27,16 +30,10 @@ export default function ExplorePage() {
         <div className="flex items-center gap-3 shrink-0">
           <ThemeToggle />
           <LocaleSwitcher />
-          <Link
-            href="/login"
-            className="hidden sm:inline-flex px-4 py-1.5 rounded-full bg-fp-red text-fp-on-accent text-xs font-semibold hover:bg-fp-coral transition-colors"
-          >
-            {nav("signIn")}
-          </Link>
+          <NavAuth />
         </div>
       </nav>
 
-      {/* ── Results header ─── */}
       <div className="shrink-0 flex items-center justify-between px-4 sm:px-6 py-3 border-b border-fp-border">
         <div>
           <h1 className="font-display text-fp-cream text-xl sm:text-2xl leading-tight">
@@ -52,7 +49,7 @@ export default function ExplorePage() {
         </div>
       </div>
 
-      <ExploreLayout places={EXPLORE_PLACES} />
+      <ExploreLayout places={EXPLORE_PLACES} savedPlaceIds={savedIds} />
     </div>
   );
 }
