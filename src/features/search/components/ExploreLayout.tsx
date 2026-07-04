@@ -52,11 +52,12 @@ export default function ExploreLayout({ places }: Props) {
       {/* ── Results list ── */}
       <main className="flex-1 flex flex-col overflow-hidden lg:pt-0 pt-12">
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-3">
-          {places.map((place) => (
+          {places.map((place, index) => (
             <PlaceListCard
               key={place.id}
               place={place}
               selected={selectedId === place.id}
+              priority={index === 0}
             />
           ))}
         </div>
