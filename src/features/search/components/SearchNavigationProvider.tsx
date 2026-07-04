@@ -121,7 +121,7 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
   );
 
   useEffect(() => {
-    if (!isSearching || !destinationRef.current) return;
+    if (!isSearching || !destinationRef.current || !hasNavigatedRef.current) return;
 
     const targetPath = destinationRef.current.split("?")[0] ?? destinationRef.current;
     if (pathname === targetPath || pathname.startsWith(`${targetPath}/`)) {

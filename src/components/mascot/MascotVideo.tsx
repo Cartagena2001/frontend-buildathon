@@ -3,13 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { MASCOT_ASSETS, type MascotVariant } from "./types";
 
-const STALL_FAILSAFE_MS = 4000;
+const DEFAULT_STALL_FAILSAFE_MS = 4000;
 
 interface Props {
   variant?: MascotVariant;
   size?: number | string;
   className?: string;
   essential?: boolean;
+  stallTimeoutMs?: number;
   onUnavailable?: () => void;
   onPlaying?: () => void;
 }
@@ -19,6 +20,7 @@ export default function MascotVideo({
   size = "clamp(96px, 20vw, 120px)",
   className = "",
   essential = false,
+  stallTimeoutMs = DEFAULT_STALL_FAILSAFE_MS,
   onUnavailable,
   onPlaying,
 }: Props) {
@@ -50,7 +52,7 @@ export default function MascotVideo({
       if (!el || unavailableRef.current) return;
       if (el.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && !el.paused) return;
       markUnavailable();
-    }, STALL_FAILSAFE_MS);
+    }, stallTimeoutMs);
   }
 
   useEffect(() => {
@@ -108,7 +110,7 @@ export default function MascotVideo({
       loop
       muted
       playsInline
-      preload="auto"
+      preload={essential ? "metadata" : "auto"}
       poster={assets.poster}
       aria-hidden="true"
       onError={markUnavailable}

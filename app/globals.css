@@ -314,8 +314,16 @@ body {
 }
 
 .mascot-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  width: 100vw;
+  min-height: 100dvh;
+  min-height: 100svh;
+  background: var(--mascot-loading-bg);
   isolation: isolate;
   touch-action: none;
+  pointer-events: auto;
 }
 
 .mascot-loading-overlay__viewport {
