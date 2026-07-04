@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MASCOT_ASSETS, type MascotVariant } from "./types";
 
 const DEFAULT_STALL_FAILSAFE_MS = 4000;
@@ -27,25 +27,29 @@ export default function MascotVideo({
   const videoRef = useRef<HTMLVideoElement>(null);
   const unavailableRef = useRef(false);
   const stallTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [hidden, setHidden] = useState(false);
   const assets = MASCOT_ASSETS[variant];
+  const assetKey = `${variant}:${assets.mp4}`;
+  const [unavailableAssetKey, setUnavailableAssetKey] = useState<string | null>(
+    null,
+  );
+  const hidden = unavailableAssetKey === assetKey;
 
-  function clearStallTimer() {
+  const clearStallTimer = useCallback(() => {
     if (stallTimerRef.current) {
       clearTimeout(stallTimerRef.current);
       stallTimerRef.current = null;
     }
-  }
+  }, []);
 
-  function markUnavailable() {
+  const markUnavailable = useCallback(() => {
     if (unavailableRef.current) return;
     unavailableRef.current = true;
     clearStallTimer();
-    setHidden(true);
+    setUnavailableAssetKey(assetKey);
     onUnavailable?.();
-  }
+  }, [assetKey, clearStallTimer, onUnavailable]);
 
-  function handleStalled() {
+  const handleStalled = useCallback(() => {
     clearStallTimer();
     stallTimerRef.current = setTimeout(() => {
       const el = videoRef.current;
@@ -53,12 +57,11 @@ export default function MascotVideo({
       if (el.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && !el.paused) return;
       markUnavailable();
     }, stallTimeoutMs);
-  }
+  }, [clearStallTimer, markUnavailable, stallTimeoutMs]);
 
   useEffect(() => {
     unavailableRef.current = false;
-    setHidden(false);
-  }, [assets.mp4]);
+  }, [assetKey]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -98,7 +101,7 @@ export default function MascotVideo({
       video.removeEventListener("playing", handlePlaying);
       clearStallTimer();
     };
-  }, [assets.mp4, essential, hidden, onPlaying]);
+  }, [assets.mp4, clearStallTimer, essential, hidden, markUnavailable, onPlaying]);
 
   if (hidden) return null;
 

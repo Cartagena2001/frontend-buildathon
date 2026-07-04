@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import MascotVideo from "./MascotVideo";
 import LoadingProgressBar from "./LoadingProgressBar";
 import { useSlowLoadingCopy } from "./useSlowLoadingCopy";
 import { MASCOT_ASSETS, type MascotVariant } from "./types";
+
+const IMMEDIATE_OVERLAY_ID = "search-loading-fallback";
 
 interface Props {
   variant?: MascotVariant;
@@ -17,6 +19,10 @@ function OverlayContent({ variant = "search" }: Props) {
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [showVideo, setShowVideo] = useState(true);
   const assets = MASCOT_ASSETS[variant];
+
+  useEffect(() => {
+    document.getElementById(IMMEDIATE_OVERLAY_ID)?.remove();
+  }, []);
 
   const { title, subtitle } = useSlowLoadingCopy({
     visible: true,

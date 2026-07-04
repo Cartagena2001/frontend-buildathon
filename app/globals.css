@@ -318,6 +318,7 @@ body {
   inset: 0;
   z-index: 10050;
   width: 100vw;
+  min-height: 100vh;
   min-height: 100dvh;
   min-height: 100svh;
   background: var(--mascot-loading-bg);
@@ -328,6 +329,7 @@ body {
 
 .mascot-loading-overlay__viewport {
   display: flex;
+  min-height: 100vh;
   min-height: 100dvh;
   min-height: 100svh;
   width: 100%;
@@ -338,6 +340,13 @@ body {
     max(1rem, env(safe-area-inset-right))
     max(1rem, env(safe-area-inset-bottom))
     max(1rem, env(safe-area-inset-left));
+}
+
+@supports (-webkit-touch-callout: none) {
+  .mascot-loading-overlay,
+  .mascot-loading-overlay__viewport {
+    min-height: -webkit-fill-available;
+  }
 }
 
 .mascot-loading-overlay__shell {
@@ -354,6 +363,61 @@ body {
 
 .mascot-loading-overlay__shell--text-only {
   gap: 1.25rem;
+}
+
+.mascot-loading-overlay--fallback {
+  color: var(--fp-brand-ink);
+}
+
+.mascot-loading-fallback__pulse {
+  width: clamp(5rem, 18vw, 8rem);
+  height: clamp(5rem, 18vw, 8rem);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 32%, #ffffff 0 12%, transparent 13%),
+    radial-gradient(circle at 65% 32%, #ffffff 0 12%, transparent 13%),
+    radial-gradient(circle at 50% 58%, var(--fp-brand-coral) 0 18%, transparent 19%),
+    var(--fp-brand-orange);
+  box-shadow: 0 1.5rem 3rem rgba(34, 34, 34, 0.16);
+  animation: mascot-loading-breathe 1.1s ease-in-out infinite alternate;
+}
+
+.mascot-loading-fallback__copy {
+  max-width: min(100%, 28rem);
+}
+
+.mascot-loading-fallback__title {
+  color: var(--fp-brand-ink);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.5rem, 6vw, 2.25rem);
+  line-height: 1.05;
+}
+
+.mascot-loading-fallback__subtitle {
+  color: var(--fp-gray-500);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: clamp(0.95rem, 3vw, 1.1rem);
+}
+
+.mascot-loading-fallback__progress {
+  width: min(12rem, 60vw);
+  height: 0.25rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(34, 34, 34, 0.12);
+}
+
+.mascot-loading-fallback__progress-fill {
+  width: 35%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--fp-brand-orange);
+  animation: loading-progress-slide 1.4s ease-in-out infinite;
+}
+
+@keyframes mascot-loading-breathe {
+  from { transform: translateY(0) scale(0.97); }
+  to { transform: translateY(-0.35rem) scale(1.03); }
 }
 
 .mascot-loading-overlay__media {
