@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition, useState } from "react";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { savePlace, unsavePlace } from "@/lib/saved/actions";
 import type { SavePlaceInput } from "@/lib/saved/actions";
 
@@ -11,18 +12,33 @@ interface Props {
 }
 
 export default function SaveButton({ place, isSaved: initialSaved, className = "" }: Props) {
-  const [saved, setSaved]     = useState(initialSaved);
-  const [pending, start]      = useTransition();
+  const [saved, setSaved] = useState(initialSaved);
+  const [pending, start]  = useTransition();
+  const router            = useRouter();
+  const pathname          = usePathname();
+
+  const redirectToLogin = () => {
+    const params = new URLSearchParams({ callbackUrl: pathname });
+    router.push(`/login?${params.toString()}`);
+  };
 
   const toggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     start(async () => {
       if (saved) {
-        await unsavePlace(place.placeId);
+        const result = await unsavePlace(place.placeId);
+        if (result?.error === "Not authenticated") {
+          redirectToLogin();
+          return;
+        }
         setSaved(false);
       } else {
-        await savePlace(place);
+        const result = await savePlace(place);
+        if (result?.error === "Not authenticated") {
+          redirectToLogin();
+          return;
+        }
         setSaved(true);
       }
     });

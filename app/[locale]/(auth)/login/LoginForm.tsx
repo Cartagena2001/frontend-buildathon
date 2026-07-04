@@ -12,10 +12,12 @@ export default function LoginForm() {
   const t = useTranslations("auth.login");
   const searchParams = useSearchParams();
   const resetSuccess = searchParams.get("reset") === "success";
+  const callbackUrl = searchParams.get("callbackUrl") ?? "";
   const [state, action, pending] = useActionState(loginUser, initialState);
 
   return (
     <form action={action} className="space-y-4">
+      <input type="hidden" name="callbackUrl" value={callbackUrl} />
       {resetSuccess && (
         <p className="text-fp-cyan text-xs px-1 py-2 rounded-lg bg-fp-cyan/10 border border-fp-cyan/20">
           {t("resetSuccess")}

@@ -11,6 +11,13 @@ import { AuthError } from "next-auth";
 import { sendWelcomeEmail } from "@/lib/auth/password-reset";
 import { getAppBaseUrl } from "@/lib/auth/password-reset-actions";
 
+function safeCallbackUrl(raw: string, locale: string): string {
+  const fallback = `/${locale}/explore`;
+  if (!raw.startsWith("/")) return fallback;
+  if (!/^\/(en|es)(\/|$)/.test(raw)) return fallback;
+  return raw;
+}
+
 // ── Register ──────────────────────────────────────────────
 
 export interface RegisterState {
@@ -102,5 +109,9 @@ export async function loginUser(
   }
 
   const locale = await getLocale();
-  redirect(`/${locale}/explore`);
+  const callbackUrl = safeCallbackUrl(
+    String(formData.get("callbackUrl") ?? ""),
+    locale,
+  );
+  redirect(callbackUrl);
 }
