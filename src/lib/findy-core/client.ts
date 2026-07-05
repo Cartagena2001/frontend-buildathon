@@ -86,9 +86,11 @@ export async function findyFetch<T>(
     const apiMsg = (data as { error?: string }).error;
     const message =
       apiMsg ??
-      (res.status === 404
-        ? `findy-core route not found — check FINDY_CORE_INTERNAL_URL (tried ${url})`
-        : `Request failed (${res.status})`);
+      (res.status === 401
+        ? "Unauthorized — JWT_SECRET in frontend must match api.findy.place deployment"
+        : res.status === 404
+          ? `findy-core route not found — check FINDY_CORE_API_URL (tried ${url})`
+          : `Request failed (${res.status})`);
     throw new FindyApiError(message, res.status, url);
   }
 
