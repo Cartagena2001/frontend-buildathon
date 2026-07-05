@@ -73,6 +73,25 @@ describe("jwt callback", () => {
     expect(result.email).toBe("prev@test.com");
   });
 
+  it("preserves findyCoreToken on profile update (place-lists auth)", async () => {
+    const token = makeToken({
+      id: "existing-id",
+      email: "prev@test.com",
+      name: "Old Name",
+      findyCoreToken: "eyJhbGci.test.stored-token",
+    });
+    const result = await jwtCallback!({
+      token,
+      user: undefined,
+      account: null,
+      trigger: "update",
+      session: { name: "New Name" },
+    } as never);
+
+    expect(result.name).toBe("New Name");
+    expect(result.findyCoreToken).toBe("eyJhbGci.test.stored-token");
+  });
+
   it("does not overwrite existing token email when user has no email", async () => {
     const token = makeToken({ id: "uid", email: "existing@test.com" });
     // Simulate a user object with no email (edge case)

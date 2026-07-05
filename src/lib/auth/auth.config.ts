@@ -14,8 +14,10 @@ export const authConfig = {
 
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      if (trigger === "update" && session?.name) {
-        token.name = session.name;
+      if (trigger === "update") {
+        if (session?.name) token.name = session.name;
+        // Profile/session refresh — keep findyCoreToken for place-lists API calls.
+        return token;
       }
 
       // On initial sign-in, copy all fields from the User object so they

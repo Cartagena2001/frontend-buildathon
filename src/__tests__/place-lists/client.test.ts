@@ -95,7 +95,7 @@ describe("findyFetch", () => {
     ).rejects.toMatchObject({
       name: "FindyApiError",
       status: 404,
-      message: expect.stringContaining("FINDY_CORE_INTERNAL_URL"),
+      message: expect.stringContaining("FINDY_CORE_API_URL"),
     });
   });
 
