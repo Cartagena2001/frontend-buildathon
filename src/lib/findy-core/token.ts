@@ -24,9 +24,15 @@ export function signFindyToken(sub: string, email: string): string {
   return `${header}.${payload}.${sig}`;
 }
 
-/** Returns a Bearer token for the current session, or null if unauthenticated. */
+/** Returns a Bearer token for the current session, or null if unauthenticated.
+ *  Email is included in the JWT payload for findy-core but is NOT required for
+ *  the token to be valid — only the user ID (sub) and signature matter.
+ */
 export async function getFindyToken(): Promise<string | null> {
   const session = await auth();
-  if (!session?.user?.id || !session.user.email) return null;
-  return signFindyToken(session.user.id, session.user.email);
+  if (!session?.user?.id) return null;
+  // Fallback to empty string if email is somehow missing from the session
+  // (e.g. Google OAuth users in some NextAuth v5 edge cases).
+  const email = session.user.email ?? "";
+  return signFindyToken(session.user.id, email);
 }
