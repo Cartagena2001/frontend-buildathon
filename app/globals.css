@@ -148,6 +148,8 @@ body {
   background-color: var(--fp-dark);
   color: var(--fp-cream);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   transition: background-color 0.25s, color 0.25s;
 }
 

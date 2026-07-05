@@ -47,8 +47,8 @@
     }
   },
   "explore": {
-    "title": "El Mapa del Calor",
-    "subtitle": "{count} lugares resueltos de {clips} clips virales esta semana.",
+    "title": "Explora El Salvador",
+    "subtitle": "{count} lugares · {clips} clips virales esta semana",
     "sortedBy": "Ordenado por",
     "sortOptions": {
       "viral": "Momentum viral",

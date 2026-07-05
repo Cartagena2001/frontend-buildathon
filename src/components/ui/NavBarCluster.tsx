@@ -1,5 +1,5 @@
-/** Shared nav row height — matches logo (h-13) for vertical alignment. */
-export const NAV_ROW_HEIGHT = "h-13";
+/** Shared nav row height — matches the compact nav logo. */
+export const NAV_ROW_HEIGHT = "h-[21px]";
 
 /** Internal padding for the nav menu pill card only (not the logo). */
 export const NAV_CLUSTER_PADDING = "px-4 py-2.5 sm:px-5 sm:py-2.5";

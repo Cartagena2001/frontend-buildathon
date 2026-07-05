@@ -9,9 +9,13 @@ export interface PlaceCardData {
   lat: number;
   lng: number;
   categories: string[];
+  categoryType: "restaurant" | "beach" | "nightlife" | "shopping" | "active" | "beauty" | "automotive" | "home-services" | "other";
   description: string;
   viralScore: string;
-  sentiment: string;
+  likes: number;
+  comments: number;
+  views: number;
+  sentiment: "high" | "medium" | "low";
   sentimentLabel: string;
   badge: string;
   badgeColor: "red" | "cyan" | "rose";
