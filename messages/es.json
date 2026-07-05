@@ -82,9 +82,20 @@
     "backToExplore": "Volver a explorar",
     "about": "Sobre este lugar",
     "socialProof": "Señales virales",
+    "engagement": "Engagement viral",
     "clips": "Clips en tendencia",
     "location": "Ubicación",
-    "rank": "Ranking"
+    "rank": "Ranking",
+    "likes": "Me gusta",
+    "comments": "Comentarios",
+    "views": "Vistas",
+    "moreClips": "+{count} más",
+    "clipOf": "Clip {n} de {total}",
+    "close": "Cerrar",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "openInMaps": "Google Maps",
+    "openInWaze": "Waze"
   },
   "footer": {
     "tagline": "El primer motor de descubrimiento de viajes con análisis de sentimiento. Impulsado por señales públicas, curado por la multitud, mapeado para ti.",

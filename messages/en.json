@@ -82,9 +82,20 @@
     "backToExplore": "Back to explore",
     "about": "About this place",
     "socialProof": "Viral signals",
+    "engagement": "Viral engagement",
     "clips": "Trending clips",
     "location": "Location",
-    "rank": "Rank"
+    "rank": "Rank",
+    "likes": "Likes",
+    "comments": "Comments",
+    "views": "Views",
+    "moreClips": "+{count} more",
+    "clipOf": "Clip {n} of {total}",
+    "close": "Close",
+    "previous": "Previous",
+    "next": "Next",
+    "openInMaps": "Google Maps",
+    "openInWaze": "Waze"
   },
   "footer": {
     "tagline": "The first sentiment-aware travel discovery engine. Powered by public signals, curated by the crowd, mapped for you.",
