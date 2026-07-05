@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getMyPlaceLists } from "@/features/place-lists/actions";
+import { getMyPlaceListsWithPreviews } from "@/features/place-lists/actions";
 import ListCard from "@/features/place-lists/components/ListCard";
 import CreateListButton from "@/features/place-lists/components/CreateListButton";
 import ListsPageShell from "@/features/place-lists/components/ListsPageShell";
@@ -12,7 +12,7 @@ export default async function ListsPage() {
     auth(),
     getTranslations("lists"),
     getLocale(),
-    getMyPlaceLists(),
+    getMyPlaceListsWithPreviews(),
   ]);
 
   if (!session?.user) redirect(`/${locale}/login`);

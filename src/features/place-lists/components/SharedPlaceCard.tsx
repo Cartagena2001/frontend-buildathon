@@ -1,16 +1,15 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { getPlaceCoverImage } from "@/features/place-lists/place-cover";
-import type { PlaceListPlace } from "@/features/place-lists/types";
+import type { EnrichedPlaceListPlace } from "@/features/place-lists/enrich-place-images";
 
 interface Props {
-  place: PlaceListPlace;
+  place: EnrichedPlaceListPlace;
   viewPlaceLabel: string;
   index?: number;
 }
 
 export default function SharedPlaceCard({ place, viewPlaceLabel, index = 0 }: Props) {
-  const cover = getPlaceCoverImage(place.category);
+  const cover = place.coverImage;
 
   return (
     <Link

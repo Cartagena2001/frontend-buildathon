@@ -1,18 +1,4 @@
-import { resolveCategoryType } from "@/features/places/category-type";
-
-const CATEGORY_IMAGES: Record<string, string> = {
-  beach: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=75",
-  restaurant: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=75",
-  nightlife: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=75",
-  shopping: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=75",
-  beauty: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=75",
-  active: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=75",
-  automotive: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&q=75",
-  "home-services": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=75",
-  other: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&q=75",
-};
-
-const DEFAULT_COVER = CATEGORY_IMAGES.other;
+import { fallbackCoverImage } from "@/features/place-lists/enrich-place-images";
 
 const LIST_GRADIENTS = [
   "from-fp-coral/30 via-fp-orange/15 to-fp-teal/10",
@@ -21,9 +7,9 @@ const LIST_GRADIENTS = [
   "from-fp-blue/20 via-fp-teal/20 to-fp-coral/10",
 ] as const;
 
+/** @deprecated Use resolvePlaceCoverImage on enriched places */
 export function getPlaceCoverImage(category: string | null | undefined): string {
-  const type = resolveCategoryType(category);
-  return CATEGORY_IMAGES[type] ?? DEFAULT_COVER;
+  return fallbackCoverImage(category);
 }
 
 export function getListCardGradient(listId: string): string {

@@ -10,6 +10,10 @@ import type {
   SharedPlaceList,
 } from "./types";
 import { isUuid } from "./types";
+import {
+  enrichPlaceListPlaces,
+  type EnrichedPlaceListPlace,
+} from "./enrich-place-images";
 
 type ActionResult<T = void> =
   | { ok: true; data: T }
@@ -72,6 +76,37 @@ export async function getPlaceListDetail(
   } catch {
     return null;
   }
+}
+
+export type PlaceListDetailEnriched = Omit<PlaceListDetail, "places"> & {
+  places: EnrichedPlaceListPlace[];
+};
+
+export async function getPlaceListDetailEnriched(
+  listId: string,
+): Promise<PlaceListDetailEnriched | null> {
+  const list = await getPlaceListDetail(listId);
+  if (!list) return null;
+  const places = await enrichPlaceListPlaces(list.places);
+  return { ...list, places };
+}
+
+export type PlaceListWithPreviews = PlaceList & { previewCovers: string[] };
+
+export async function getMyPlaceListsWithPreviews(): Promise<PlaceListWithPreviews[]> {
+  const lists = await getMyPlaceLists();
+
+  return Promise.all(
+    lists.map(async (list) => {
+      if (list.placeCount === 0) return { ...list, previewCovers: [] };
+
+      const detail = await getPlaceListDetail(list.id);
+      if (!detail?.places.length) return { ...list, previewCovers: [] };
+
+      const enriched = await enrichPlaceListPlaces(detail.places.slice(0, 3));
+      return { ...list, previewCovers: enriched.map((p) => p.coverImage) };
+    }),
+  );
 }
 
 export async function updatePlaceList(
@@ -243,4 +278,17 @@ export async function getSharedPlaceList(
   } catch {
     return null;
   }
+}
+
+export type SharedPlaceListEnriched = Omit<SharedPlaceList, "places"> & {
+  places: EnrichedPlaceListPlace[];
+};
+
+export async function getSharedPlaceListEnriched(
+  shareToken: string,
+): Promise<SharedPlaceListEnriched | null> {
+  const list = await getSharedPlaceList(shareToken);
+  if (!list) return null;
+  const places = await enrichPlaceListPlaces(list.places);
+  return { ...list, places };
 }

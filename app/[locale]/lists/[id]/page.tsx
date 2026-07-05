@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getPlaceListDetail } from "@/features/place-lists/actions";
+import { getPlaceListDetailEnriched } from "@/features/place-lists/actions";
 import ListPlaceCard from "@/features/place-lists/components/ListPlaceCard";
 import ListDetailActions from "@/features/place-lists/components/ListDetailActions";
 import ListDetailHero from "@/features/place-lists/components/ListDetailHero";
@@ -14,7 +14,7 @@ type Props = {
 export default async function ListDetailPage({ params }: Props) {
   const { id } = await params;
   const [list, t] = await Promise.all([
-    getPlaceListDetail(id),
+    getPlaceListDetailEnriched(id),
     getTranslations("lists"),
   ]);
 

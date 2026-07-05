@@ -2,20 +2,21 @@
 
 import { useTransition } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { removePlaceFromList } from "@/features/place-lists/actions";
-import { getPlaceCoverImage } from "@/features/place-lists/place-cover";
-import type { PlaceListPlace } from "@/features/place-lists/types";
+import type { EnrichedPlaceListPlace } from "@/features/place-lists/enrich-place-images";
+import { formatAppDate } from "@/lib/format-date";
 
 interface Props {
   listId: string;
-  place: PlaceListPlace;
+  place: EnrichedPlaceListPlace;
   index?: number;
 }
 
 export default function ListPlaceCard({ listId, place, index = 0 }: Props) {
   const t = useTranslations("lists");
+  const locale = useLocale();
   const [pending, startTransition] = useTransition();
 
   const handleRemove = () => {
@@ -24,13 +25,9 @@ export default function ListPlaceCard({ listId, place, index = 0 }: Props) {
     });
   };
 
-  const addedDate = new Date(place.addedAt).toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  const addedDate = formatAppDate(place.addedAt, locale);
 
-  const cover = getPlaceCoverImage(place.category);
+  const cover = place.coverImage;
 
   return (
     <article

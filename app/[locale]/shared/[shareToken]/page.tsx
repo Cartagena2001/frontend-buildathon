@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getSharedPlaceList } from "@/features/place-lists/actions";
+import { getSharedPlaceListEnriched } from "@/features/place-lists/actions";
 import ListsPageShell from "@/features/place-lists/components/ListsPageShell";
 import SharedListHero from "@/features/place-lists/components/SharedListHero";
 import SharedPlaceCard from "@/features/place-lists/components/SharedPlaceCard";
@@ -13,7 +13,7 @@ type Props = {
 export default async function SharedListPage({ params }: Props) {
   const { shareToken } = await params;
   const [list, t] = await Promise.all([
-    getSharedPlaceList(shareToken),
+    getSharedPlaceListEnriched(shareToken),
     getTranslations("lists"),
   ]);
 

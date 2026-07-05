@@ -1,23 +1,24 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import type { PlaceList } from "@/features/place-lists/types";
+import PlaceCoverCollage from "@/features/place-lists/components/PlaceCoverCollage";
+import type { PlaceListWithPreviews } from "@/features/place-lists/actions";
 import { getListCardGradient } from "@/features/place-lists/place-cover";
+import { formatAppDate } from "@/lib/format-date";
 
 interface Props {
-  list: PlaceList;
+  list: PlaceListWithPreviews;
   index?: number;
 }
 
 export default function ListCard({ list, index = 0 }: Props) {
   const t = useTranslations("lists");
+  const locale = useLocale();
   const gradient = getListCardGradient(list.id);
+  const hasCovers = list.previewCovers.length > 0;
 
-  const updated = new Date(list.updatedAt).toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  });
+  const updated = formatAppDate(list.updatedAt, locale);
 
   return (
     <Link
@@ -25,16 +26,24 @@ export default function ListCard({ list, index = 0 }: Props) {
       className="group block bg-fp-dim border border-fp-border rounded-2xl overflow-hidden transition-all duration-300 hover:border-fp-coral/50 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10 fade-up"
       style={{ animationDelay: `${Math.min(index, 5) * 0.08}s` }}
     >
-      {/* Visual header */}
-      <div className={`relative h-36 sm:h-40 bg-gradient-to-br ${gradient} overflow-hidden`}>
-        <div
-          className="absolute inset-0 opacity-[0.35]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 80%, var(--fp-brand-coral) 0%, transparent 45%), radial-gradient(circle at 80% 20%, var(--fp-brand-teal) 0%, transparent 40%)",
-          }}
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,var(--fp-dim)_0%,transparent_55%)]" />
+      <div className={`relative h-36 sm:h-40 overflow-hidden ${hasCovers ? "" : `bg-gradient-to-br ${gradient}`}`}>
+        {hasCovers ? (
+          <>
+            <PlaceCoverCollage covers={list.previewCovers} alt={list.name} />
+            <div className="absolute inset-0 bg-gradient-to-t from-fp-dim/90 via-fp-dim/20 to-transparent" />
+          </>
+        ) : (
+          <>
+            <div
+              className="absolute inset-0 opacity-[0.35]"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle at 20% 80%, var(--fp-brand-coral) 0%, transparent 45%), radial-gradient(circle at 80% 20%, var(--fp-brand-teal) 0%, transparent 40%)",
+              }}
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(to_top,var(--fp-dim)_0%,transparent_55%)]" />
+          </>
+        )}
 
         <span className="absolute top-3 left-3 w-9 h-9 rounded-full fp-badge-overlay flex items-center justify-center text-fp-coral">
           <BookmarkIcon />
@@ -51,17 +60,16 @@ export default function ListCard({ list, index = 0 }: Props) {
         </span>
       </div>
 
-      {/* Body */}
       <div className="p-4 sm:p-5">
         <h2 className="font-display text-fp-cream text-lg sm:text-xl leading-tight mb-1.5 group-hover:text-fp-coral transition-colors line-clamp-1">
           {list.name}
         </h2>
         {list.description ? (
-          <p className="text-fp-muted text-sm leading-relaxed line-clamp-2 min-h-[2.5rem]">
+          <p className="text-fp-muted text-sm leading-relaxed line-clamp-2 min-h-10">
             {list.description}
           </p>
         ) : (
-          <p className="text-fp-muted/60 text-sm italic min-h-[2.5rem]">
+          <p className="text-fp-muted/60 text-sm italic min-h-10">
             {t("noDescription")}
           </p>
         )}

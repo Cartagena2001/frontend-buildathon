@@ -2,7 +2,9 @@
 
 import { useTransition } from "react";
 import Image from "next/image";
+import { useLocale } from "next-intl";
 import { unsavePlace } from "@/lib/saved/actions";
+import { formatAppDate } from "@/lib/format-date";
 import type { SavedPlace } from "@/lib/db/schema";
 
 interface Props {
@@ -12,6 +14,7 @@ interface Props {
 }
 
 export default function SavedPlaceCard({ place, removeLabel, savedLabel }: Props) {
+  const locale = useLocale();
   const [pending, startTransition] = useTransition();
 
   const handleRemove = () => {
@@ -20,11 +23,7 @@ export default function SavedPlaceCard({ place, removeLabel, savedLabel }: Props
     });
   };
 
-  const savedDate = new Date(place.createdAt).toLocaleDateString(undefined, {
-    month: "short",
-    day:   "numeric",
-    year:  "numeric",
-  });
+  const savedDate = formatAppDate(place.createdAt, locale);
 
   return (
     <div className="glass rounded-2xl overflow-hidden flex flex-col group">
