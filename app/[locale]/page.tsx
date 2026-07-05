@@ -4,7 +4,6 @@ import HeroSection from "@/components/hero/HeroSection";
 import BrandLogo from "@/components/ui/BrandLogo";
 import { Link } from "@/i18n/navigation";
 import SearchBar from "@/features/search/components/SearchBar";
-import HomeCategories from "@/features/search/components/HomeCategories";
 import TagSearchLink from "@/features/search/components/TagSearchLink";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import MobileNav from "@/components/ui/MobileNav";
@@ -82,10 +81,6 @@ export default async function HomePage() {
 
             <div className="fade-up delay-300 w-full max-w-2xl">
               <SearchBar />
-            </div>
-
-            <div className="fade-up delay-400 mt-6">
-              <HomeCategories />
             </div>
 
             <div className="fade-up delay-500 mt-6">
