@@ -10,6 +10,8 @@ import { eq } from "drizzle-orm";
 import NavAuth from "@/components/ui/NavAuth";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
+import EditProfileButton from "@/components/profile/EditProfileButton";
+import UserAvatar from "@/components/ui/UserAvatar";
 
 export default async function ProfilePage() {
   const [session, t, locale] = await Promise.all([
@@ -29,14 +31,12 @@ export default async function ProfilePage() {
     .where(eq(users.id, session.user.id!))
     .limit(1);
 
-  const name       = session.user.name ?? "";
+  const firstName  = user?.firstName ?? session.user.name?.split(" ")[0] ?? "";
+  const lastName   = user?.lastName ?? session.user.name?.split(" ").slice(1).join(" ") ?? "";
+  const name       = `${firstName} ${lastName}`.trim() || session.user.name || "";
   const email      = session.user.email ?? "";
+  const avatar     = user?.image ?? null;
   const createdAt  = user?.createdAt ? new Date(user.createdAt) : null;
-  const initials   = name
-    .split(" ")
-    .slice(0, 2)
-    .map((n: string) => n[0]?.toUpperCase() ?? "")
-    .join("");
 
   const tNav = await getTranslations("nav");
 
@@ -59,9 +59,7 @@ export default async function ProfilePage() {
         <div className="glass rounded-2xl p-6 sm:p-8 mb-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
             {/* Avatar */}
-            <div className="w-20 h-20 rounded-full bg-fp-red text-fp-on-accent text-2xl font-bold flex items-center justify-center flex-shrink-0">
-              {initials || "U"}
-            </div>
+            <UserAvatar name={name} image={avatar} size="md" />
 
             {/* Info */}
             <div className="flex-1 min-w-0">
@@ -83,9 +81,12 @@ export default async function ProfilePage() {
             </div>
 
             {/* Edit button */}
-            <button className="fp-btn-secondary rounded-xl px-5 py-2.5 text-sm font-medium border border-fp-border hover:border-fp-cyan hover:text-fp-cyan transition-colors">
-              {t("editProfile")}
-            </button>
+            <EditProfileButton
+              firstName={firstName}
+              lastName={lastName}
+              email={email}
+              image={avatar}
+            />
           </div>
         </div>
 

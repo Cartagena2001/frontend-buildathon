@@ -5,21 +5,15 @@ import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { signOut } from "next-auth/react";
+import UserAvatar from "./UserAvatar";
 
 interface Props {
   name:  string;
   email: string;
+  image?: string | null;
 }
 
-function initials(name: string) {
-  return name
-    .split(" ")
-    .slice(0, 2)
-    .map((n) => n[0]?.toUpperCase() ?? "")
-    .join("");
-}
-
-export default function NavUserMenu({ name, email }: Props) {
+export default function NavUserMenu({ name, email, image }: Props) {
   const t = useTranslations("nav");
   const [open, setOpen]         = useState(false);
   const [pos,  setPos]          = useState({ top: 0, right: 0 });
@@ -124,10 +118,10 @@ export default function NavUserMenu({ name, email }: Props) {
       <button
         ref={btnRef}
         onClick={handleOpen}
-        className="w-9 h-9 rounded-full bg-fp-red text-fp-on-accent text-sm font-bold flex items-center justify-center hover:bg-fp-cyan hover:text-fp-on-cyan transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-fp-cyan"
+        className="rounded-full hover:ring-2 hover:ring-fp-cyan focus:outline-none focus-visible:ring-2 focus-visible:ring-fp-cyan transition-shadow"
         aria-label="User menu"
       >
-        {initials(name) || "U"}
+        <UserAvatar name={name} image={image} size="sm" />
       </button>
 
       {typeof document !== "undefined" && createPortal(dropdown, document.body)}

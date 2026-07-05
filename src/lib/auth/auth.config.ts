@@ -13,12 +13,16 @@ export const authConfig = {
   providers: [],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update" && session?.name) {
+        token.name = session.name;
+      }
+
       // On initial sign-in, copy all fields from the User object so they
       // persist in every subsequent session refresh.
       if (user?.id) {
         token.id    = user.id;
-        token.email = user.email;
+        token.email = user.email ?? token.email;
         token.name  = user.name;
       }
 

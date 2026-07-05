@@ -59,6 +59,20 @@ describe("jwt callback", () => {
     expect(result.name).toBe("Prev");
   });
 
+  it("updates token name when trigger is update with session name", async () => {
+    const token = makeToken({ id: "existing-id", email: "prev@test.com", name: "Old Name" });
+    const result = await jwtCallback!({
+      token,
+      user: undefined,
+      account: null,
+      trigger: "update",
+      session: { name: "New Name" },
+    } as never);
+
+    expect(result.name).toBe("New Name");
+    expect(result.email).toBe("prev@test.com");
+  });
+
   it("does not overwrite existing token email when user has no email", async () => {
     const token = makeToken({ id: "uid", email: "existing@test.com" });
     // Simulate a user object with no email (edge case)

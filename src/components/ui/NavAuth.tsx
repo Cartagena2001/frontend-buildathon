@@ -3,7 +3,10 @@
  *   • "Sign in" button  → when not authenticated
  *   • Avatar dropdown   → when authenticated (name initial + menu)
  */
+import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { users } from "@/lib/db/schema";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import NavUserMenu from "./NavUserMenu";
@@ -31,10 +34,17 @@ export default async function NavAuth({ variant = "default" }: NavAuthProps) {
     );
   }
 
+  const [row] = await db
+    .select({ image: users.image })
+    .from(users)
+    .where(eq(users.id, session.user.id!))
+    .limit(1);
+
   return (
     <NavUserMenu
       name={session.user.name ?? ""}
       email={session.user.email ?? ""}
+      image={row?.image ?? null}
     />
   );
 }
