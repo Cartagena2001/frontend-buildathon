@@ -141,8 +141,11 @@ export function mapCorePlaceToDetailData(place: CorePlace): PlaceDetailData {
   };
 }
 
-function toInt(value?: string): number {
-  const parsed = Number.parseInt(value ?? "", 10);
+function toInt(value?: string | number | null): number {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return Math.trunc(value);
+  }
+  const parsed = Number.parseInt(String(value ?? ""), 10);
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
