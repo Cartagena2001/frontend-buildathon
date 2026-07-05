@@ -1,5 +1,11 @@
 import "@testing-library/jest-dom";
 
+vi.mock("@/lib/auth", () => ({
+  auth: vi.fn().mockResolvedValue(null),
+  signIn: vi.fn(),
+  signOut: vi.fn(),
+}));
+
 // Silence Next.js-specific globals that don't exist in Vitest jsdom
 // (e.g. next-intl server functions)
 vi.mock("next-intl/server", () => ({

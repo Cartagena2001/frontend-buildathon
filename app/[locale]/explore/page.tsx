@@ -7,7 +7,7 @@ import { EXPLORE_PLACES } from "@/features/places/data/mock-places";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import NavAuth from "@/components/ui/NavAuth";
-import { getSavedPlaceIds } from "@/lib/saved/actions";
+import { getSavedPlaceIds } from "@/features/place-lists/actions";
 
 export default async function ExplorePage() {
   const [t, savedIds] = await Promise.all([
