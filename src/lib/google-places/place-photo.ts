@@ -6,16 +6,20 @@ const REVALIDATE_SECONDS = 86_400;
 interface PhotoLookup {
   name: string;
   location?: string;
-  lat?: number;
-  lng?: number;
 }
 
 interface GooglePhoto {
   name?: string;
 }
 
+interface GoogleLatLng {
+  latitude?: number;
+  longitude?: number;
+}
+
 interface GooglePlace {
   photos?: GooglePhoto[];
+  location?: GoogleLatLng;
 }
 
 interface TextSearchResponse {
@@ -26,19 +30,26 @@ interface PhotoMediaResponse {
   photoUri?: string;
 }
 
+export interface GooglePlaceLookupResult {
+  photos: string[];
+  lat?: number;
+  lng?: number;
+}
+
+const EMPTY_LOOKUP: GooglePlaceLookupResult = { photos: [] };
+
 /**
- * Resolves up to `limit` public photo URLs for a place via Google Places.
- * Returns an empty array when no API key is configured or nothing is found,
- * so callers can fall back to content-based imagery.
+ * Looks up a place via Google Places Text Search and returns photos plus
+ * coordinates when available. Returns empty results when no API key is
+ * configured or nothing is found, so callers can fall back to index data.
  */
 export async function getGooglePlacePhotos(
-  { name, location, lat, lng }: PhotoLookup,
+  { name, location }: PhotoLookup,
   limit = 3,
-): Promise<string[]> {
-  if (!API_KEY || !name.trim()) return [];
+): Promise<GooglePlaceLookupResult> {
+  if (!API_KEY || !name.trim()) return EMPTY_LOOKUP;
 
   try {
-    const hasCoords = typeof lat === "number" && typeof lng === "number";
     const textQuery = location ? `${name}, ${location}` : name;
 
     const searchRes = await fetch(TEXT_SEARCH_URL, {
@@ -46,37 +57,38 @@ export async function getGooglePlacePhotos(
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": API_KEY,
-        "X-Goog-FieldMask": "places.photos",
+        "X-Goog-FieldMask": "places.photos,places.location",
       },
       body: JSON.stringify({
         textQuery,
         maxResultCount: 1,
-        ...(hasCoords
-          ? {
-              locationBias: {
-                circle: {
-                  center: { latitude: lat, longitude: lng },
-                  radius: 5000,
-                },
-              },
-            }
-          : {}),
       }),
       next: { revalidate: REVALIDATE_SECONDS },
     });
 
-    if (!searchRes.ok) return [];
+    if (!searchRes.ok) return EMPTY_LOOKUP;
 
     const data = (await searchRes.json()) as TextSearchResponse;
-    const photoNames = (data.places?.[0]?.photos ?? [])
+    const place = data.places?.[0];
+    const photoNames = (place?.photos ?? [])
       .map((photo) => photo.name)
       .filter((photoName): photoName is string => Boolean(photoName))
       .slice(0, limit);
 
     const uris = await Promise.all(photoNames.map(resolvePhotoUri));
-    return uris.filter((uri): uri is string => Boolean(uri));
+    const photos = uris.filter((uri): uri is string => Boolean(uri));
+
+    const googleLat = place?.location?.latitude;
+    const googleLng = place?.location?.longitude;
+    const hasCoords =
+      typeof googleLat === "number" && typeof googleLng === "number";
+
+    return {
+      photos,
+      ...(hasCoords ? { lat: googleLat, lng: googleLng } : {}),
+    };
   } catch {
-    return [];
+    return EMPTY_LOOKUP;
   }
 }
 

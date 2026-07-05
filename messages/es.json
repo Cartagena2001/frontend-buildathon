@@ -86,6 +86,18 @@
     "headline2": "El más comentado.",
     "searchPlaceholder": "¿Dónde está lo viral en El Salvador?",
     "searchButton": "Buscar",
+    "categoriesLabel": "Explorar por categoría",
+    "categories": {
+      "restaurant": "Restaurantes",
+      "shopping": "Compras",
+      "nightlife": "Vida nocturna",
+      "active": "Vida activa",
+      "beauty": "Belleza y spas",
+      "automotive": "Automotriz",
+      "home-services": "Servicios del hogar",
+      "beach": "Playas",
+      "other": "Más"
+    },
     "viralLabel": "Viral ahora mismo",
     "popular": {
       "eyebrow": "Tendencia ahora",

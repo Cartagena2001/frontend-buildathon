@@ -23,7 +23,6 @@ interface Props {
   category: ExploreCategoryId;
   onSentiment: (value: ExploreSentiment | null) => void;
   onSort: (value: ExploreSort) => void;
-  onCategory: (value: ExploreCategoryId) => void;
 }
 
 export default function ExploreLayout({
@@ -34,7 +33,6 @@ export default function ExploreLayout({
   category,
   onSentiment,
   onSort,
-  onCategory,
 }: Props) {
   const locale = useLocale();
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -62,10 +60,8 @@ export default function ExploreLayout({
     <ExploreFilters
       sentiment={sentiment}
       sort={sort}
-      category={category}
       onSentiment={onSentiment}
       onSort={onSort}
-      onCategory={onCategory}
     />
   );
 

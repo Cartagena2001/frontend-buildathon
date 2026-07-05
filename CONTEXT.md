@@ -9,11 +9,11 @@ The atomic unit of the product — same meaning as in findy-core. In this app, d
 _Avoid_: Spot, venue, POI
 
 **Place Detail**:
-The full Place record for a single id, fetched from findy-core via `GET /places/:id` where `:id` is the Postgres `places.id` UUID. Loaded server-side by a findy-core client (`src/lib/findy-core/`); the core base URL is never exposed to the browser.
+The full Place record for a single id, fetched from findy-core via `GET /places/:id` where `:id` is the Postgres `places.id` UUID. Loaded server-side by a findy-core client (`src/lib/findy-core/`); the core base URL is never exposed to the browser. The page serves two jobs: **validate** (see why the Place is trending via its Place Mentions) and **orient** (understand where it is and how to get there).
 _Avoid_: place info, place page
 
 **Place Mention**:
-A single social-video occurrence attached to a Place — same as findy-core. Rendered on the detail page as evidence (the "clips" section), not as raw Apify records.
+A single social-video occurrence attached to a Place — same as findy-core. Rendered on Place Detail as evidence: one **featured** mention expanded (summary, sentiment, stats, link to source video) and the rest in a compact list below. Not shown as raw Apify records.
 _Avoid_: video, post, clip (when meaning the domain entity)
 
 **Search**:

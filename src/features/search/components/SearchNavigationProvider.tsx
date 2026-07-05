@@ -12,6 +12,7 @@ import {
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "@/i18n/navigation";
+import type { ExploreCategoryId } from "../filter-places";
 import { fetchSearchResults } from "../search-client";
 import { setCachedResults } from "../search-results-cache";
 
@@ -22,7 +23,7 @@ const IMMEDIATE_OVERLAY_ID = "search-loading-fallback";
 interface SearchNavigationContextValue {
   isSearching: boolean;
   searchSession: number;
-  startSearch: (query: string) => void;
+  startSearch: (query: string, category?: ExploreCategoryId) => void;
 }
 
 const SearchNavigationContext =
@@ -153,13 +154,17 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
   );
 
   const startSearch = useCallback(
-    (query: string) => {
+    (query: string, category?: ExploreCategoryId) => {
       const trimmed = query.trim();
       if (!trimmed || isSearchingRef.current) return;
 
       clearSearchTimers();
 
-      const destination = `/explore?q=${encodeURIComponent(trimmed)}`;
+      const categoryParam =
+        category && category !== "all"
+          ? `&category=${encodeURIComponent(category)}`
+          : "";
+      const destination = `/explore?q=${encodeURIComponent(trimmed)}${categoryParam}`;
 
       lockPageScroll();
       showImmediateOverlay(t("search.title"), t("search.subtitle"));

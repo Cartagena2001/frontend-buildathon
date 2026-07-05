@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { searchPlaces } from "@/features/search/search-service";
 import { mapSearchResultsToPlaces } from "@/features/search/map-search-result";
+import { cacheSearchHits } from "@/features/search/place-by-id-cache";
 import { enrichPlacesWithGooglePhotos } from "@/features/search/enrich-google-photos";
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
 
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
 
   try {
     const results = await searchPlaces({ query, limit: body.limit });
+    cacheSearchHits(results);
     const places: PlaceCardData[] = await enrichPlacesWithGooglePhotos(
       mapSearchResultsToPlaces(results),
     );

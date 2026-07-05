@@ -3,22 +3,24 @@ import BrandLogo from "@/components/ui/BrandLogo";
 import { navLogoLinkClassName } from "@/components/ui/NavBarCluster";
 import ExploreResults from "@/features/search/components/ExploreResults";
 import ExploreSearchBar from "@/features/search/components/ExploreSearchBar";
+import { parseExploreCategory } from "@/features/search/explore-categories";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import NavAuth from "@/components/ui/NavAuth";
 import { getSavedPlaceIds } from "@/features/place-lists/actions";
 
 interface Props {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; category?: string }>;
 }
 
 export default async function ExplorePage({ searchParams }: Props) {
-  const [{ q }, savedIds] = await Promise.all([
+  const [{ q, category }, savedIds] = await Promise.all([
     searchParams,
     getSavedPlaceIds(),
   ]);
 
   const query = q?.trim() ?? "";
+  const initialCategory = parseExploreCategory(category);
 
   return (
     <div className="flex flex-col h-screen bg-fp-dark overflow-hidden">
@@ -38,7 +40,11 @@ export default async function ExplorePage({ searchParams }: Props) {
         </div>
       </nav>
 
-      <ExploreResults query={query} savedPlaceIds={savedIds} />
+      <ExploreResults
+        query={query}
+        initialCategory={initialCategory}
+        savedPlaceIds={savedIds}
+      />
     </div>
   );
 }

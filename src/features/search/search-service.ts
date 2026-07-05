@@ -1,3 +1,4 @@
+import { fetchSearchDocument } from "@/lib/upstash/search";
 import type { SearchQuery, SearchResultItem } from "./types";
 
 const SEARCH_API_URL =
@@ -46,4 +47,27 @@ export async function searchPlaces({
   );
 
   return results;
+}
+
+/** Loads a single place document from the search index by id. */
+export async function fetchPlaceFromSearchIndex(
+  id: string,
+  index = DEFAULT_INDEX,
+): Promise<SearchResultItem | null> {
+  try {
+    const res = await fetch(`${SEARCH_API_URL}/fetch`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ index, id }),
+      cache: "no-store",
+    });
+
+    if (res.ok) {
+      return (await res.json()) as SearchResultItem;
+    }
+  } catch {
+    // Fall through to direct Upstash fetch.
+  }
+
+  return fetchSearchDocument(id, index);
 }

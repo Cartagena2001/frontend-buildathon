@@ -1,35 +1,16 @@
 "use client";
 
-import type {
-  ExploreCategoryId,
-  ExploreSentiment,
-  ExploreSort,
-} from "@/features/search/filter-places";
+import type { ExploreSentiment, ExploreSort } from "@/features/search/filter-places";
 
 const SENTIMENTS = ["positive", "neutral", "negative"] as const;
 
 const RANKINGS = ["likes", "comments", "views"] as const;
 
-const CATEGORIES = [
-  { id: "all",           label: "All",            icon: "✦"  },
-  { id: "restaurant",    label: "Restaurants",     icon: "🍽️" },
-  { id: "shopping",      label: "Shopping",        icon: "🛍️" },
-  { id: "nightlife",     label: "Nightlife",       icon: "✦"  },
-  { id: "active",        label: "Active Life",     icon: "🎯" },
-  { id: "beauty",        label: "Beauty & Spas",   icon: "✂️" },
-  { id: "automotive",    label: "Automotive",      icon: "🚗" },
-  { id: "home-services", label: "Home Services",   icon: "🏠" },
-  { id: "beach",         label: "Beaches",         icon: "🏖️" },
-  { id: "other",         label: "More",            icon: "···" },
-] as const;
-
 interface Props {
   sentiment:    ExploreSentiment | null;
   sort:         ExploreSort;
-  category:     ExploreCategoryId;
   onSentiment:  (value: ExploreSentiment | null) => void;
   onSort:       (value: ExploreSort) => void;
-  onCategory:   (value: ExploreCategoryId) => void;
 }
 
 const sentimentConfig: Record<ExploreSentiment, { label: string; color: string; dot: string }> = {
@@ -45,8 +26,8 @@ const rankingConfig: Record<(typeof RANKINGS)[number], { label: string; icon: Re
 };
 
 export default function ExploreFilters({
-  sentiment, sort, category,
-  onSentiment, onSort, onCategory,
+  sentiment, sort,
+  onSentiment, onSort,
 }: Props) {
   return (
     <aside className="flex flex-col gap-7 py-7 px-5 h-full overflow-y-auto">
@@ -109,33 +90,6 @@ export default function ExploreFilters({
                   <span className={active ? "text-fp-coral" : "text-fp-muted"}>{icon}</span>
                   {label}
                 </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="h-px bg-fp-border" />
-
-      {/* ── Categories ── */}
-      <div>
-        <p className="text-fp-muted text-[0.6rem] font-bold uppercase tracking-[0.18em] mb-3">
-          Category
-        </p>
-        <div className="space-y-1">
-          {CATEGORIES.map(({ id, label }) => {
-            const active = category === id;
-            return (
-              <button
-                key={id}
-                onClick={() => onCategory(id as ExploreCategoryId)}
-                className={`w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                  active
-                    ? "bg-fp-coral/15 text-fp-coral border border-fp-coral/30"
-                    : "text-fp-muted hover:text-fp-cream hover:bg-fp-surface/60"
-                }`}
-              >
-                {label}
               </button>
             );
           })}

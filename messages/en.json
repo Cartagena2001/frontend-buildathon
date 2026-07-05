@@ -86,6 +86,18 @@
     "headline2": "The most talked about.",
     "searchPlaceholder": "Where's the heat in El Salvador?",
     "searchButton": "Search",
+    "categoriesLabel": "Browse by category",
+    "categories": {
+      "restaurant": "Restaurants",
+      "shopping": "Shopping",
+      "nightlife": "Nightlife",
+      "active": "Active Life",
+      "beauty": "Beauty & Spas",
+      "automotive": "Automotive",
+      "home-services": "Home Services",
+      "beach": "Beaches",
+      "other": "More"
+    },
     "viralLabel": "Viral right now",
     "popular": {
       "eyebrow": "Trending now",

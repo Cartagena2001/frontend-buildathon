@@ -16,25 +16,36 @@ import type { PlaceCardData } from "@/features/places/components/PlaceCard";
 
 interface Props {
   query: string;
+  initialCategory?: ExploreCategoryId;
   savedPlaceIds: string[];
 }
 
 const SORT_OPTIONS: ExploreSort[] = ["viral", "likes", "comments", "views"];
 
-export default function ExploreResults({ query, savedPlaceIds }: Props) {
+export default function ExploreResults({
+  query,
+  initialCategory = "all",
+  savedPlaceIds,
+}: Props) {
   const t = useTranslations("explore");
   const [places, setPlaces] = useState<PlaceCardData[]>([]);
   const [loading, setLoading] = useState(Boolean(query));
   const [sentiment, setSentiment] = useState<ExploreSentiment | null>(null);
   const [sort, setSort] = useState<ExploreSort>("viral");
-  const [category, setCategory] = useState<ExploreCategoryId>("all");
+  const [category, setCategory] = useState<ExploreCategoryId>(initialCategory);
   const [prevQuery, setPrevQuery] = useState(query);
+  const [prevInitialCategory, setPrevInitialCategory] = useState(initialCategory);
 
   if (query !== prevQuery) {
     setPrevQuery(query);
     setSentiment(null);
     setSort("viral");
     setCategory("all");
+  }
+
+  if (initialCategory !== prevInitialCategory) {
+    setPrevInitialCategory(initialCategory);
+    setCategory(initialCategory);
   }
 
   useEffect(() => {
@@ -112,7 +123,6 @@ export default function ExploreResults({ query, savedPlaceIds }: Props) {
         category={category}
         onSentiment={setSentiment}
         onSort={setSort}
-        onCategory={setCategory}
       />
     </>
   );
