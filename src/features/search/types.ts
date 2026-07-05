@@ -25,7 +25,12 @@ export interface SearchResultCoordinates {
 
 export interface SearchResultMetadata {
   coordinates?: SearchResultCoordinates;
+  department?: string;
+  municipality?: string;
   category?: string;
+  verificationStatus?: string;
+  sources?: string[];
+  sourceUrls?: string[];
   mentionCount?: number;
   engagement?: SearchEngagement;
   sentiments?: SearchSentiment[];
