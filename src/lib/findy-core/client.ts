@@ -6,12 +6,17 @@ import { getFindyToken } from "./token";
  * server-side fetch when the frontend runs on a different port (e.g. :3001).
  */
 export function getFindyApiBaseUrl(): string {
-  if (process.env.FINDY_CORE_API_URL?.startsWith("http")) {
-    return process.env.FINDY_CORE_API_URL.replace(/\/$/, "");
-  }
+  const candidates = [
+    process.env.FINDY_CORE_API_URL,
+    process.env.FINDY_CORE_INTERNAL_URL,
+    process.env.NEXT_PUBLIC_FINDY_CORE_API,
+    process.env.NODE_ENV === "production" ? "https://api.findy.place" : undefined,
+  ];
 
-  if (process.env.FINDY_CORE_INTERNAL_URL?.startsWith("http")) {
-    return process.env.FINDY_CORE_INTERNAL_URL.replace(/\/$/, "");
+  for (const candidate of candidates) {
+    if (candidate?.startsWith("http")) {
+      return candidate.replace(/\/$/, "");
+    }
   }
 
   return "http://localhost:3000";

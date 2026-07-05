@@ -6,20 +6,6 @@ const DEFAULT_INDEX = "places";
 const DEFAULT_LIMIT = 12;
 const DEFAULT_SEMANTIC_WEIGHT = 0.5;
 const DEFAULT_RERANKING = true;
-const DEFAULT_SUSPICIOUS = false;
-const SUSPICIOUS_FALSE_FILTER = "@metadata.suspicious = false";
-
-function combineFilters(base?: string, extra?: string): string | undefined {
-  if (!base && !extra) return undefined;
-  if (!base) return extra;
-  if (!extra) return base;
-  return `(${base}) AND ${extra}`;
-}
-
-function resolveSearchFilter(filter?: string, suspicious = false): string | undefined {
-  if (suspicious) return filter;
-  return combineFilters(filter, SUSPICIOUS_FALSE_FILTER);
-}
 
 /** Calls the findy search engine and returns the raw ranked hits. */
 export async function searchPlaces({
@@ -27,14 +13,11 @@ export async function searchPlaces({
   index = DEFAULT_INDEX,
   limit = DEFAULT_LIMIT,
   filter,
-  suspicious = DEFAULT_SUSPICIOUS,
   semanticWeight = DEFAULT_SEMANTIC_WEIGHT,
   reranking = DEFAULT_RERANKING,
 }: SearchQuery): Promise<SearchResultItem[]> {
   const trimmed = query.trim();
   if (!trimmed) return [];
-
-  const resolvedFilter = resolveSearchFilter(filter, suspicious);
 
   const res = await fetch(`${SEARCH_API_URL}/query`, {
     method: "POST",
@@ -43,7 +26,7 @@ export async function searchPlaces({
       index,
       query: trimmed,
       limit,
-      filter: resolvedFilter,
+      filter,
       semanticWeight,
       reranking,
     }),

@@ -30,8 +30,6 @@ export interface SearchResultMetadata {
   engagement?: SearchEngagement;
   sentiments?: SearchSentiment[];
   videoIds?: string[];
-  /** True when the place could not be verified as a real location. */
-  suspicious?: boolean;
 }
 
 /** Single hit returned by `POST search.findy.place/query`. */
@@ -47,8 +45,6 @@ export interface SearchQuery {
   index?: string;
   limit?: number;
   filter?: string;
-  /** When false (default), excludes places flagged as non-existing. */
-  suspicious?: boolean;
   /** 0 = keyword-only, 1 = semantic-only. Default 0.5 balances place names and meaning. */
   semanticWeight?: number;
   /** Re-score candidates with Upstash's reranker for better ordering. */

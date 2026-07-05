@@ -31,6 +31,12 @@ describe("getFindyApiBaseUrl", () => {
     expect(getFindyApiBaseUrl()).toBe("http://localhost:3000");
   });
 
+  it("falls back to NEXT_PUBLIC_FINDY_CORE_API", async () => {
+    process.env.NEXT_PUBLIC_FINDY_CORE_API = "https://api.findy.place/";
+    const { getFindyApiBaseUrl } = await import("@/lib/findy-core/client");
+    expect(getFindyApiBaseUrl()).toBe("https://api.findy.place");
+  });
+
   it("falls back to localhost:3000 when no env is set", async () => {
     delete process.env.FINDY_CORE_INTERNAL_URL;
     const { getFindyApiBaseUrl } = await import("@/lib/findy-core/client");
