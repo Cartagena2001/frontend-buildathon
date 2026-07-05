@@ -13,6 +13,7 @@ import {
 } from "@/features/place-lists/actions";
 import type { PlaceList } from "@/features/place-lists/types";
 import { isUuid } from "@/features/place-lists/types";
+import PlaceAddedSuccessOverlay from "@/features/place-lists/components/PlaceAddedSuccessOverlay";
 
 interface Props {
   placeId: string;
@@ -40,6 +41,7 @@ export default function SaveToListModal({
   const [error, setError] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState("");
+  const [showAddedSuccess, setShowAddedSuccess] = useState(false);
   const [pending, startTransition] = useTransition();
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -88,6 +90,11 @@ export default function SaveToListModal({
     void loadLists();
   };
 
+  const showPlaceAddedSuccess = () => {
+    setOpen(false);
+    setShowAddedSuccess(true);
+  };
+
   const toggleList = (listId: string) => {
     startTransition(async () => {
       setError(null);
@@ -127,6 +134,10 @@ export default function SaveToListModal({
       const nowSaved = next.size > 0;
       setSaved(nowSaved);
       onSavedChange?.(nowSaved);
+
+      if (!isIn) {
+        showPlaceAddedSuccess();
+      }
     });
   };
 
@@ -164,6 +175,7 @@ export default function SaveToListModal({
           );
           setSaved(true);
           onSavedChange?.(true);
+          showPlaceAddedSuccess();
         }
       }
     });
@@ -319,6 +331,9 @@ export default function SaveToListModal({
       </button>
 
       {typeof document !== "undefined" && createPortal(modal, document.body)}
+      {showAddedSuccess && (
+        <PlaceAddedSuccessOverlay onDismiss={() => setShowAddedSuccess(false)} />
+      )}
     </>
   );
 }

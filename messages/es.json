@@ -79,6 +79,8 @@
     "loadError": "No se pudieron cargar las listas.",
     "noListsYet": "Aún no tienes listas.",
     "mockPlaceWarning": "Este lugar usa datos de demo. Para guardarlo necesitas un lugar real del catálogo.",
+    "placeAddedSuccess": "¡Lugar agregado con éxito!",
+    "placeAddedShareHint": "Ahora puedes compartirlo con tus amigos.",
     "shareTitle": "Compartir esta lista",
     "shareDescription": "Cualquiera con el enlace puede ver esta lista.",
     "enableSharing": "Crear enlace para compartir",

@@ -79,6 +79,8 @@
     "loadError": "Could not load lists.",
     "noListsYet": "You don't have any lists yet.",
     "mockPlaceWarning": "This place uses demo data. Saving requires a real place from the catalog.",
+    "placeAddedSuccess": "Place added successfully!",
+    "placeAddedShareHint": "Now you can share it with your friends.",
     "shareTitle": "Share this list",
     "shareDescription": "Anyone with the link can view this list.",
     "enableSharing": "Create share link",
