@@ -30,8 +30,9 @@ async function deriveFindyPassword(
     false,
     ["deriveBits"],
   );
+  const saltBytes = new Uint8Array(salt);
   const bits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", salt, iterations, hash: "SHA-256" },
+    { name: "PBKDF2", salt: saltBytes, iterations, hash: "SHA-256" },
     keyMaterial,
     KEY_LENGTH * 8,
   );
