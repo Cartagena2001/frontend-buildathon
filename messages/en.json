@@ -145,7 +145,12 @@
     "noResults": "No places found. Try a different search.",
     "viralScore": "Viral Score",
     "sentiment": "Sentiment",
-    "hits": "hits"
+    "hits": "hits",
+    "filters": {
+      "locationQuality": "Location quality",
+      "excludeSuspicious": "Exclude suspicious places",
+      "excludeSuspiciousHint": "Hide places outside El Salvador or with unreliable coordinates"
+    }
   },
   "place": {
     "backToExplore": "Back to explore",

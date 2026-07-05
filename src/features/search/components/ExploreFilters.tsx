@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { ExploreSentiment, ExploreSort } from "@/features/search/filter-places";
 
 const SENTIMENTS = ["positive", "neutral", "negative"] as const;
@@ -7,10 +8,12 @@ const SENTIMENTS = ["positive", "neutral", "negative"] as const;
 const RANKINGS = ["likes", "comments", "views"] as const;
 
 interface Props {
-  sentiment:    ExploreSentiment | null;
-  sort:         ExploreSort;
-  onSentiment:  (value: ExploreSentiment | null) => void;
-  onSort:       (value: ExploreSort) => void;
+  sentiment: ExploreSentiment | null;
+  sort: ExploreSort;
+  excludeSuspicious: boolean;
+  onSentiment: (value: ExploreSentiment | null) => void;
+  onSort: (value: ExploreSort) => void;
+  onExcludeSuspicious: (value: boolean) => void;
 }
 
 const sentimentConfig: Record<ExploreSentiment, { label: string; color: string; dot: string }> = {
@@ -26,11 +29,48 @@ const rankingConfig: Record<(typeof RANKINGS)[number], { label: string; icon: Re
 };
 
 export default function ExploreFilters({
-  sentiment, sort,
-  onSentiment, onSort,
+  sentiment,
+  sort,
+  excludeSuspicious,
+  onSentiment,
+  onSort,
+  onExcludeSuspicious,
 }: Props) {
+  const t = useTranslations("explore.filters");
+
   return (
     <aside className="flex flex-col gap-7 py-7 px-5 h-full overflow-y-auto">
+
+      {/* ── Location quality ── */}
+      <div>
+        <p className="text-fp-muted text-[0.6rem] font-bold uppercase tracking-[0.18em] mb-3">
+          {t("locationQuality")}
+        </p>
+        <button
+          onClick={() => onExcludeSuspicious(!excludeSuspicious)}
+          className="flex items-start gap-2.5 w-full group text-left"
+        >
+          <span className={`mt-0.5 w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
+            excludeSuspicious ? "border-fp-coral bg-fp-coral" : "border-fp-border group-hover:border-fp-coral/60"
+          }`}>
+            {excludeSuspicious && (
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-fp-dark">
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+            )}
+          </span>
+          <span>
+            <span className={`block text-sm transition-colors ${excludeSuspicious ? "text-fp-cream" : "text-fp-muted group-hover:text-fp-coral"}`}>
+              {t("excludeSuspicious")}
+            </span>
+            <span className="block text-fp-muted text-[0.65rem] mt-0.5 leading-snug">
+              {t("excludeSuspiciousHint")}
+            </span>
+          </span>
+        </button>
+      </div>
+
+      <div className="h-px bg-fp-border" />
 
       {/* ── Sentiment ── */}
       <div>

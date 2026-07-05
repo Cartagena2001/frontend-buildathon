@@ -30,6 +30,7 @@ export interface SearchResultMetadata {
   engagement?: SearchEngagement;
   sentiments?: SearchSentiment[];
   videoIds?: string[];
+  suspicious?: boolean;
 }
 
 /** Single hit returned by `POST search.findy.place/query`. */

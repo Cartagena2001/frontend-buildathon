@@ -158,6 +158,7 @@ function mapSearchResult(
     badgeColor,
     coverImage: images.cover,
     thumbnails: images.thumbnails,
+    suspicious: metadata?.suspicious ?? false,
   };
 }
 

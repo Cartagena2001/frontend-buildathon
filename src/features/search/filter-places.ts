@@ -24,13 +24,18 @@ export interface ExploreFilterState {
   sentiment: ExploreSentiment | null;
   category: ExploreCategoryId;
   sort: ExploreSort;
+  excludeSuspicious: boolean;
 }
 
 export function filterAndSortPlaces(
   places: PlaceCardData[],
-  { sentiment, category, sort }: ExploreFilterState,
+  { sentiment, category, sort, excludeSuspicious }: ExploreFilterState,
 ): PlaceCardData[] {
   let result = [...places];
+
+  if (excludeSuspicious) {
+    result = result.filter((place) => !place.suspicious);
+  }
 
   if (sentiment) {
     const levels = sentimentMap[sentiment];

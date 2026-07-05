@@ -21,8 +21,10 @@ interface Props {
   sentiment: ExploreSentiment | null;
   sort: ExploreSort;
   category: ExploreCategoryId;
+  excludeSuspicious: boolean;
   onSentiment: (value: ExploreSentiment | null) => void;
   onSort: (value: ExploreSort) => void;
+  onExcludeSuspicious: (value: boolean) => void;
 }
 
 export default function ExploreLayout({
@@ -31,16 +33,18 @@ export default function ExploreLayout({
   sentiment,
   sort,
   category,
+  excludeSuspicious,
   onSentiment,
   onSort,
+  onExcludeSuspicious,
 }: Props) {
   const locale = useLocale();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(places[0]?.id ?? null);
 
   const filtered = useMemo(
-    () => filterAndSortPlaces(places, { sentiment, category, sort }),
-    [places, sentiment, category, sort],
+    () => filterAndSortPlaces(places, { sentiment, category, sort, excludeSuspicious }),
+    [places, sentiment, category, sort, excludeSuspicious],
   );
 
   const resolvedSelectedId =
@@ -54,14 +58,17 @@ export default function ExploreLayout({
     sentiment,
     sort !== "viral" ? sort : null,
     category !== "all" ? category : null,
+    !excludeSuspicious ? "showSuspicious" : null,
   ].filter(Boolean).length;
 
   const filterPanel = (
     <ExploreFilters
       sentiment={sentiment}
       sort={sort}
+      excludeSuspicious={excludeSuspicious}
       onSentiment={onSentiment}
       onSort={onSort}
+      onExcludeSuspicious={onExcludeSuspicious}
     />
   );
 

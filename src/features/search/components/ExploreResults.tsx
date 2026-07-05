@@ -33,6 +33,7 @@ export default function ExploreResults({
   const [sentiment, setSentiment] = useState<ExploreSentiment | null>(null);
   const [sort, setSort] = useState<ExploreSort>("viral");
   const [category, setCategory] = useState<ExploreCategoryId>(initialCategory);
+  const [excludeSuspicious, setExcludeSuspicious] = useState(true);
   const [prevQuery, setPrevQuery] = useState(query);
   const [prevInitialCategory, setPrevInitialCategory] = useState(initialCategory);
 
@@ -41,6 +42,7 @@ export default function ExploreResults({
     setSentiment(null);
     setSort("viral");
     setCategory("all");
+    setExcludeSuspicious(true);
   }
 
   if (initialCategory !== prevInitialCategory) {
@@ -87,8 +89,14 @@ export default function ExploreResults({
   const isLoading = Boolean(query && loading);
 
   const filteredCount = useMemo(
-    () => filterAndSortPlaces(displayPlaces, { sentiment, category, sort }).length,
-    [displayPlaces, sentiment, category, sort],
+    () =>
+      filterAndSortPlaces(displayPlaces, {
+        sentiment,
+        category,
+        sort,
+        excludeSuspicious,
+      }).length,
+    [displayPlaces, sentiment, category, sort, excludeSuspicious],
   );
 
   return (
@@ -121,8 +129,10 @@ export default function ExploreResults({
         sentiment={sentiment}
         sort={sort}
         category={category}
+        excludeSuspicious={excludeSuspicious}
         onSentiment={setSentiment}
         onSort={setSort}
+        onExcludeSuspicious={setExcludeSuspicious}
       />
     </>
   );

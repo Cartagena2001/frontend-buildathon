@@ -21,6 +21,7 @@ export interface PlaceCardData {
   badgeColor: "red" | "cyan" | "rose";
   coverImage: string;
   thumbnails: string[];
+  suspicious?: boolean;
 }
 
 const badgeClasses: Record<PlaceCardData["badgeColor"], string> = {
