@@ -24,15 +24,24 @@ export function signFindyToken(sub: string, email: string): string {
   return `${header}.${payload}.${sig}`;
 }
 
-/** Returns a Bearer token for the current session, or null if unauthenticated.
- *  Email is included in the JWT payload for findy-core but is NOT required for
- *  the token to be valid — only the user ID (sub) and signature matter.
+/**
+ * Returns a Bearer token for the current session, or null if unauthenticated.
+ *
+ * Priority:
+ * 1. `findyCoreToken` stored in session — issued by findy-core itself after
+ *    syncing the user on login. Valid for the production API without needing
+ *    to share JWT_SECRET between the two services.
+ * 2. Self-signed fallback using JWT_SECRET (local dev / migration path).
  */
 export async function getFindyToken(): Promise<string | null> {
   const session = await auth();
   if (!session?.user?.id) return null;
-  // Fallback to empty string if email is somehow missing from the session
-  // (e.g. Google OAuth users in some NextAuth v5 edge cases).
+
+  // Prefer findy-core-issued token (no shared secret required)
+  const stored = (session as { findyCoreToken?: string }).findyCoreToken;
+  if (stored) return stored;
+
+  // Fallback: self-sign (works when JWT_SECRET matches findy-core's secret)
   const email = session.user.email ?? "";
   return signFindyToken(session.user.id, email);
 }
