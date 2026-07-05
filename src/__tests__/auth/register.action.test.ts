@@ -150,7 +150,7 @@ describe("registerUser", () => {
     expect(result.error).toBe("An account with this email already exists.");
   });
 
-  it("signs in and redirects to /es/explore after successful registration", async () => {
+  it("signs in and redirects to /es home after successful registration", async () => {
     let redirectTarget = "";
     mockRedirect.mockImplementationOnce((url: string) => {
       redirectTarget = url;
@@ -170,6 +170,6 @@ describe("registerUser", () => {
         findyCoreToken: "eyJhbGci.test.findy-token",
       })
     );
-    expect(redirectTarget).toBe("/es/explore");
+    expect(redirectTarget).toBe("/es");
   });
 });

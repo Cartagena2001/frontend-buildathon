@@ -36,7 +36,7 @@ export default function GoogleSignInButton({ label, className = "" }: Props) {
 
     try {
       const supabase = createClient();
-      const next = `/${locale}/explore`;
+      const next = `/${locale}`;
       const redirectTo = `${window.location.origin}/auth/callback?locale=${locale}&next=${encodeURIComponent(next)}`;
 
       const { error: oauthError } = await supabase.auth.signInWithOAuth({

@@ -84,7 +84,7 @@ describe("loginUser", () => {
     );
   });
 
-  it("redirects to /es/explore on successful login", async () => {
+  it("redirects to /es home on successful login", async () => {
     let redirectTarget = "";
     mockRedirect.mockImplementationOnce((url: string) => {
       redirectTarget = url;
@@ -97,7 +97,7 @@ describe("loginUser", () => {
       if ((e as Error).message !== "NEXT_REDIRECT") throw e;
     }
 
-    expect(redirectTarget).toBe("/es/explore");
+    expect(redirectTarget).toBe("/es");
   });
 
   it("re-throws non-AuthError exceptions", async () => {

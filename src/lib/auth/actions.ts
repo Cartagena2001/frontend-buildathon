@@ -13,7 +13,7 @@ import { getAppBaseUrl } from "@/lib/auth/password-reset-actions";
 import { findySignup } from "@/lib/findy-core/auth";
 
 function safeCallbackUrl(raw: string, locale: string): string {
-  const fallback = `/${locale}/explore`;
+  const fallback = `/${locale}`;
   if (!raw.startsWith("/")) return fallback;
   if (!/^\/(en|es)(\/|$)/.test(raw)) return fallback;
   return raw;
@@ -102,7 +102,7 @@ export async function registerUser(
   });
 
   const locale = await getLocale();
-  redirect(`/${locale}/explore`);
+  redirect(`/${locale}`);
 }
 
 // ── Login ─────────────────────────────────────────────────
