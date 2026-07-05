@@ -296,6 +296,9 @@
       "signIn": "Inicia sesión"
     }
   },
+  "notFound": {
+    "imageAlt": "Gato dormido con el número 404"
+  },
   "loading": {
     "search": {
       "title": "Rastreando experiencias…",
