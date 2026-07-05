@@ -174,15 +174,14 @@ body {
   filter: brightness(0.78) saturate(0.88) contrast(1.04);
 }
 
-/* Left-weighted scrim keeps headline readable over bright sky; right stays open for mascot */
+/* Center-weighted scrim keeps headline readable; edges stay open for the beach scene */
 .hero-bg--video::before {
   background:
-    linear-gradient(
-      108deg,
-      rgba(34, 34, 34, 0.58) 0%,
-      rgba(34, 34, 34, 0.34) 34%,
-      rgba(34, 34, 34, 0.10) 52%,
-      transparent 68%
+    radial-gradient(
+      ellipse 85% 65% at 50% 42%,
+      rgba(34, 34, 34, 0.12) 0%,
+      rgba(34, 34, 34, 0.38) 52%,
+      rgba(34, 34, 34, 0.52) 100%
     ),
     linear-gradient(
       to top,
@@ -195,12 +194,11 @@ body {
 
 [data-theme="dark"] .hero-bg--video::before {
   background:
-    linear-gradient(
-      108deg,
-      rgba(17, 24, 39, 0.72) 0%,
-      rgba(17, 24, 39, 0.48) 34%,
-      rgba(17, 24, 39, 0.16) 52%,
-      transparent 68%
+    radial-gradient(
+      ellipse 85% 65% at 50% 42%,
+      rgba(17, 24, 39, 0.18) 0%,
+      rgba(17, 24, 39, 0.48) 52%,
+      rgba(17, 24, 39, 0.68) 100%
     ),
     linear-gradient(
       to top,
@@ -212,20 +210,65 @@ body {
 }
 
 .hero-headline {
+  color: #ffffff;
   text-shadow:
-    0 1px 2px rgba(255, 246, 238, 0.55),
-    0 8px 32px rgba(255, 246, 238, 0.35);
+    0 2px 10px rgba(17, 24, 39, 0.35),
+    0 14px 44px rgba(17, 24, 39, 0.28);
+}
+
+.hero-headline__word {
+  color: #ff9a1a;
+  opacity: 0;
+  transform: translateY(0.3em);
+  text-shadow:
+    0 2px 10px rgba(17, 24, 39, 0.22),
+    0 0 26px rgba(255, 138, 0, 0.4);
+  transition:
+    opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-headline__word.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-theme="dark"] .hero-headline__word {
+  color: #ffa938;
+  text-shadow:
+    0 2px 14px rgba(0, 0, 0, 0.4),
+    0 0 32px rgba(255, 138, 0, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-headline__word {
+    transition: none;
+    transform: none;
+  }
+
+  .hero-headline__word:not(.is-active) {
+    display: none;
+  }
+
+  .hero-headline__word.is-active {
+    opacity: 1;
+  }
 }
 
 [data-theme="dark"] .hero-headline {
   text-shadow:
-    0 2px 4px rgba(17, 24, 39, 0.85),
-    0 8px 40px rgba(17, 24, 39, 0.65);
+    0 2px 10px rgba(0, 0, 0, 0.55),
+    0 14px 48px rgba(0, 0, 0, 0.45);
 }
 
 .hero-viral-label {
-  color: color-mix(in srgb, var(--fp-cream) 92%, transparent);
-  text-shadow: 0 1px 10px rgba(17, 24, 39, 0.28);
+  color: rgba(34, 34, 34, 0.62);
+  text-shadow: none;
+  letter-spacing: 0.14em;
+}
+
+[data-theme="dark"] .hero-viral-label {
+  color: rgba(255, 246, 238, 0.72);
 }
 
 .hero-bg::before {
@@ -243,6 +286,169 @@ body {
 }
 
 .hero-content { position: relative; z-index: 2; }
+
+/* Hero tag pills — same frosted cream glass as the nav cluster */
+.hero-content .tag-pill {
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  background: rgba(255, 246, 238, 0.82);
+  color: var(--fp-brand-ink);
+  font-weight: 600;
+  box-shadow:
+    0 2px 12px rgba(34, 34, 34, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.hero-content .tag-pill:hover {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(255, 138, 0, 0.38);
+  color: var(--fp-brand-ink);
+}
+
+.hero-content .tag-pill.active {
+  background: var(--fp-brand-orange);
+  border-color: var(--fp-brand-orange);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(255, 138, 0, 0.28);
+}
+
+.hero-content .tag-pill.active:hover {
+  background: #e67d00;
+  border-color: #e67d00;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .hero-content .tag-pill {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(17, 24, 39, 0.62);
+  color: var(--fp-brand-cream);
+  box-shadow:
+    0 2px 16px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .hero-content .tag-pill:hover {
+  background: rgba(17, 24, 39, 0.78);
+  border-color: rgba(255, 138, 0, 0.42);
+  color: var(--fp-brand-cream);
+}
+
+[data-theme="dark"] .hero-content .tag-pill.active {
+  background: var(--fp-brand-orange);
+  border-color: var(--fp-brand-orange);
+  color: #ffffff;
+}
+
+.hero-nav-cluster.nav-hero-cluster {
+  border-color: rgba(255, 255, 255, 0.52);
+  background: rgba(255, 246, 238, 0.78);
+  box-shadow:
+    0 4px 24px rgba(34, 34, 34, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.hero-nav-cluster.nav-hero-cluster button[aria-label*="mode"] {
+  border-color: rgba(34, 34, 34, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.hero-nav-cluster.nav-hero-cluster button[aria-label*="mode"] svg {
+  color: var(--fp-brand-ink);
+}
+
+.hero-nav-cluster.nav-hero-cluster button[type="button"]:not([aria-label*="mode"]) {
+  color: rgba(34, 34, 34, 0.55);
+}
+
+.hero-nav-cluster.nav-hero-cluster button[type="button"]:not([aria-label*="mode"])[aria-current="true"],
+.hero-nav-cluster.nav-hero-cluster button[type="button"]:not([aria-label*="mode"]):hover {
+  color: var(--fp-brand-ink);
+}
+
+.hero-nav-cluster.nav-hero-cluster .hero-nav-signin {
+  border-color: rgba(34, 34, 34, 0.14);
+  color: var(--fp-brand-ink);
+}
+
+.hero-nav-cluster.nav-hero-cluster .hero-nav-signin:hover {
+  border-color: rgba(34, 34, 34, 0.24);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.hero-nav-cluster.nav-hero-cluster span[aria-hidden] {
+  background: rgba(34, 34, 34, 0.14);
+}
+
+.hero-nav-cluster.nav-hero-cluster button[aria-label="Open menu"] span {
+  background: var(--fp-brand-ink);
+}
+
+/* Dark mode: cluster bg flips dark, so children need light treatment */
+[data-theme="dark"] .hero-nav-cluster.nav-hero-cluster button[aria-label*="mode"] {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.10);
+}
+
+[data-theme="dark"] .hero-nav-cluster.nav-hero-cluster button[aria-label*="mode"] svg {
+  color: var(--fp-brand-cream);
+}
+
+[data-theme="dark"] .hero-nav-cluster.nav-hero-cluster button[type="button"]:not([aria-label*="mode"]) {
+  color: rgba(255, 246, 238, 0.62);
+}
+
+[data-theme="dark"] .hero-nav-cluster.nav-hero-cluster button[type="button"]:not([aria-label*="mode"])[aria-current="true"],
+[data-theme="dark"] .hero-nav-cluster.nav-hero-cluster button[type="button"]:not([aria-label*="mode"]):hover {
+  color: var(--fp-brand-cream);
+}
+
+[data-theme="dark"] .hero-nav-cluster.nav-hero-cluster .hero-nav-signin {
+  border-color: rgba(255, 255, 255, 0.20);
+  color: var(--fp-brand-cream);
+}
+
+[data-theme="dark"] .hero-nav-cluster.nav-hero-cluster .hero-nav-signin:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.10);
+}
+
+[data-theme="dark"] .hero-nav-cluster.nav-hero-cluster span[aria-hidden] {
+  background: rgba(255, 255, 255, 0.20);
+}
+
+[data-theme="dark"] .hero-nav-cluster.nav-hero-cluster button[aria-label="Open menu"] span {
+  background: var(--fp-brand-cream);
+}
+
+/* Hero nav pill — warm cream glass over beach photography */
+.nav-hero-cluster {
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  background: rgba(255, 246, 238, 0.78);
+  box-shadow:
+    0 4px 24px rgba(34, 34, 34, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+[data-theme="dark"] .nav-hero-cluster {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(17, 24, 39, 0.62);
+  box-shadow:
+    0 4px 28px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.nav-cluster-default {
+  border: 1px solid var(--fp-border);
+  background: var(--fp-surface);
+  box-shadow: 0 1px 3px rgba(34, 34, 34, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
 
 .auth-bg {
   position: relative;
@@ -287,6 +493,14 @@ body {
 .delay-300 { animation-delay: 0.32s; }
 .delay-400 { animation-delay: 0.44s; }
 .delay-500 { animation-delay: 0.56s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
 
 /* ══════════════════════════════════════════════════════════
    PILL TAGS
@@ -354,6 +568,24 @@ body {
   border: 1px solid var(--fp-border);
   color: var(--fp-cream);
   backdrop-filter: blur(8px);
+}
+
+.fp-category-chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: var(--fp-cyan-dim);
+  color: var(--fp-teal);
+  border: 1px solid color-mix(in srgb, var(--fp-brand-teal) 22%, transparent);
 }
 
 .fp-tooltip {

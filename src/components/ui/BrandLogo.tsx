@@ -15,15 +15,19 @@ type BrandLogoProps = {
   size?: keyof typeof HEIGHT;
   className?: string;
   priority?: boolean;
+  /** Force light or dark logo variant regardless of theme */
+  forceVariant?: "onLight" | "onDark";
 };
 
 export default function BrandLogo({
   size = "md",
   className = "",
   priority = false,
+  forceVariant,
 }: BrandLogoProps) {
   const { theme } = useTheme();
-  const logo = theme === "dark" ? BRAND_LOGO.onDark : BRAND_LOGO.onLight;
+  const logoKey = forceVariant ?? (theme === "dark" ? "onDark" : "onLight");
+  const logo = BRAND_LOGO[logoKey];
 
   return (
     <span

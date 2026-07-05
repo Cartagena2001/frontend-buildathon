@@ -82,8 +82,12 @@
     "addedOn": "Added {date}"
   },
   "home": {
-    "headline1": "Not the best rated.",
-    "headline2": "The most talked about.",
+    "headline1": "Find the most",
+    "headline2Variants": {
+      "popular": "popular.",
+      "viewed": "viewed.",
+      "commented": "commented."
+    },
     "searchPlaceholder": "Where's the heat in El Salvador?",
     "searchButton": "Search",
     "categoriesLabel": "Browse by category",

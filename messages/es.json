@@ -82,8 +82,12 @@
     "addedOn": "Agregado {date}"
   },
   "home": {
-    "headline1": "No el mejor calificado.",
-    "headline2": "El más comentado.",
+    "headline1": "Encuentra lo más",
+    "headline2Variants": {
+      "popular": "popular.",
+      "viewed": "visto.",
+      "commented": "comentado."
+    },
     "searchPlaceholder": "¿Dónde está lo viral en El Salvador?",
     "searchButton": "Buscar",
     "categoriesLabel": "Explorar por categoría",

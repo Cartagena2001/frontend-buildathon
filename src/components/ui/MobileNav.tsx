@@ -52,20 +52,6 @@ export default function MobileNav({ user }: Props) {
 
         {/* Nav links */}
         <nav className="flex flex-col gap-8">
-          <Link
-            href="/explore"
-            onClick={() => setOpen(false)}
-            className="font-display text-fp-cream text-3xl italic hover:text-fp-rose transition-colors"
-          >
-            {t("destinations")}
-          </Link>
-          <Link
-            href="/explore?sort=trending"
-            onClick={() => setOpen(false)}
-            className="font-display text-fp-cream text-3xl italic hover:text-fp-rose transition-colors"
-          >
-            {t("trending")}
-          </Link>
           {user && (
             <Link
               href="/profile"

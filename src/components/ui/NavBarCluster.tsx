@@ -9,21 +9,37 @@ export const navLogoLinkClassName = `flex ${NAV_ROW_HEIGHT} shrink-0 items-cente
 type NavBarClusterProps = {
   children: React.ReactNode;
   className?: string;
+  /** Warm frosted pill for homepage hero over photography */
+  variant?: "default" | "hero";
 };
 
-export function NavBarCluster({ children, className = "" }: NavBarClusterProps) {
+export function NavBarCluster({
+  children,
+  className = "",
+  variant = "default",
+}: NavBarClusterProps) {
+  const variantClass =
+    variant === "hero" ? "nav-hero-cluster" : "nav-cluster-default";
+
   return (
     <div
-      className={`flex items-center gap-3 rounded-full border border-white/15 bg-fp-dark/20 ${NAV_CLUSTER_PADDING} shadow-sm backdrop-blur-md sm:gap-4 ${className}`}
+      className={`flex items-center gap-3 rounded-full ${NAV_CLUSTER_PADDING} sm:gap-4 ${variantClass} ${className}`}
     >
       {children}
     </div>
   );
 }
 
-export function NavBarDivider() {
-  return <span aria-hidden className="h-4 w-px shrink-0 bg-white/15" />;
+export function NavBarDivider({ variant = "default" }: { variant?: "default" | "hero" }) {
+  return (
+    <span
+      aria-hidden
+      className={`h-4 w-px shrink-0 ${
+        variant === "hero" ? "bg-white/20" : "bg-fp-border"
+      }`}
+    />
+  );
 }
 
 export const navLinkClassName =
-  "whitespace-nowrap text-sm font-medium text-fp-cream/75 transition-colors hover:text-fp-coral";
+  "whitespace-nowrap text-sm font-medium text-fp-cream/80 transition-colors hover:text-fp-coral";
