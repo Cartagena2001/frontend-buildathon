@@ -62,7 +62,7 @@ const DEFAULT_IMAGES: CategoryImages = {
   ],
 };
 
-function imagesForCategory(category: string): CategoryImages {
+export function imagesForCategory(category: string): CategoryImages {
   return CATEGORY_IMAGES[category.trim().toLowerCase()] ?? DEFAULT_IMAGES;
 }
 

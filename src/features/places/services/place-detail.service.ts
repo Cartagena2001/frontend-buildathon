@@ -2,13 +2,13 @@ import {
   findyFetchPublic,
   FindyApiError,
 } from "@/lib/findy-core/client";
-import type { PlaceCardData } from "@/features/places/components/PlaceCard";
 import {
-  mapCorePlaceToCardData,
-  type CorePlace,
-} from "@/features/places/map-core-place";
-import { enrichPlacesWithGooglePhotos } from "@/features/search/enrich-google-photos";
-import { mapSearchResultsToPlaces } from "@/features/search/map-search-result";
+  mapCorePlaceToDetailData,
+  mapSearchResultToDetailData,
+} from "@/features/places/map-core-place-detail";
+import type { CorePlace } from "@/features/places/map-core-place";
+import type { PlaceDetailData } from "@/features/places/place-detail.types";
+import { enrichPlaceDetailWithGooglePhotos } from "@/features/places/enrich-place-detail";
 import { getCachedSearchHit } from "@/features/search/place-by-id-cache";
 import { fetchPlaceFromSearchIndex } from "@/features/search/search-service";
 
@@ -24,18 +24,14 @@ export function isValidPlaceId(id: string): boolean {
 }
 
 /** Loads full place detail from findy-core, falling back to the search index. */
-export async function fetchPlaceDetail(id: string): Promise<PlaceCardData> {
+export async function fetchPlaceDetail(id: string): Promise<PlaceDetailData> {
   if (!isValidPlaceId(id)) {
     throw new FindyApiError("Invalid place id", 400);
   }
 
   try {
     const data = await findyFetchPublic<PlaceDetailResponse>(`/places/${id}`);
-    const [place] = await enrichPlacesWithGooglePhotos([
-      mapCorePlaceToCardData(data.place),
-    ]);
-
-    return place;
+    return enrichPlaceDetailWithGooglePhotos(mapCorePlaceToDetailData(data.place));
   } catch (error) {
     const isCore404 =
       error instanceof FindyApiError && error.status === 404;
@@ -51,10 +47,6 @@ export async function fetchPlaceDetail(id: string): Promise<PlaceCardData> {
       throw error;
     }
 
-    const [place] = await enrichPlacesWithGooglePhotos(
-      mapSearchResultsToPlaces([searchHit]),
-    );
-
-    return place;
+    return enrichPlaceDetailWithGooglePhotos(mapSearchResultToDetailData(searchHit));
   }
 }

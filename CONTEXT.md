@@ -9,11 +9,15 @@ The atomic unit of the product — same meaning as in findy-core. In this app, d
 _Avoid_: Spot, venue, POI
 
 **Place Detail**:
-The full Place record for a single id, fetched from findy-core via `GET /places/:id` where `:id` is the Postgres `places.id` UUID. Loaded server-side by a findy-core client (`src/lib/findy-core/`); the core base URL is never exposed to the browser. The page serves two jobs: **validate** (see why the Place is trending via its Place Mentions) and **orient** (understand where it is and how to get there).
+The full Place record for a single id, fetched from findy-core via `GET /places/:id` where `:id` is the Postgres `places.id` UUID. Loaded server-side by a findy-core client (`src/lib/findy-core/`); the core base URL is never exposed to the browser. The page serves two jobs: **validate** (see why the Place is trending via its Place Mentions) and **orient** (understand where it is and how to get there). The header shows evidence-focused aggregates: mention count, aggregate sentiment, total likes, and last mention date — not rank or duplicate engagement metrics. Rendered from a dedicated `PlaceDetailData` view model, not the Explore card shape.
 _Avoid_: place info, place page
 
+**PlaceDetailData**:
+The frontend view model for Place Detail — carries mention-level evidence (featured + list), orient fields (location, coordinates), and evidence aggregates. Mapped from `CorePlace` via `mapCorePlaceToDetailData()`. Explore list cards continue to use `PlaceCardData`.
+_Avoid_: place detail type, detail DTO
+
 **Place Mention**:
-A single social-video occurrence attached to a Place — same as findy-core. Rendered on Place Detail as evidence: one **featured** mention expanded (summary, sentiment, stats, link to source video) and the rest in a compact list below. Not shown as raw Apify records.
+A single social-video occurrence attached to a Place — same as findy-core. Rendered on Place Detail as evidence: one **featured** mention expanded (summary, sentiment, stats, link to source video) and the rest in a compact list below. The featured mention is the one with a non-null `summary` and highest engagement (`likes + comments + shares + bookmarks`); if none have summaries, fall back to most engaged. Not shown as raw Apify records.
 _Avoid_: video, post, clip (when meaning the domain entity)
 
 **Search**:
