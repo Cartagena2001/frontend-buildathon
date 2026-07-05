@@ -11,11 +11,11 @@ import {
 } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
+import { fetchSearchResults } from "../search-client";
+import { setCachedResults } from "../search-results-cache";
 
-/** Tiempo mínimo visible antes de navegar a /explore */
-const MIN_OVERLAY_MS = 3200;
-/** Failsafe: nunca dejar el overlay colgado */
-const MAX_OVERLAY_MS = 8000;
+/** Failsafe: nunca dejar el overlay colgado si el endpoint se cuelga */
+const MAX_OVERLAY_MS = 15000;
 const IMMEDIATE_OVERLAY_ID = "search-loading-fallback";
 
 interface SearchNavigationContextValue {
@@ -111,14 +111,9 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
   const isSearchingRef = useRef(false);
   const destinationRef = useRef<string | null>(null);
   const hasNavigatedRef = useRef(false);
-  const navigateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const failsafeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearSearchTimers = useCallback(() => {
-    if (navigateTimer.current) {
-      clearTimeout(navigateTimer.current);
-      navigateTimer.current = null;
-    }
     if (failsafeTimer.current) {
       clearTimeout(failsafeTimer.current);
       failsafeTimer.current = null;
@@ -168,14 +163,23 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
       isSearchingRef.current = true;
       setIsSearching(true);
 
-      navigateTimer.current = setTimeout(() => {
-        navigateToDestination(destination);
-      }, MIN_OVERLAY_MS);
-
       failsafeTimer.current = setTimeout(() => {
         navigateToDestination(destination);
         dismissOverlay();
       }, MAX_OVERLAY_MS);
+
+      // The cat animation stays visible for exactly the endpoint round-trip:
+      // once results (or an error) come back we cache them and navigate.
+      fetchSearchResults(trimmed)
+        .then((places) => setCachedResults(trimmed, places))
+        .catch(() => setCachedResults(trimmed, []))
+        .finally(() => {
+          if (failsafeTimer.current) {
+            clearTimeout(failsafeTimer.current);
+            failsafeTimer.current = null;
+          }
+          navigateToDestination(destination);
+        });
     },
     [navigateToDestination, dismissOverlay, clearSearchTimers, t],
   );
