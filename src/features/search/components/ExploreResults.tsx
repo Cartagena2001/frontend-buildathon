@@ -15,9 +15,8 @@ interface Props {
 
 export default function ExploreResults({ query, savedPlaceIds }: Props) {
   const t = useTranslations("explore");
-  const cached = query ? getCachedResults(query) : null;
-  const [places, setPlaces] = useState<PlaceCardData[]>(cached ?? []);
-  const [loading, setLoading] = useState(Boolean(query) && cached === null);
+  const [places, setPlaces] = useState<PlaceCardData[]>([]);
+  const [loading, setLoading] = useState(Boolean(query));
 
   useEffect(() => {
     if (!query) {

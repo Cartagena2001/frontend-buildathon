@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { fetchSearchResults } from "../search-client";
 import { setCachedResults } from "../search-results-cache";
@@ -102,9 +103,15 @@ function hideImmediateOverlay() {
   document.getElementById(IMMEDIATE_OVERLAY_ID)?.remove();
 }
 
+function destinationQuery(destination: string): string {
+  const search = destination.split("?")[1] ?? "";
+  return new URLSearchParams(search).get("q")?.trim() ?? "";
+}
+
 export function SearchNavigationProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const t = useTranslations("loading");
   const [isSearching, setIsSearching] = useState(false);
   const [searchSession, setSearchSession] = useState(0);
@@ -188,10 +195,16 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
     if (!isSearching || !destinationRef.current || !hasNavigatedRef.current) return;
 
     const targetPath = destinationRef.current.split("?")[0] ?? destinationRef.current;
-    if (pathname === targetPath || pathname.startsWith(`${targetPath}/`)) {
+    const targetQuery = destinationQuery(destinationRef.current);
+    const currentQuery = searchParams.get("q")?.trim() ?? "";
+
+    if (
+      (pathname === targetPath || pathname.startsWith(`${targetPath}/`)) &&
+      targetQuery === currentQuery
+    ) {
       dismissOverlay();
     }
-  }, [pathname, isSearching, dismissOverlay]);
+  }, [pathname, searchParams, isSearching, dismissOverlay]);
 
   useEffect(() => {
     if (!isSearching) return;

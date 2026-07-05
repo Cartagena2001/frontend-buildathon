@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchNavigation } from "./SearchNavigationProvider";
 
 interface Props {
@@ -10,6 +10,10 @@ interface Props {
 export default function ExploreSearchBar({ initialQuery = "" }: Props) {
   const [query, setQuery] = useState(initialQuery);
   const { startSearch, isSearching } = useSearchNavigation();
+
+  useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

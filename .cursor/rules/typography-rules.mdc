@@ -1,5 +1,5 @@
 ---
-description: Typography — DM Serif Display (titles) and DM Sans (UI/body) only
+description: Typography — SF Pro Display (titles) and DM Sans (UI/body) only
 globs: **/*.{tsx,ts,css}
 alwaysApply: true
 ---
@@ -10,10 +10,10 @@ alwaysApply: true
 
 | Role | Font | Tailwind | Weights |
 |------|------|----------|---------|
-| Display / titles | **DM Serif Display** | `font-display` | 400, italic |
+| Display / titles | **SF Pro Display** (system stack) | `font-display` | system weights |
 | UI / body / labels | **DM Sans** | `font-sans` | 300–600 |
 
-Loaded once in `app/layout.tsx` via `next/font/google`. **Never** add Montserrat, Poppins, Inter, Geist, Arial, or other font imports.
+Display stack in `globals.css` + `@/lib/typography`. Body via `next/font/google` (DM Sans). **Never** add Montserrat, Poppins, Inter, Geist, Arial, or other font imports.
 
 Stacks for non-Tailwind contexts: `@/lib/typography`.
 
