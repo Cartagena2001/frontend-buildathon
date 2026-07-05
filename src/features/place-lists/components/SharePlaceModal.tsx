@@ -76,6 +76,9 @@ export default function SharePlaceModal({
       subtitle={t("sharePlacePrompt", { placeName })}
       titleId="share-place-title"
       onDismiss={handleClose}
+      mascotSrc="/mascot/share-cat.webp"
+      mascotWidth={995}
+      mascotHeight={700}
     >
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5">
         <button

@@ -10,6 +10,9 @@ interface Props {
   titleId: string;
   onDismiss: () => void;
   autoDismissMs?: number;
+  mascotSrc?: string;
+  mascotWidth?: number;
+  mascotHeight?: number;
   children?: ReactNode;
 }
 
@@ -19,6 +22,9 @@ export default function CelebrationOverlay({
   titleId,
   onDismiss,
   autoDismissMs,
+  mascotSrc = "/mascot/good-cat.png",
+  mascotWidth = 320,
+  mascotHeight = 320,
   children,
 }: Props) {
   const [mounted, setMounted] = useState(false);
@@ -56,10 +62,10 @@ export default function CelebrationOverlay({
         onClick={(e) => e.stopPropagation()}
       >
         <Image
-          src="/mascot/good-cat.png"
+          src={mascotSrc}
           alt=""
-          width={320}
-          height={320}
+          width={mascotWidth}
+          height={mascotHeight}
           priority
           className="place-added-success-overlay__cat w-[min(72vw,20rem)] h-auto mascot-elevation select-none"
         />
