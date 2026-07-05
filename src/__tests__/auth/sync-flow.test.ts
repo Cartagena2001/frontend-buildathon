@@ -150,7 +150,7 @@ describe("auth config integration", () => {
       expires: "2099-01-01T00:00:00.000Z",
     } as Parameters<typeof sessionCb>[0]["session"];
 
-    const result = await sessionCb({ session, token, user: undefined as never, trigger: "update" });
+    const result = await sessionCb({ session, token, user: undefined as never } as never);
     expect((result as { findyCoreToken?: string }).findyCoreToken).toBe(FINDY_JWT);
   });
 });
