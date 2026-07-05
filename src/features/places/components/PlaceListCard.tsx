@@ -2,13 +2,8 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import type { PlaceCardData } from "./PlaceCard";
+import { badgeOnSurfaceClasses } from "./place-badge-styles";
 import SaveButton from "./SaveButton";
-
-const badgeClasses: Record<PlaceCardData["badgeColor"], string> = {
-  red:  "bg-fp-orange text-fp-on-accent",
-  cyan: "bg-fp-teal text-fp-on-cyan",
-  rose: "border border-fp-coral/50 text-fp-coral",
-};
 
 const sentimentClasses: Record<string, string> = {
   high:   "text-fp-teal",
@@ -70,15 +65,22 @@ export default function PlaceListCard({
             <h3 className="font-display text-fp-cream text-[1.35rem] leading-tight group-hover:text-fp-coral transition-colors">
               {place.name}
             </h3>
-            <span className={`shrink-0 mt-1 px-2.5 py-1 rounded-full text-[0.62rem] font-bold uppercase tracking-wider ${badgeClasses[place.badgeColor]}`}>
+            <span className={`shrink-0 mt-1 px-2.5 py-1 rounded-full text-[0.62rem] font-bold uppercase tracking-wider ${badgeOnSurfaceClasses[place.badgeColor]}`}>
               {place.badge}
             </span>
           </div>
 
           {/* Location + categories */}
-          <p className="text-fp-muted text-xs mb-3">
-            {place.location} · {place.categories.join(" · ")}
+          <p className="text-fp-muted text-xs mb-2">
+            {place.location}
           </p>
+          {place.categories.length > 0 ? (
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {place.categories.slice(0, 2).map((cat) => (
+                <span key={cat} className="fp-category-chip">{cat}</span>
+              ))}
+            </div>
+          ) : null}
 
           {/* Description */}
           <p className="text-fp-muted text-xs leading-5 line-clamp-3 mb-4">

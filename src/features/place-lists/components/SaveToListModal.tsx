@@ -301,7 +301,7 @@ export default function SaveToListModal({
         className={`w-8 h-8 rounded-full flex items-center justify-center transition-all disabled:opacity-40 ${
           saved
             ? "bg-fp-cyan/20 text-fp-cyan hover:bg-fp-red/20 hover:text-fp-red"
-            : "bg-black/50 text-fp-muted hover:bg-fp-cyan/20 hover:text-fp-cyan"
+            : "fp-badge-overlay text-fp-muted hover:text-fp-cyan hover:border-fp-cyan/40"
         } ${className}`}
       >
         <svg

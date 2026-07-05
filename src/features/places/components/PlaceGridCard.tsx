@@ -3,18 +3,13 @@
 import Image from "next/image";
 import { useRouter } from "@/i18n/navigation";
 import type { PlaceCardData } from "./PlaceCard";
+import { badgeOnImageClasses } from "./place-badge-styles";
 import SaveButton from "./SaveButton";
 
 const sentimentDot: Record<string, string> = {
   high:   "bg-fp-teal",
   medium: "bg-fp-coral",
   low:    "bg-fp-orange",
-};
-
-const badgeClasses: Record<PlaceCardData["badgeColor"], string> = {
-  red:  "bg-fp-orange/90 text-white",
-  cyan: "bg-fp-teal/90 text-white",
-  rose: "border border-fp-coral/60 text-fp-coral bg-black/30",
 };
 
 interface Props {
@@ -57,7 +52,7 @@ export default function PlaceGridCard({
       className={`group relative block rounded-2xl overflow-hidden bg-fp-dim transition-all duration-200 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-fp-coral ${
         selected
           ? "ring-2 ring-fp-coral shadow-lg shadow-fp-coral/10"
-          : "hover:shadow-xl hover:shadow-black/25"
+          : "hover:shadow-xl hover:shadow-fp-ink/10"
       }`}
     >
       {/* Image */}
@@ -72,7 +67,7 @@ export default function PlaceGridCard({
         />
 
         {/* Badge */}
-        <span className={`absolute top-3 left-3 px-2 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider backdrop-blur-sm ${badgeClasses[place.badgeColor]}`}>
+        <span className={`absolute top-3 left-3 px-2 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider ${badgeOnImageClasses[place.badgeColor]}`}>
           {place.badge}
         </span>
 
@@ -114,9 +109,14 @@ export default function PlaceGridCard({
           <span className={`mt-1 w-2 h-2 rounded-full shrink-0 ${sentimentDot[place.sentiment]}`} />
         </div>
 
-        <p className="text-fp-muted text-[0.7rem] line-clamp-1 mb-2">
-          {place.location} · {place.categories[0]}
-        </p>
+        <div className="flex items-center gap-1.5 min-w-0 mb-2">
+          <p className="text-fp-muted text-[0.7rem] truncate min-w-0">
+            {place.location}
+          </p>
+          {place.categories[0] ? (
+            <span className="fp-category-chip shrink-0">{place.categories[0]}</span>
+          ) : null}
+        </div>
 
         <div className="flex items-center justify-between">
           <span className="text-fp-cream text-xs font-semibold">

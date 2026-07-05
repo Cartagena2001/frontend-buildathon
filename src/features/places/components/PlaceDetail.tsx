@@ -4,23 +4,16 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
-import ThemeToggle from "@/components/ui/ThemeToggle";
 import SaveButton from "./SaveButton";
 import { createClient } from "@/lib/supabase/client";
 import type { PlaceDetailData, PlaceMentionView } from "@/features/places/place-detail.types";
 import { toMapPlace } from "@/features/places/place-detail.types";
+import { badgeOnImageClasses } from "./place-badge-styles";
 
 const MapView = dynamic(() => import("@/features/map/components/MapView"), {
   ssr: false,
 });
 
-const badgeClasses: Record<PlaceDetailData["badgeColor"], string> = {
-  red: "bg-fp-orange text-fp-on-accent",
-  cyan: "bg-fp-teal text-fp-on-cyan",
-  rose: "bg-fp-coral/20 text-fp-coral border border-fp-coral/40",
-};
 
 const sentimentClasses: Record<string, string> = {
   high: "text-fp-teal",
@@ -99,64 +92,40 @@ export default function PlaceDetail({ place, isSaved = false }: PlaceDetailProps
   const mapPlace = toMapPlace(place);
 
   return (
-    <div className="flex flex-col h-[100dvh] lg:h-screen bg-fp-dark overflow-hidden">
-      <header className="shrink-0 flex items-center justify-between gap-3 px-4 sm:px-6 py-3 border-b border-fp-border bg-fp-dark z-30">
-        <Link
-          href="/explore"
-          className="inline-flex items-center gap-2 text-sm text-fp-muted hover:text-fp-coral transition-colors shrink-0"
-        >
-          <BackIcon />
-          <span className="hidden sm:inline">{t("backToExplore")}</span>
-        </Link>
+    <div className="flex flex-1 min-h-0 overflow-y-auto lg:overflow-hidden flex-col lg:flex-row">
+      <main className="lg:flex-1 lg:min-w-0 lg:overflow-y-auto lg:min-h-0">
+        <PlaceDetailHero place={place} isSaved={isSaved} />
+        <PlaceDetailEvidence place={place} />
+      </main>
 
-        <Link
-          href="/"
-          className="text-fp-cream font-sans text-[1rem] font-light tracking-wide shrink-0"
-        >
-          findy<span className="text-fp-coral">.</span>place
-        </Link>
-
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <ThemeToggle />
-          <LocaleSwitcher />
+      <aside className="relative shrink-0 h-72 sm:h-80 lg:h-auto lg:w-[380px] xl:w-[460px] 2xl:w-[520px] lg:border-l border-fp-border bg-fp-dim lg:flex lg:flex-col lg:min-h-0">
+        <div className="shrink-0 px-5 py-3 border-b border-fp-border hidden lg:flex items-center justify-between">
+          <div className="flex items-center gap-2 min-w-0">
+            <MapPinIcon />
+            <span className="text-fp-cream text-sm truncate">{place.location}</span>
+          </div>
+          <span className="text-fp-muted text-[0.62rem] tabular-nums shrink-0 ml-3">
+            {place.lat.toFixed(4)}, {place.lng.toFixed(4)}
+          </span>
         </div>
-      </header>
 
-      <div className="flex flex-1 min-h-0 overflow-y-auto lg:overflow-hidden flex-col lg:flex-row">
-        <main className="lg:flex-1 lg:min-w-0 lg:overflow-y-auto lg:min-h-0">
-          <PlaceDetailHero place={place} isSaved={isSaved} />
-          <PlaceDetailEvidence place={place} />
-        </main>
+        <div className="relative flex-1 min-h-[16rem] lg:min-h-0">
+          <MapView places={[mapPlace]} selectedId={place.id} showPopup={false} />
+        </div>
 
-        <aside className="relative shrink-0 h-72 sm:h-80 lg:h-auto lg:w-[380px] xl:w-[460px] 2xl:w-[520px] lg:border-l border-fp-border bg-fp-dim lg:flex lg:flex-col lg:min-h-0">
-          <div className="shrink-0 px-5 py-3 border-b border-fp-border hidden lg:flex items-center justify-between">
-            <div className="flex items-center gap-2 min-w-0">
-              <MapPinIcon />
-              <span className="text-fp-cream text-sm truncate">{place.location}</span>
-            </div>
-            <span className="text-fp-muted text-[0.62rem] tabular-nums shrink-0 ml-3">
-              {place.lat.toFixed(4)}, {place.lng.toFixed(4)}
-            </span>
-          </div>
-
-          <div className="relative flex-1 min-h-[16rem] lg:min-h-0">
-            <MapView places={[mapPlace]} selectedId={place.id} showPopup={false} />
-          </div>
-
-          <div className="shrink-0 hidden lg:flex items-center gap-2 px-5 py-3 border-t border-fp-border">
-            <OpenInMapButton
-              label={t("openInMaps")}
-              href={`https://www.google.com/maps?q=${place.lat},${place.lng}`}
-              icon={<GoogleMapsIcon />}
-            />
-            <OpenInMapButton
-              label={t("openInWaze")}
-              href={`https://waze.com/ul?ll=${place.lat},${place.lng}&navigate=yes`}
-              icon={<WazeIcon />}
-            />
-          </div>
-        </aside>
-      </div>
+        <div className="shrink-0 hidden lg:flex items-center gap-2 px-5 py-3 border-t border-fp-border">
+          <OpenInMapButton
+            label={t("openInMaps")}
+            href={`https://www.google.com/maps?q=${place.lat},${place.lng}`}
+            icon={<GoogleMapsIcon />}
+          />
+          <OpenInMapButton
+            label={t("openInWaze")}
+            href={`https://waze.com/ul?ll=${place.lat},${place.lng}&navigate=yes`}
+            icon={<WazeIcon />}
+          />
+        </div>
+      </aside>
     </div>
   );
 }
@@ -185,24 +154,26 @@ function PlaceDetailHero({
           placeId={place.id}
           placeName={place.name}
           isSaved={isSaved}
-          className="w-10 h-10 !bg-black/50 backdrop-blur-sm border border-white/20 !text-white hover:!bg-fp-coral/90 hover:!text-white hover:border-transparent shadow-lg"
+          className="w-10 h-10 fp-badge-overlay hover:!bg-fp-coral hover:!text-fp-on-accent hover:!border-fp-coral shadow-lg"
         />
       </div>
 
       <div className="absolute inset-x-0 bottom-0 px-5 sm:px-7 lg:px-8 pb-6">
         <div className="flex items-center gap-2 mb-2.5">
-          <span className={`px-2.5 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider ${badgeClasses[place.badgeColor]}`}>
+          <span className={`px-2.5 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider ${badgeOnImageClasses[place.badgeColor]}`}>
             {place.badge}
           </span>
         </div>
         <h1 className="font-display text-fp-cream text-2xl sm:text-3xl lg:text-[2rem] leading-tight mb-1 text-balance">
           {place.name}
         </h1>
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 flex-wrap">
           <p className="text-fp-muted text-xs sm:text-sm truncate">
             {place.location}
-            {place.category ? ` · ${place.category}` : ""}
           </p>
+          {place.category ? (
+            <span className="fp-category-chip shrink-0">{place.category}</span>
+          ) : null}
           <span className={`w-2 h-2 rounded-full shrink-0 ${sentimentDot[place.sentiment]}`} aria-hidden />
         </div>
       </div>
@@ -368,9 +339,6 @@ function StatInline({ label, value, valueClass = "text-fp-cream" }: { label: str
   );
 }
 
-function BackIcon() {
-  return <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>;
-}
 function MapPinIcon() {
   return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>;
 }

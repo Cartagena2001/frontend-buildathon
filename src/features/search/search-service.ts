@@ -5,8 +5,10 @@ const SEARCH_API_URL =
   process.env.SEARCH_API_URL ?? "https://search.findy.place";
 const DEFAULT_INDEX = "places";
 const DEFAULT_LIMIT = 12;
+const MAX_LIMIT = 20;
 const DEFAULT_SEMANTIC_WEIGHT = 0.5;
-const DEFAULT_RERANKING = true;
+/** Reranking compresses scores (~0.4 max), which breaks the 0.88 best-match split. */
+const DEFAULT_RERANKING = false;
 
 /** Calls the findy search engine and returns the raw ranked hits. */
 export async function searchPlaces({
@@ -20,13 +22,15 @@ export async function searchPlaces({
   const trimmed = query.trim();
   if (!trimmed) return [];
 
+  const safeLimit = Math.min(Math.max(limit, 1), MAX_LIMIT);
+
   const res = await fetch(`${SEARCH_API_URL}/query`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       index,
       query: trimmed,
-      limit,
+      limit: safeLimit,
       filter,
       semanticWeight,
       reranking,

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
+import { badgeOnImageClasses } from "./place-badge-styles";
 
 export interface PlaceCardData {
   rank: number;
@@ -24,11 +25,6 @@ export interface PlaceCardData {
   suspicious?: boolean;
 }
 
-const badgeClasses: Record<PlaceCardData["badgeColor"], string> = {
-  red:  "bg-fp-orange text-fp-on-accent",
-  cyan: "bg-fp-teal text-fp-on-cyan",
-  rose: "bg-fp-coral/20 text-fp-coral border border-fp-coral/40",
-};
 
 const sentimentClasses: Record<string, string> = {
   high:    "text-fp-teal",
@@ -56,7 +52,7 @@ export default function PlaceCard({ place }: { place: PlaceCardData }) {
           {String(place.rank).padStart(2, "0")}
         </span>
         {/* Trending badge */}
-        <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-[0.65rem] font-bold uppercase tracking-wider ${badgeClasses[place.badgeColor]}`}>
+        <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-[0.65rem] font-bold uppercase tracking-wider ${badgeOnImageClasses[place.badgeColor]}`}>
           {place.badge}
         </span>
       </div>
@@ -66,9 +62,16 @@ export default function PlaceCard({ place }: { place: PlaceCardData }) {
         <h3 className="font-display text-fp-cream text-lg leading-tight mb-1 group-hover:text-fp-coral transition-colors">
           {place.name}
         </h3>
-        <p className="text-fp-muted text-xs mb-3">
-          {place.location} · {place.categories.join(" · ")}
+        <p className="text-fp-muted text-xs mb-2">
+          {place.location}
         </p>
+        {place.categories.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {place.categories.slice(0, 2).map((cat) => (
+              <span key={cat} className="fp-category-chip">{cat}</span>
+            ))}
+          </div>
+        ) : null}
         <p className="text-fp-muted text-xs leading-5 line-clamp-3 mb-4">
           {place.description}
         </p>

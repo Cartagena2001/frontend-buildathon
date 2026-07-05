@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import ExploreFilters from "./ExploreFilters";
 import PlaceGridCard from "@/features/places/components/PlaceGridCard";
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
@@ -17,6 +17,7 @@ const MapView = dynamic(() => import("@/features/map/components/MapView"), { ssr
 
 interface Props {
   places: PlaceCardData[];
+  relatedPlaces?: PlaceCardData[];
   savedPlaceIds?: string[];
   sentiment: ExploreSentiment | null;
   sort: ExploreSort;
@@ -29,6 +30,7 @@ interface Props {
 
 export default function ExploreLayout({
   places,
+  relatedPlaces = [],
   savedPlaceIds = [],
   sentiment,
   sort,
@@ -39,20 +41,35 @@ export default function ExploreLayout({
   onExcludeSuspicious,
 }: Props) {
   const locale = useLocale();
+  const t = useTranslations("explore");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(places[0]?.id ?? null);
+  const [selectedId, setSelectedId] = useState<string | null>(
+    places[0]?.id ?? relatedPlaces[0]?.id ?? null,
+  );
+
+  const filterState = { sentiment, category, sort, excludeSuspicious };
 
   const filtered = useMemo(
-    () => filterAndSortPlaces(places, { sentiment, category, sort, excludeSuspicious }),
+    () => filterAndSortPlaces(places, filterState),
     [places, sentiment, category, sort, excludeSuspicious],
   );
 
+  const filteredRelated = useMemo(
+    () => filterAndSortPlaces(relatedPlaces, filterState),
+    [relatedPlaces, sentiment, category, sort, excludeSuspicious],
+  );
+
+  const mapPlaces = useMemo(
+    () => [...filtered, ...filteredRelated],
+    [filtered, filteredRelated],
+  );
+
   const resolvedSelectedId =
-    filtered.length === 0
+    mapPlaces.length === 0
       ? null
-      : filtered.some((place) => place.id === selectedId)
+      : mapPlaces.some((place) => place.id === selectedId)
         ? selectedId
-        : filtered[0].id;
+        : mapPlaces[0].id;
 
   const activeFilterCount = [
     sentiment,
@@ -117,7 +134,7 @@ export default function ExploreLayout({
       {/* ── Results grid ── */}
       <main className="flex-1 flex flex-col overflow-hidden lg:pt-0 pt-12">
         <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-4">
-          {filtered.length === 0 ? (
+          {mapPlaces.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full gap-3 text-fp-muted">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -125,27 +142,30 @@ export default function ExploreLayout({
               <p className="text-sm">No places match your filters</p>
             </div>
           ) : (
-            <>
-              <p className="text-fp-muted text-[0.68rem] mb-3">
-                <span className="text-fp-cream font-semibold">{filtered.length}</span> places
-              </p>
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                {filtered.map((place, index) => (
-                  <PlaceGridCard
-                    key={place.id}
-                    place={place}
-                    selected={resolvedSelectedId === place.id}
-                    isSaved={savedPlaceIds.includes(place.id)}
-                    priority={index < 2}
-                    onSelect={(id) => {
-                      setSelectedId(id);
-                      const el = document.getElementById(`place-${id}`);
-                      el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                    }}
-                  />
-                ))}
-              </div>
-            </>
+            <div className="space-y-8">
+              {filtered.length > 0 ? (
+                <ResultsSection
+                  title={t("exactResults")}
+                  count={filtered.length}
+                  places={filtered}
+                  savedPlaceIds={savedPlaceIds}
+                  selectedId={resolvedSelectedId}
+                  onSelect={setSelectedId}
+                />
+              ) : null}
+
+              {filteredRelated.length > 0 ? (
+                <ResultsSection
+                  title={t("relatedResults")}
+                  subtitle={t("relatedResultsHint")}
+                  count={filteredRelated.length}
+                  places={filteredRelated}
+                  savedPlaceIds={savedPlaceIds}
+                  selectedId={resolvedSelectedId}
+                  onSelect={setSelectedId}
+                />
+              ) : null}
+            </div>
           )}
         </div>
       </main>
@@ -153,7 +173,7 @@ export default function ExploreLayout({
       {/* ── Map (desktop only) ── */}
       <aside className="hidden lg:block relative w-[42%] xl:w-[45%] 2xl:w-[48%] shrink-0 border-l border-fp-border">
         <MapView
-          places={filtered}
+          places={mapPlaces}
           selectedId={resolvedSelectedId}
           locale={locale}
           onSelectPlace={(id) => {
@@ -164,5 +184,57 @@ export default function ExploreLayout({
         />
       </aside>
     </div>
+  );
+}
+
+function ResultsSection({
+  title,
+  subtitle,
+  count,
+  places,
+  savedPlaceIds,
+  selectedId,
+  onSelect,
+}: {
+  title: string;
+  subtitle?: string;
+  count: number;
+  places: PlaceCardData[];
+  savedPlaceIds: string[];
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <section>
+      <div className="mb-3">
+        <div className="flex items-baseline gap-2">
+          <h2 className="font-display text-fp-cream text-base sm:text-lg leading-tight">
+            {title}
+          </h2>
+          <span className="text-fp-muted text-[0.68rem]">
+            <span className="text-fp-cream font-semibold">{count}</span> places
+          </span>
+        </div>
+        {subtitle ? (
+          <p className="text-fp-muted text-[0.68rem] mt-1">{subtitle}</p>
+        ) : null}
+      </div>
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        {places.map((place, index) => (
+          <PlaceGridCard
+            key={place.id}
+            place={place}
+            selected={selectedId === place.id}
+            isSaved={savedPlaceIds.includes(place.id)}
+            priority={index < 2}
+            onSelect={(id) => {
+              onSelect(id);
+              const el = document.getElementById(`place-${id}`);
+              el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }}
+          />
+        ))}
+      </div>
+    </section>
   );
 }

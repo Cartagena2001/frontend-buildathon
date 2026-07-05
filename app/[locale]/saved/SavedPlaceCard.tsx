@@ -47,7 +47,7 @@ export default function SavedPlaceCard({ place, removeLabel, savedLabel }: Props
         <button
           onClick={handleRemove}
           disabled={pending}
-          className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-fp-red hover:bg-fp-red hover:text-white transition-colors disabled:opacity-40"
+          className="absolute top-2 right-2 w-8 h-8 rounded-full fp-badge-overlay flex items-center justify-center text-fp-red hover:bg-fp-red/15 hover:text-fp-red hover:border-fp-red/40 transition-colors disabled:opacity-40"
           aria-label={removeLabel}
         >
           <BookmarkFilledIcon />
@@ -58,7 +58,7 @@ export default function SavedPlaceCard({ place, removeLabel, savedLabel }: Props
       <div className="p-4 flex flex-col gap-2 flex-1">
         <div className="flex flex-wrap gap-1.5">
           {place.placeCategories.slice(0, 2).map((cat) => (
-            <span key={cat} className="text-[0.65rem] font-semibold uppercase tracking-widest text-fp-cyan border border-fp-cyan/30 rounded-full px-2 py-0.5">
+            <span key={cat} className="fp-category-chip">
               {cat}
             </span>
           ))}

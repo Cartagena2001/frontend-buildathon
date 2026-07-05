@@ -29,9 +29,10 @@ export default function ExploreResults({
 }: Props) {
   const t = useTranslations("explore");
   const [places, setPlaces] = useState<PlaceCardData[]>([]);
+  const [relatedPlaces, setRelatedPlaces] = useState<PlaceCardData[]>([]);
   const [loading, setLoading] = useState(Boolean(query));
   const [sentiment, setSentiment] = useState<ExploreSentiment | null>(null);
-  const [sort, setSort] = useState<ExploreSort>("viral");
+  const [sort, setSort] = useState<ExploreSort>("likes");
   const [category, setCategory] = useState<ExploreCategoryId>(initialCategory);
   const [excludeSuspicious, setExcludeSuspicious] = useState(true);
   const [prevQuery, setPrevQuery] = useState(query);
@@ -40,7 +41,7 @@ export default function ExploreResults({
   if (query !== prevQuery) {
     setPrevQuery(query);
     setSentiment(null);
-    setSort("viral");
+    setSort("likes");
     setCategory("all");
     setExcludeSuspicious(true);
   }
@@ -59,7 +60,8 @@ export default function ExploreResults({
       const hit = getCachedResults(query);
       if (hit) {
         if (!active) return;
-        setPlaces(hit);
+        setPlaces(hit.places);
+        setRelatedPlaces(hit.relatedPlaces);
         setLoading(false);
         return;
       }
@@ -70,9 +72,13 @@ export default function ExploreResults({
         const results = await fetchSearchResults(query);
         if (!active) return;
         setCachedResults(query, results);
-        setPlaces(results);
+        setPlaces(results.places);
+        setRelatedPlaces(results.relatedPlaces);
       } catch {
-        if (active) setPlaces([]);
+        if (active) {
+          setPlaces([]);
+          setRelatedPlaces([]);
+        }
       } finally {
         if (active) setLoading(false);
       }
@@ -86,18 +92,19 @@ export default function ExploreResults({
   }, [query]);
 
   const displayPlaces = useMemo(() => (query ? places : []), [query, places]);
+  const displayRelatedPlaces = useMemo(
+    () => (query ? relatedPlaces : []),
+    [query, relatedPlaces],
+  );
   const isLoading = Boolean(query && loading);
 
-  const filteredCount = useMemo(
-    () =>
-      filterAndSortPlaces(displayPlaces, {
-        sentiment,
-        category,
-        sort,
-        excludeSuspicious,
-      }).length,
-    [displayPlaces, sentiment, category, sort, excludeSuspicious],
-  );
+  const filteredCount = useMemo(() => {
+    const filterState = { sentiment, category, sort, excludeSuspicious };
+    return (
+      filterAndSortPlaces(displayPlaces, filterState).length +
+      filterAndSortPlaces(displayRelatedPlaces, filterState).length
+    );
+  }, [displayPlaces, displayRelatedPlaces, sentiment, category, sort, excludeSuspicious]);
 
   return (
     <>
@@ -125,6 +132,7 @@ export default function ExploreResults({
 
       <ExploreLayout
         places={displayPlaces}
+        relatedPlaces={displayRelatedPlaces}
         savedPlaceIds={savedPlaceIds}
         sentiment={sentiment}
         sort={sort}

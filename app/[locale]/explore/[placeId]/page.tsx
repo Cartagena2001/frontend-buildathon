@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import AppNav from "@/components/ui/AppNav";
 import PlaceDetail from "@/features/places/components/PlaceDetail";
 import { fetchPlaceDetail } from "@/features/places/services/place-detail.service";
 import { FindyApiError } from "@/lib/findy-core/client";
@@ -26,9 +27,12 @@ export default async function PlaceDetailPage({ params }: Props) {
   const savedIds = await getSavedPlaceIds();
 
   return (
-    <PlaceDetail
-      place={place}
-      isSaved={savedIds.includes(place.id)}
-    />
+    <div className="flex flex-col h-[100dvh] lg:h-screen bg-fp-dark overflow-hidden">
+      <AppNav />
+      <PlaceDetail
+        place={place}
+        isSaved={savedIds.includes(place.id)}
+      />
+    </div>
   );
 }

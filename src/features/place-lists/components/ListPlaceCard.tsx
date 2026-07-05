@@ -32,7 +32,7 @@ export default function ListPlaceCard({ listId, place }: Props) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           {place.category && (
-            <span className="text-[0.65rem] font-semibold uppercase tracking-widest text-fp-cyan border border-fp-cyan/30 rounded-full px-2 py-0.5">
+            <span className="fp-category-chip">
               {place.category}
             </span>
           )}

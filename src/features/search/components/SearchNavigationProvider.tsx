@@ -183,8 +183,8 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
       // The cat animation stays visible for exactly the endpoint round-trip:
       // once results (or an error) come back we cache them and navigate.
       fetchSearchResults(trimmed)
-        .then((places) => setCachedResults(trimmed, places))
-        .catch(() => setCachedResults(trimmed, []))
+        .then((results) => setCachedResults(trimmed, results))
+        .catch(() => setCachedResults(trimmed, { places: [], relatedPlaces: [] }))
         .finally(() => {
           if (failsafeTimer.current) {
             clearTimeout(failsafeTimer.current);

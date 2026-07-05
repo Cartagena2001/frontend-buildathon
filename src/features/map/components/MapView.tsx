@@ -12,10 +12,11 @@ type LeafletApi = typeof Leaflet;
 const EL_SALVADOR_CENTER: LatLngTuple = [13.6929, -89.2182];
 
 function createNameLabel(L: LeafletApi, name: string, selected: boolean) {
-  const bg = selected ? "#FF5A5F" : "#222";
+  const bg = selected ? "#FF5A5F" : "rgba(255, 255, 255, 0.92)";
+  const color = selected ? "#ffffff" : "#222222";
   const shadow = selected
     ? "0 3px 14px rgba(255,90,95,0.5)"
-    : "0 2px 8px rgba(0,0,0,0.45)";
+    : "0 2px 10px rgba(34,34,34,0.14)";
   const short = name.length > 22 ? name.slice(0, 20) + "…" : name;
 
   return L.divIcon({
@@ -23,7 +24,7 @@ function createNameLabel(L: LeafletApi, name: string, selected: boolean) {
     html: `<span style="
       display:inline-block;
       background:${bg};
-      color:#fff;
+      color:${color};
       font-family:${FONT_SANS};
       font-size:11px;
       font-weight:700;
@@ -35,7 +36,7 @@ function createNameLabel(L: LeafletApi, name: string, selected: boolean) {
       user-select:none;
       transform:${selected ? "scale(1.1)" : "scale(1)"};
       transition:transform 0.15s,background 0.15s;
-      border:${selected ? "2px solid #fff" : "1.5px solid rgba(255,255,255,0.15)"};
+      border:${selected ? "2px solid #fff" : "1px solid rgba(34,34,34,0.12)"};
     ">${short}</span>`,
     iconSize: [0, 0],
     iconAnchor: [0, 20],
