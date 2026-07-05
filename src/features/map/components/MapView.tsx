@@ -1,20 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import L from "leaflet";
+import { useEffect, useRef, useState } from "react";
+import type * as Leaflet from "leaflet";
+import type { LatLngTuple, Map as LeafletMap, LayerGroup, Marker, MarkerOptions } from "leaflet";
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
 import { FONT_DISPLAY, FONT_SANS } from "@/lib/typography";
 import "leaflet/dist/leaflet.css";
 
-const EL_SALVADOR_CENTER: L.LatLngTuple = [13.6929, -89.2182];
+type LeafletApi = typeof Leaflet;
 
-/* ── Pill label marker ── */
-function createNameLabel(name: string, selected: boolean) {
-  const bg     = selected ? "#FF5A5F" : "#222";
+const EL_SALVADOR_CENTER: LatLngTuple = [13.6929, -89.2182];
+
+function createNameLabel(L: LeafletApi, name: string, selected: boolean) {
+  const bg = selected ? "#FF5A5F" : "#222";
   const shadow = selected
     ? "0 3px 14px rgba(255,90,95,0.5)"
     : "0 2px 8px rgba(0,0,0,0.45)";
-  const short  = name.length > 22 ? name.slice(0, 20) + "…" : name;
+  const short = name.length > 22 ? name.slice(0, 20) + "…" : name;
 
   return L.divIcon({
     className: "",
@@ -35,17 +37,19 @@ function createNameLabel(name: string, selected: boolean) {
       transition:transform 0.15s,background 0.15s;
       border:${selected ? "2px solid #fff" : "1.5px solid rgba(255,255,255,0.15)"};
     ">${short}</span>`,
-    iconSize:    [0, 0],
-    iconAnchor:  [0, 20],
+    iconSize: [0, 0],
+    iconAnchor: [0, 20],
     popupAnchor: [0, -30],
   });
 }
 
-/* ── Rich popup with "Ver más" button ── */
 function buildPopupHtml(place: PlaceCardData, locale: string) {
   const sentColor =
-    place.sentiment === "high"   ? "#00B39F" :
-    place.sentiment === "medium" ? "#FF5A5F" : "#FF8C42";
+    place.sentiment === "high"
+      ? "#00B39F"
+      : place.sentiment === "medium"
+        ? "#FF5A5F"
+        : "#FF8C42";
 
   const href = `/${locale}/explore/${place.id}`;
 
@@ -88,9 +92,10 @@ function buildPopupHtml(place: PlaceCardData, locale: string) {
 }
 
 interface MapViewProps {
-  places:         PlaceCardData[];
-  selectedId?:    string | null;
-  locale?:        string;
+  places: PlaceCardData[];
+  selectedId?: string | null;
+  locale?: string;
+  showPopup?: boolean;
   onSelectPlace?: (id: string) => void;
 }
 
@@ -98,18 +103,34 @@ export default function MapView({
   places,
   selectedId,
   locale = "en",
+  showPopup = true,
   onSelectPlace,
 }: MapViewProps) {
-  const containerRef    = useRef<HTMLDivElement>(null);
-  const mapRef          = useRef<L.Map | null>(null);
-  const layerRef        = useRef<L.LayerGroup | null>(null);
-  /* map placeId → marker so we can open the selected popup */
-  const markerMapRef    = useRef<Map<string, L.Marker>>(new Map());
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<LeafletMap | null>(null);
+  const layerRef = useRef<LayerGroup | null>(null);
+  const markerMapRef = useRef(new Map<string, Marker>());
+  const leafletRef = useRef<LeafletApi | null>(null);
+  const [leafletReady, setLeafletReady] = useState(false);
 
-  /* ── Init map once ── */
   useEffect(() => {
+    let cancelled = false;
+
+    void import("leaflet").then((mod) => {
+      if (cancelled) return;
+      leafletRef.current = (mod.default ?? mod) as LeafletApi;
+      setLeafletReady(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const L = leafletRef.current;
     const container = containerRef.current;
-    if (!container || mapRef.current) return;
+    if (!leafletReady || !L || !container || mapRef.current) return;
 
     const map = L.map(container, {
       center: EL_SALVADOR_CENTER,
@@ -120,7 +141,6 @@ export default function MapView({
 
     L.control.zoom({ position: "bottomright" }).addTo(map);
 
-    /* Carto Light — minimal, no street clutter */
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
       {
@@ -131,8 +151,8 @@ export default function MapView({
       },
     ).addTo(map);
 
-    layerRef.current  = L.layerGroup().addTo(map);
-    mapRef.current    = map;
+    layerRef.current = L.layerGroup().addTo(map);
+    mapRef.current = map;
 
     const invalidate = () => map.invalidateSize({ animate: false });
     requestAnimationFrame(invalidate);
@@ -151,13 +171,13 @@ export default function MapView({
       layerRef.current = null;
       markerMap.clear();
     };
-  }, []);
+  }, [leafletReady]);
 
-  /* ── Rebuild markers when places list or locale changes ── */
   useEffect(() => {
-    const map   = mapRef.current;
+    const L = leafletRef.current;
+    const map = mapRef.current;
     const layer = layerRef.current;
-    if (!map || !layer) return;
+    if (!L || !map || !layer) return;
 
     layer.clearLayers();
     markerMapRef.current.clear();
@@ -166,22 +186,24 @@ export default function MapView({
       const selected = selectedId === place.id;
 
       const marker = L.marker([place.lat, place.lng], {
-        icon:         createNameLabel(place.name, selected),
-        opacity:      selectedId && !selected ? 0.6 : 1,
+        icon: createNameLabel(L, place.name, selected),
+        opacity: selectedId && !selected ? 0.6 : 1,
         zIndexOffset: selected ? 1000 : 0,
       });
 
-      marker.bindPopup(buildPopupHtml(place, locale), {
-        maxWidth:    240,
-        className:   "fp-map-popup",
-        closeButton: true,
-        offset:      [60, 0],
-        autoPan:     true,
-      });
+      if (showPopup) {
+        marker.bindPopup(buildPopupHtml(place, locale), {
+          maxWidth: 240,
+          className: "fp-map-popup",
+          closeButton: true,
+          offset: [60, 0],
+          autoPan: true,
+        });
+      }
 
       marker.on("click", () => {
         onSelectPlace?.(place.id);
-        marker.openPopup();
+        if (showPopup) marker.openPopup();
       });
 
       marker.addTo(layer);
@@ -199,26 +221,25 @@ export default function MapView({
 
     window.setTimeout(() => map.invalidateSize({ animate: false }), 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [places, locale]);
+  }, [places, locale, showPopup, leafletReady]);
 
-  /* ── Open popup for the selected marker whenever selectedId changes ── */
   useEffect(() => {
-    if (!selectedId || !mapRef.current) return;
+    const L = leafletRef.current;
+    if (!L || !selectedId || !mapRef.current) return;
     const marker = markerMapRef.current.get(selectedId);
     if (!marker) return;
 
-    /* Re-render icon as selected */
     markerMapRef.current.forEach((m, id) => {
       const place = places.find((p) => p.id === id);
       if (!place) return;
-      m.setIcon(createNameLabel(place.name, id === selectedId));
+      m.setIcon(createNameLabel(L, place.name, id === selectedId));
       m.setOpacity(id === selectedId ? 1 : 0.6);
-      (m.options as L.MarkerOptions).zIndexOffset = id === selectedId ? 1000 : 0;
+      (m.options as MarkerOptions).zIndexOffset = id === selectedId ? 1000 : 0;
     });
 
-    marker.openPopup();
+    if (showPopup) marker.openPopup();
     mapRef.current.panTo(marker.getLatLng(), { animate: true, duration: 0.4 });
-  }, [selectedId, places]);
+  }, [selectedId, places, showPopup, leafletReady]);
 
   return (
     <>
