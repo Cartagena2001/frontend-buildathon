@@ -3,43 +3,87 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { PlaceList } from "@/features/place-lists/types";
+import { getListCardGradient } from "@/features/place-lists/place-cover";
 
 interface Props {
   list: PlaceList;
+  index?: number;
 }
 
-export default function ListCard({ list }: Props) {
+export default function ListCard({ list, index = 0 }: Props) {
   const t = useTranslations("lists");
+  const gradient = getListCardGradient(list.id);
+
+  const updated = new Date(list.updatedAt).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+  });
 
   return (
     <Link
       href={`/lists/${list.id}`}
-      className="glass rounded-2xl p-5 flex flex-col gap-3 hover:border-fp-cyan/40 transition-colors group"
+      className="group block bg-fp-dim border border-fp-border rounded-2xl overflow-hidden transition-all duration-300 hover:border-fp-coral/50 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10 fade-up"
+      style={{ animationDelay: `${Math.min(index, 5) * 0.08}s` }}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h2 className="font-display text-fp-cream text-lg leading-tight group-hover:text-fp-cyan transition-colors truncate">
-            {list.name}
-          </h2>
-          {list.description && (
-            <p className="text-fp-muted text-sm mt-1 line-clamp-2">{list.description}</p>
-          )}
-        </div>
+      {/* Visual header */}
+      <div className={`relative h-36 sm:h-40 bg-gradient-to-br ${gradient} overflow-hidden`}>
+        <div
+          className="absolute inset-0 opacity-[0.35]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 20% 80%, var(--fp-brand-coral) 0%, transparent 45%), radial-gradient(circle at 80% 20%, var(--fp-brand-teal) 0%, transparent 40%)",
+          }}
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,var(--fp-dim)_0%,transparent_55%)]" />
+
+        <span className="absolute top-3 left-3 w-9 h-9 rounded-full fp-badge-overlay flex items-center justify-center text-fp-coral">
+          <BookmarkIcon />
+        </span>
+
         {list.isShared && (
-          <span className="shrink-0 px-2 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider bg-fp-cyan/15 text-fp-cyan border border-fp-cyan/30">
+          <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[0.6rem] font-bold uppercase tracking-wider bg-fp-teal/90 text-white shadow-sm">
             {t("shared")}
           </span>
         )}
-      </div>
 
-      <div className="flex items-center justify-between mt-auto pt-1">
-        <span className="text-fp-muted text-xs">
+        <span className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-fp-coral text-white text-[0.65rem] font-bold tracking-wide shadow-sm">
           {t("placeCount", { count: list.placeCount })}
         </span>
-        <span className="text-fp-cyan text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-          {t("viewList")} →
-        </span>
+      </div>
+
+      {/* Body */}
+      <div className="p-4 sm:p-5">
+        <h2 className="font-display text-fp-cream text-lg sm:text-xl leading-tight mb-1.5 group-hover:text-fp-coral transition-colors line-clamp-1">
+          {list.name}
+        </h2>
+        {list.description ? (
+          <p className="text-fp-muted text-sm leading-relaxed line-clamp-2 min-h-[2.5rem]">
+            {list.description}
+          </p>
+        ) : (
+          <p className="text-fp-muted/60 text-sm italic min-h-[2.5rem]">
+            {t("noDescription")}
+          </p>
+        )}
+
+        <div className="flex items-center justify-between pt-4 mt-2 border-t border-fp-border/70">
+          <span className="text-fp-muted text-[0.65rem] font-semibold uppercase tracking-widest">
+            {updated}
+          </span>
+          <span className="inline-flex items-center gap-1 text-fp-coral text-xs font-semibold opacity-80 group-hover:opacity-100 transition-opacity">
+            {t("viewList")}
+            <span aria-hidden className="group-hover:translate-x-0.5 transition-transform">→</span>
+          </span>
+        </div>
       </div>
     </Link>
+  );
+}
+
+function BookmarkIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+    </svg>
   );
 }
