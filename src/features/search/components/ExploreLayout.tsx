@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { useLocale } from "next-intl";
 import ExploreFilters from "./ExploreFilters";
@@ -45,16 +45,12 @@ export default function ExploreLayout({
     [places, sentiment, category, sort],
   );
 
-  useEffect(() => {
-    if (filtered.length === 0) {
-      setSelectedId(null);
-      return;
-    }
-
-    if (!filtered.some((place) => place.id === selectedId)) {
-      setSelectedId(filtered[0].id);
-    }
-  }, [filtered, selectedId]);
+  const resolvedSelectedId =
+    filtered.length === 0
+      ? null
+      : filtered.some((place) => place.id === selectedId)
+        ? selectedId
+        : filtered[0].id;
 
   const activeFilterCount = [
     sentiment,
@@ -135,7 +131,7 @@ export default function ExploreLayout({
                   <PlaceGridCard
                     key={place.id}
                     place={place}
-                    selected={selectedId === place.id}
+                    selected={resolvedSelectedId === place.id}
                     isSaved={savedPlaceIds.includes(place.id)}
                     priority={index < 2}
                     onSelect={(id) => {
@@ -155,7 +151,7 @@ export default function ExploreLayout({
       <aside className="hidden lg:block relative w-[42%] xl:w-[45%] 2xl:w-[48%] shrink-0 border-l border-fp-border">
         <MapView
           places={filtered}
-          selectedId={selectedId}
+          selectedId={resolvedSelectedId}
           locale={locale}
           onSelectPlace={(id) => {
             setSelectedId(id);

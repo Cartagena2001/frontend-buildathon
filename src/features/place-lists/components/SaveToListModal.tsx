@@ -33,6 +33,7 @@ export default function SaveToListModal({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [saved, setSaved] = useState(initialSaved);
+  const [prevInitialSaved, setPrevInitialSaved] = useState(initialSaved);
   const [lists, setLists] = useState<PlaceList[]>([]);
   const [inLists, setInLists] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
@@ -42,24 +43,29 @@ export default function SaveToListModal({
   const [pending, startTransition] = useTransition();
   const modalRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  if (initialSaved !== prevInitialSaved) {
+    setPrevInitialSaved(initialSaved);
     setSaved(initialSaved);
-  }, [initialSaved]);
+  }
 
-  useEffect(() => {
-    if (!open) return;
+  async function loadLists() {
     setLoading(true);
     setError(null);
 
-    Promise.all([getMyPlaceLists(), getListsContainingPlace(placeId)])
-      .then(([allLists, containing]) => {
-        setLists(allLists);
-        setInLists(new Set(containing));
-        setSaved(containing.length > 0);
-      })
-      .catch(() => setError(t("loadError")))
-      .finally(() => setLoading(false));
-  }, [open, placeId, t]);
+    try {
+      const [allLists, containing] = await Promise.all([
+        getMyPlaceLists(),
+        getListsContainingPlace(placeId),
+      ]);
+      setLists(allLists);
+      setInLists(new Set(containing));
+      setSaved(containing.length > 0);
+    } catch {
+      setError(t("loadError"));
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -79,6 +85,7 @@ export default function SaveToListModal({
     e.preventDefault();
     e.stopPropagation();
     setOpen(true);
+    void loadLists();
   };
 
   const toggleList = (listId: string) => {

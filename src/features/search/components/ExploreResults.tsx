@@ -28,56 +28,61 @@ export default function ExploreResults({ query, savedPlaceIds }: Props) {
   const [sentiment, setSentiment] = useState<ExploreSentiment | null>(null);
   const [sort, setSort] = useState<ExploreSort>("viral");
   const [category, setCategory] = useState<ExploreCategoryId>("all");
+  const [prevQuery, setPrevQuery] = useState(query);
+
+  if (query !== prevQuery) {
+    setPrevQuery(query);
+    setSentiment(null);
+    setSort("viral");
+    setCategory("all");
+  }
 
   useEffect(() => {
-    if (!query) {
-      setPlaces([]);
-      setLoading(false);
-      return;
-    }
-
-    const hit = getCachedResults(query);
-    if (hit) {
-      setPlaces(hit);
-      setLoading(false);
-      return;
-    }
+    if (!query) return;
 
     let active = true;
-    setLoading(true);
 
-    fetchSearchResults(query)
-      .then((results) => {
+    async function load() {
+      const hit = getCachedResults(query);
+      if (hit) {
+        if (!active) return;
+        setPlaces(hit);
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const results = await fetchSearchResults(query);
         if (!active) return;
         setCachedResults(query, results);
         setPlaces(results);
-      })
-      .catch(() => {
+      } catch {
         if (active) setPlaces([]);
-      })
-      .finally(() => {
+      } finally {
         if (active) setLoading(false);
-      });
+      }
+    }
+
+    void load();
 
     return () => {
       active = false;
     };
   }, [query]);
 
-  useEffect(() => {
-    setSentiment(null);
-    setSort("viral");
-    setCategory("all");
-  }, [query]);
+  const displayPlaces = useMemo(() => (query ? places : []), [query, places]);
+  const isLoading = Boolean(query && loading);
 
   const filteredCount = useMemo(
-    () => filterAndSortPlaces(places, { sentiment, category, sort }).length,
-    [places, sentiment, category, sort],
+    () => filterAndSortPlaces(displayPlaces, { sentiment, category, sort }).length,
+    [displayPlaces, sentiment, category, sort],
   );
 
   return (
     <>
-      {loading ? <MascotLoadingOverlay variant="search" /> : null}
+      {isLoading ? <MascotLoadingOverlay variant="search" /> : null}
 
       <div className="shrink-0 flex items-center justify-between px-4 sm:px-6 py-3 border-b border-fp-border">
         <div>
@@ -100,7 +105,7 @@ export default function ExploreResults({ query, savedPlaceIds }: Props) {
       </div>
 
       <ExploreLayout
-        places={places}
+        places={displayPlaces}
         savedPlaceIds={savedPlaceIds}
         sentiment={sentiment}
         sort={sort}

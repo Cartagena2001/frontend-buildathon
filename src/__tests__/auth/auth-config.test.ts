@@ -99,7 +99,13 @@ describe("session callback", () => {
     });
     const session = makeSession();
 
-    const result = await sessionCallback!({ session, token, user: undefined as never, trigger: "update" });
+    const result = await sessionCallback!({
+      session,
+      token,
+      user: undefined as never,
+      trigger: "update",
+      newSession: undefined,
+    });
 
     expect(result.user.id).toBe("d4e5f6a7-b8c9-4012-d345-6789abcdef01");
     expect(result.user.email).toBe("user@gmail.com");
@@ -110,7 +116,13 @@ describe("session callback", () => {
     const token = makeToken({ email: "x@test.com" }); // no token.id
     const session = makeSession();
 
-    const result = await sessionCallback!({ session, token, user: undefined as never, trigger: "update" });
+    const result = await sessionCallback!({
+      session,
+      token,
+      user: undefined as never,
+      trigger: "update",
+      newSession: undefined,
+    });
 
     expect(result.user.id).toBe(""); // unchanged from default
     expect(result.user.email).toBe("x@test.com");
@@ -126,7 +138,13 @@ describe("session callback", () => {
     });
     const session = makeSession({ user: { id: "", name: null, email: null, image: null } });
 
-    const result = await sessionCallback!({ session, token, user: undefined as never, trigger: "update" });
+    const result = await sessionCallback!({
+      session,
+      token,
+      user: undefined as never,
+      trigger: "update",
+      newSession: undefined,
+    });
 
     // These are the exact checks getFindyToken does:
     expect(result.user.id).toBeTruthy();
