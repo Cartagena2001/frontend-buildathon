@@ -1,25 +1,36 @@
 /**
  * Tests for getFindyToken — the function that produces the findy-core
  * Bearer token from the current NextAuth session.
- *
- * Covers the Google OAuth regression where session.user.email could be null,
- * causing getFindyToken to return null and findy-core to respond 401.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 const mockAuth = vi.hoisted(() => vi.fn());
+const mockFetch = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/auth", () => ({ auth: mockAuth }));
+vi.stubGlobal("fetch", mockFetch);
 
 const USER_ID = "d4e5f6a7-b8c9-4012-d345-6789abcdef01";
 const JWT_SECRET = "test-secret-key";
+const FINDY_JWT = "eyJhbGci.test.findy-core-token";
+
+function mockOk(token = FINDY_JWT) {
+  return { ok: true, json: async () => ({ token }) } as Response;
+}
 
 describe("getFindyToken", () => {
   const env = process.env;
 
   beforeEach(() => {
     vi.resetModules();
-    process.env = { ...env, JWT_SECRET };
+    process.env = {
+      ...env,
+      JWT_SECRET,
+      FINDY_SYNC_SECRET: "sync-secret",
+      FINDY_CORE_API_URL: "https://api.findy.place",
+    };
+    mockFetch.mockReset();
+    mockAuth.mockReset();
   });
 
   afterEach(() => {
@@ -27,16 +38,8 @@ describe("getFindyToken", () => {
     vi.clearAllMocks();
   });
 
-  // ── Unauthenticated ──────────────────────────────────────────────────────
-
   it("returns null when there is no session", async () => {
     mockAuth.mockResolvedValue(null);
-    const { getFindyToken } = await import("@/lib/findy-core/token");
-    expect(await getFindyToken()).toBeNull();
-  });
-
-  it("returns null when session has no user", async () => {
-    mockAuth.mockResolvedValue({ user: undefined });
     const { getFindyToken } = await import("@/lib/findy-core/token");
     expect(await getFindyToken()).toBeNull();
   });
@@ -47,98 +50,48 @@ describe("getFindyToken", () => {
     expect(await getFindyToken()).toBeNull();
   });
 
-  // ── Credentials user (happy path) ────────────────────────────────────────
+  it("returns stored findyCoreToken from session without calling API", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: USER_ID, email: "creds@test.com" },
+      findyCoreToken: FINDY_JWT,
+    });
+    const { getFindyToken } = await import("@/lib/findy-core/token");
+    expect(await getFindyToken()).toBe(FINDY_JWT);
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
 
-  it("returns a signed JWT for a credentials user (id + email present)", async () => {
+  it("re-provisions via findy-core when token is missing (prod)", async () => {
     mockAuth.mockResolvedValue({
       user: { id: USER_ID, email: "creds@test.com", name: "Test User" },
     });
+    mockFetch.mockResolvedValueOnce(mockOk());
+
     const { getFindyToken } = await import("@/lib/findy-core/token");
-
-    const token = await getFindyToken();
-    expect(token).not.toBeNull();
-
-    const parts = token!.split(".");
-    expect(parts).toHaveLength(3);
-
-    const payload = JSON.parse(Buffer.from(parts[1], "base64url").toString());
-    expect(payload.sub).toBe(USER_ID);
-    expect(payload.email).toBe("creds@test.com");
-    expect(payload.exp).toBeGreaterThan(Math.floor(Date.now() / 1000));
+    expect(await getFindyToken()).toBe(FINDY_JWT);
+    expect(mockFetch).toHaveBeenCalled();
   });
 
-  // ── Google OAuth user — the regression scenario ───────────────────────────
-
-  it("returns a signed JWT for a Google OAuth user even when session.user.email is null", async () => {
-    // Before the fix, this returned null → 401 Unauthorized from findy-core.
+  it("returns null on prod when provision fails (no self-sign fallback)", async () => {
     mockAuth.mockResolvedValue({
-      user: { id: USER_ID, email: null, name: "Google User" },
+      user: { id: USER_ID, email: "creds@test.com", name: "Test User" },
     });
+    mockFetch.mockResolvedValue({ ok: false, status: 401, json: async () => ({}) });
+
     const { getFindyToken } = await import("@/lib/findy-core/token");
-
-    const token = await getFindyToken();
-
-    // Must NOT be null — we need a token to send the Authorization header
-    expect(token).not.toBeNull();
-
-    const parts = token!.split(".");
-    const payload = JSON.parse(Buffer.from(parts[1], "base64url").toString());
-    expect(payload.sub).toBe(USER_ID);
-    expect(payload.email).toBe(""); // fallback to empty string
-    expect(payload.exp).toBeGreaterThan(Math.floor(Date.now() / 1000));
+    expect(await getFindyToken()).toBeNull();
   });
 
-  it("returns a signed JWT for a Google OAuth user when email is undefined", async () => {
-    mockAuth.mockResolvedValue({
-      user: { id: USER_ID, email: undefined },
-    });
-    const { getFindyToken } = await import("@/lib/findy-core/token");
-
-    const token = await getFindyToken();
-    expect(token).not.toBeNull();
-
-    const payload = JSON.parse(Buffer.from(token!.split(".")[1], "base64url").toString());
-    expect(payload.sub).toBe(USER_ID);
-  });
-
-  // ── Token validity ────────────────────────────────────────────────────────
-
-  it("produces a token with 7-day expiry", async () => {
-    mockAuth.mockResolvedValue({ user: { id: USER_ID, email: "x@test.com" } });
-    const { getFindyToken } = await import("@/lib/findy-core/token");
-
-    const before = Math.floor(Date.now() / 1000);
-    const token = await getFindyToken();
-    const after = Math.floor(Date.now() / 1000);
-
-    const payload = JSON.parse(Buffer.from(token!.split(".")[1], "base64url").toString());
-    const sevenDays = 60 * 60 * 24 * 7;
-
-    expect(payload.exp).toBeGreaterThanOrEqual(before + sevenDays - 1);
-    expect(payload.exp).toBeLessThanOrEqual(after + sevenDays + 1);
-  });
-
-  it("signature is HMAC-SHA256 of header.payload with JWT_SECRET", async () => {
-    const { createHmac } = await import("crypto");
-    mockAuth.mockResolvedValue({ user: { id: USER_ID, email: "x@test.com" } });
-    const { getFindyToken } = await import("@/lib/findy-core/token");
-
-    const token = await getFindyToken();
-    const [header, payload, sig] = token!.split(".");
-
-    const expected = createHmac("sha256", JWT_SECRET)
-      .update(`${header}.${payload}`)
-      .digest("base64url");
-
-    expect(sig).toBe(expected);
-  });
-
-  it("throws if JWT_SECRET is not set", async () => {
-    delete process.env.JWT_SECRET;
+  it("self-signs only for local findy-core when provision fails", async () => {
+    process.env.FINDY_CORE_API_URL = "http://localhost:3000";
     vi.resetModules();
-    mockAuth.mockResolvedValue({ user: { id: USER_ID, email: "x@test.com" } });
+    mockAuth.mockResolvedValue({
+      user: { id: USER_ID, email: "creds@test.com", name: "Test User" },
+    });
+    mockFetch.mockResolvedValue({ ok: false, status: 401, json: async () => ({}) });
 
     const { getFindyToken } = await import("@/lib/findy-core/token");
-    await expect(getFindyToken()).rejects.toThrow("JWT_SECRET");
+    const token = await getFindyToken();
+    expect(token).not.toBeNull();
+    expect(token!.split(".")).toHaveLength(3);
   });
 });

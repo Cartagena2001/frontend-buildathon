@@ -193,6 +193,7 @@ describe("place lists full flow (simulated API)", () => {
     process.env.JWT_SECRET = "test-secret";
     mockAuth.mockResolvedValue({
       user: { id: USER_ID, email: "flow@test.com", name: "Flow User" },
+      findyCoreToken: "test-session-token",
     });
     vi.stubGlobal("fetch", vi.fn(createFindyCoreSimulator()));
   });

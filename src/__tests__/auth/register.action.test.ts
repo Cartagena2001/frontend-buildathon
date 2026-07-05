@@ -59,6 +59,12 @@ vi.mock("@/lib/auth/password-reset-actions", () => ({
   getAppBaseUrl: vi.fn().mockResolvedValue("http://localhost:3000"),
 }));
 
+const mockFindySignup = vi.fn().mockResolvedValue("eyJhbGci.test.findy-token");
+
+vi.mock("@/lib/findy-core/auth", () => ({
+  findySignup: (...args: unknown[]) => mockFindySignup(...args),
+}));
+
 // ── Import under test (after mocks) ───────────────────────────────────────
 
 const { registerUser } = await import("@/lib/auth/actions");
@@ -86,6 +92,7 @@ describe("registerUser", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockLimit.mockResolvedValue([]); // default: email not taken
+    mockFindySignup.mockResolvedValue("eyJhbGci.test.findy-token");
     mockRedirect.mockImplementation(() => { throw new Error("NEXT_REDIRECT"); });
   });
 
@@ -114,21 +121,33 @@ describe("registerUser", () => {
     expect(result.error).toBe("An account with this email already exists.");
   });
 
-  it("hashes password and inserts user on valid data", async () => {
+  it("returns friendly error when database connection fails", async () => {
+    mockLimit.mockRejectedValue(new Error("fetch failed"));
+    const fd = makeFormData();
+    const result = await registerUser({}, fd);
+    expect(result.error).toContain("Could not connect to the database");
+  });
+
+  it("calls findy-core signup and signs in with token on valid data", async () => {
     try {
       await registerUser({}, makeFormData());
     } catch {
       // redirect throws in test environment – that's expected
     }
-    // db.insert().values() should have been called with the hashed password
-    expect(mockValues).toHaveBeenCalledWith(
-      expect.objectContaining({
-        firstName:    "María",
-        lastName:     "García",
-        email:        "maria@example.com",
-        passwordHash: "hashed_password",
-      })
-    );
+
+    expect(mockFindySignup).toHaveBeenCalledWith({
+      firstName: "María",
+      lastName:  "García",
+      email:     "maria@example.com",
+      password:  "password123",
+    });
+    expect(mockValues).not.toHaveBeenCalled();
+  });
+
+  it("returns error when findy-core signup fails", async () => {
+    mockFindySignup.mockResolvedValueOnce(null);
+    const result = await registerUser({}, makeFormData());
+    expect(result.error).toBe("An account with this email already exists.");
   });
 
   it("signs in and redirects to /es/explore after successful registration", async () => {
@@ -146,7 +165,10 @@ describe("registerUser", () => {
 
     expect(mockSignIn).toHaveBeenCalledWith(
       "credentials",
-      expect.objectContaining({ email: "maria@example.com" })
+      expect.objectContaining({
+        email: "maria@example.com",
+        findyCoreToken: "eyJhbGci.test.findy-token",
+      })
     );
     expect(redirectTarget).toBe("/es/explore");
   });

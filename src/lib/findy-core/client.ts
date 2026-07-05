@@ -46,6 +46,14 @@ export async function findyFetch<T>(
   const token = explicitToken !== undefined ? explicitToken : await getFindyToken();
   const url = `${getFindyApiBaseUrl()}${path}`;
 
+  if (explicitToken === undefined && !token) {
+    throw new FindyApiError(
+      "Session has no findy-core token. Sign out and sign in again.",
+      401,
+      url,
+    );
+  }
+
   const headers: Record<string, string> = {
     ...(extraHeaders as Record<string, string>),
   };

@@ -1,5 +1,6 @@
 import { createHmac } from "crypto";
 import { auth } from "@/lib/auth";
+import { getFindyAuthBaseUrl, provisionFindyCoreToken } from "@/lib/findy-core/auth";
 
 const EXPIRY_SECONDS = 60 * 60 * 24 * 7;
 
@@ -24,24 +25,39 @@ export function signFindyToken(sub: string, email: string): string {
   return `${header}.${payload}.${sig}`;
 }
 
+function isLocalFindyCore(): boolean {
+  const url = getFindyAuthBaseUrl();
+  return url.includes("localhost") || url.includes("127.0.0.1");
+}
+
 /**
  * Returns a Bearer token for the current session, or null if unauthenticated.
  *
  * Priority:
- * 1. `findyCoreToken` stored in session — issued by findy-core itself after
- *    syncing the user on login. Valid for the production API without needing
- *    to share JWT_SECRET between the two services.
- * 2. Self-signed fallback using JWT_SECRET (local dev / migration path).
+ * 1. `findyCoreToken` stored in session — issued by findy-core after login/sync.
+ * 2. Re-provision via findy-core auth endpoints.
+ * 3. Self-signed JWT — local dev only (requires JWT_SECRET to match findy-core).
  */
 export async function getFindyToken(): Promise<string | null> {
   const session = await auth();
   if (!session?.user?.id) return null;
 
-  // Prefer findy-core-issued token (no shared secret required)
   const stored = (session as { findyCoreToken?: string }).findyCoreToken;
   if (stored) return stored;
 
-  // Fallback: self-sign (works when JWT_SECRET matches findy-core's secret)
-  const email = session.user.email ?? "";
-  return signFindyToken(session.user.id, email);
+  const nameParts = (session.user.name ?? "").split(" ");
+  const provisioned = await provisionFindyCoreToken({
+    id:        session.user.id,
+    email:     session.user.email ?? "",
+    firstName: nameParts[0] ?? "User",
+    lastName:  nameParts.slice(1).join(" "),
+  });
+  if (provisioned) return provisioned;
+
+  // Self-sign only for local findy-core — prod rejects tokens signed with a mismatched secret.
+  if (isLocalFindyCore()) {
+    return signFindyToken(session.user.id, session.user.email ?? "");
+  }
+
+  return null;
 }

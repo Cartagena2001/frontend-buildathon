@@ -1,5 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
-import { syncUserToFindyCore } from "@/lib/findy-core/sync";
+import { provisionFindyCoreToken } from "@/lib/findy-core/auth";
 
 /** Edge-safe NextAuth config (no Node-only providers). */
 export const authConfig = {
@@ -20,22 +20,28 @@ export const authConfig = {
         token.id    = user.id;
         token.email = user.email;
         token.name  = user.name;
+      }
 
-        // Sync user into findy-core's DB and obtain a JWT issued by findy-core.
-        // This token is valid for the production API without needing to share
-        // JWT_SECRET between the two services.
-        const nameParts = (user.name ?? "").split(" ");
-        const findyCoreToken = await syncUserToFindyCore({
-          id:        user.id,
-          email:     user.email ?? "",
+      if (user?.findyCoreToken) {
+        token.findyCoreToken = user.findyCoreToken;
+      }
+
+      // Obtain findy-core JWT when missing (login / OAuth paths).
+      if (token.id && !token.findyCoreToken) {
+        const nameParts = ((token.name as string) ?? "").split(" ");
+        const findyCoreToken = await provisionFindyCoreToken({
+          id:        token.id as string,
+          email:     (token.email as string) ?? "",
           firstName: nameParts[0] ?? "User",
           lastName:  nameParts.slice(1).join(" "),
+          password:  user?.findyPassword,
         });
 
         if (findyCoreToken) {
           token.findyCoreToken = findyCoreToken;
         }
       }
+
       return token;
     },
 

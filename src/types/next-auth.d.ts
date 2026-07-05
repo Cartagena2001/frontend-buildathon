@@ -11,6 +11,10 @@ declare module "next-auth" {
 
   interface User {
     id: string;
+    /** Ephemeral — passed to jwt callback for findy-core credentials login, never persisted */
+    findyPassword?: string;
+    /** Set on register when findy-core signup returns a JWT */
+    findyCoreToken?: string;
   }
 }
 
