@@ -111,6 +111,19 @@ export default function SaveToListModal({
       if (isIn) next.delete(listId);
       else next.add(listId);
       setInLists(next);
+      setLists((prev) =>
+        prev.map((list) =>
+          list.id === listId
+            ? {
+                ...list,
+                placeCount: Math.max(
+                  0,
+                  list.placeCount + (isIn ? -1 : 1),
+                ),
+              }
+            : list,
+        ),
+      );
       const nowSaved = next.size > 0;
       setSaved(nowSaved);
       onSavedChange?.(nowSaved);
@@ -144,6 +157,11 @@ export default function SaveToListModal({
         const added = await addPlaceToList(list.id, placeId);
         if (added.ok) {
           setInLists((prev) => new Set([...prev, list.id]));
+          setLists((prev) =>
+            prev.map((l) =>
+              l.id === list.id ? { ...l, placeCount: l.placeCount + 1 } : l,
+            ),
+          );
           setSaved(true);
           onSavedChange?.(true);
         }
@@ -165,9 +183,22 @@ export default function SaveToListModal({
         onClick={(e) => e.stopPropagation()}
         className="relative w-full sm:max-w-md bg-fp-dim border border-fp-border rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden"
       >
-        <div className="px-5 py-4 border-b border-fp-border">
-          <h2 className="font-display text-fp-cream text-lg">{t("saveToList")}</h2>
-          <p className="text-fp-muted text-sm mt-0.5 truncate">{placeName}</p>
+        <div className="px-5 py-4 border-b border-fp-border flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <h2 className="font-display text-fp-cream text-lg">{t("saveToList")}</h2>
+            <p className="text-fp-muted text-sm mt-0.5 truncate">{placeName}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            aria-label={t("close")}
+            className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-fp-muted hover:text-fp-cream hover:bg-fp-border/40 transition-colors"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
         </div>
 
         <div className="max-h-[50vh] overflow-y-auto px-5 py-3">
