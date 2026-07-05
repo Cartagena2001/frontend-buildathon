@@ -3,17 +3,39 @@ import { Link } from "@/i18n/navigation";
 import BrandLogo from "@/components/ui/BrandLogo";
 import { navLogoLinkClassName } from "@/components/ui/NavBarCluster";
 import ExploreLayout from "@/features/search/components/ExploreLayout";
+import ExploreSearchBar from "@/features/search/components/ExploreSearchBar";
+import { searchPlaces } from "@/features/search/search-service";
+import { mapSearchResultsToPlaces } from "@/features/search/map-search-result";
+import { enrichPlacesWithGooglePhotos } from "@/features/search/enrich-google-photos";
 import { EXPLORE_PLACES } from "@/features/places/data/mock-places";
+import type { PlaceCardData } from "@/features/places/components/PlaceCard";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import NavAuth from "@/components/ui/NavAuth";
 import { getSavedPlaceIds } from "@/lib/saved/actions";
 
-export default async function ExplorePage() {
-  const [t, savedIds] = await Promise.all([
+interface Props {
+  searchParams: Promise<{ q?: string }>;
+}
+
+export default async function ExplorePage({ searchParams }: Props) {
+  const [{ q }, t, savedIds] = await Promise.all([
+    searchParams,
     getTranslations("explore"),
     getSavedPlaceIds(),
   ]);
+
+  const query = q?.trim() ?? "";
+
+  let places: PlaceCardData[] = EXPLORE_PLACES;
+  if (query) {
+    try {
+      const results = await searchPlaces({ query });
+      places = await enrichPlacesWithGooglePhotos(mapSearchResultsToPlaces(results));
+    } catch {
+      places = [];
+    }
+  }
 
   return (
     <div className="flex flex-col h-screen bg-fp-dark overflow-hidden">
@@ -23,7 +45,7 @@ export default async function ExplorePage() {
         </Link>
 
         <div className="flex-1 min-w-0 max-w-xl">
-          <ExploreSearchBar />
+          <ExploreSearchBar initialQuery={query} />
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
@@ -39,7 +61,7 @@ export default async function ExplorePage() {
             {t("title")}
           </h1>
           <p className="text-fp-muted text-xs mt-0.5 hidden sm:block">
-            {t("subtitle", { count: "24", clips: "1,420" })}
+            {t("subtitle", { count: String(places.length), clips: "1,420" })}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -48,22 +70,7 @@ export default async function ExplorePage() {
         </div>
       </div>
 
-      <ExploreLayout places={EXPLORE_PLACES} savedPlaceIds={savedIds} />
-    </div>
-  );
-}
-
-function ExploreSearchBar() {
-  return (
-    <div className="flex items-center fp-search-bar rounded-full px-4 py-2 gap-2">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fp-muted shrink-0">
-        <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-      </svg>
-      <input
-        type="text"
-        placeholder="Search places…"
-        className="flex-1 min-w-0 bg-transparent text-fp-cream placeholder:text-fp-muted text-sm outline-none"
-      />
+      <ExploreLayout places={places} savedPlaceIds={savedIds} />
     </div>
   );
 }
