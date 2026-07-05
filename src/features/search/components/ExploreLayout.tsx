@@ -75,7 +75,7 @@ export default function ExploreLayout({
 
   const activeFilterCount = [
     sentiment,
-    sort !== "viral" ? sort : null,
+    sort !== "likes" ? sort : null,
     category !== "all" ? category : null,
     !excludeSuspicious ? "showSuspicious" : null,
   ].filter(Boolean).length;
@@ -98,14 +98,14 @@ export default function ExploreLayout({
       <div className="lg:hidden shrink-0 flex items-center gap-2 px-4 py-2.5 border-b border-fp-border bg-fp-dark w-full absolute top-0 left-0 right-0 z-20">
         <button
           onClick={() => setFiltersOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-fp-border text-fp-muted text-xs hover:text-fp-coral hover:border-fp-coral/50 transition-colors"
+          className="flex items-center gap-1.5 rounded-full border border-fp-border bg-fp-surface px-3.5 py-1.5 text-xs font-medium text-fp-cream transition-colors hover:border-fp-coral/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fp-coral/40"
         >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fp-muted">
             <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/>
           </svg>
-          Filters
+          {t("filters.title")}
           {activeFilterCount > 0 && (
-            <span className="w-4 h-4 rounded-full bg-fp-coral text-white text-[0.55rem] flex items-center justify-center font-bold">
+            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-fp-coral px-1 text-[0.6rem] font-bold text-white">
               {activeFilterCount}
             </span>
           )}
@@ -113,22 +113,24 @@ export default function ExploreLayout({
       </div>
 
       {/* ── Desktop sidebar ── */}
-      <aside className="hidden lg:flex lg:w-[210px] xl:w-[230px] shrink-0 border-r border-fp-border overflow-y-auto flex-col">
+      <aside className="hidden lg:flex lg:w-[232px] xl:w-[248px] shrink-0 flex-col overflow-y-auto border-r border-fp-border bg-fp-surface/60">
         {filterPanel}
       </aside>
 
       {/* ── Mobile filter drawer ── */}
       {filtersOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setFiltersOpen(false)} />
-          <div className="relative w-72 bg-fp-dark border-r border-fp-border h-full overflow-y-auto z-10">
-            <button
-              onClick={() => setFiltersOpen(false)}
-              className="absolute top-4 right-4 text-fp-muted hover:text-fp-cream"
-            >
-              ✕
-            </button>
-            {filterPanel}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" onClick={() => setFiltersOpen(false)} />
+          <div className="relative z-10 h-full w-72 overflow-y-auto border-r border-fp-border bg-fp-dark">
+            <ExploreFilters
+              sentiment={sentiment}
+              sort={sort}
+              excludeSuspicious={excludeSuspicious}
+              onSentiment={onSentiment}
+              onSort={onSort}
+              onExcludeSuspicious={onExcludeSuspicious}
+              onClose={() => setFiltersOpen(false)}
+            />
           </div>
         </div>
       )}
