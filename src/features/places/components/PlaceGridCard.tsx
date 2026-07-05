@@ -1,10 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import type { PlaceCardData } from "./PlaceCard";
 import { badgeOnImageClasses } from "./place-badge-styles";
 import SaveButton from "./SaveButton";
+import SharePlaceModal from "@/features/place-lists/components/SharePlaceModal";
 
 const sentimentDot: Record<string, string> = {
   high:   "bg-fp-teal",
@@ -28,10 +31,11 @@ export default function PlaceGridCard({
   onSelect,
 }: Props) {
   const router = useRouter();
+  const t = useTranslations("lists");
+  const [shareOpen, setShareOpen] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
-    /* Let SaveButton handle its own clicks */
-    if ((e.target as HTMLElement).closest("[data-save-button]")) return;
+    if ((e.target as HTMLElement).closest("[data-save-button], [data-share-button]")) return;
     onSelect?.(place.id);
   };
 
@@ -86,6 +90,17 @@ export default function PlaceGridCard({
           {String(place.rank).padStart(2, "0")}
         </span>
 
+        <span data-share-button onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            onClick={() => setShareOpen(true)}
+            className="absolute bottom-3 right-3 w-7 h-7 rounded-full fp-badge-overlay flex items-center justify-center text-fp-cream hover:text-fp-coral hover:border-fp-coral/40 transition-colors"
+            aria-label={t("sharePlaceAction")}
+          >
+            <ShareIcon />
+          </button>
+        </span>
+
         {/* "Ver más" on hover — shortcut to detail */}
         {selected && (
           <button
@@ -93,7 +108,7 @@ export default function PlaceGridCard({
               e.stopPropagation();
               router.push(`/explore/${place.id}`);
             }}
-            className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-fp-coral text-white text-[0.6rem] font-bold tracking-wide shadow hover:bg-fp-coral/90 transition-colors"
+            className="absolute bottom-3 right-12 px-2.5 py-1 rounded-full bg-fp-coral text-white text-[0.6rem] font-bold tracking-wide shadow hover:bg-fp-coral/90 transition-colors"
           >
             Ver más
           </button>
@@ -130,6 +145,25 @@ export default function PlaceGridCard({
           </div>
         </div>
       </div>
+
+      <SharePlaceModal
+        placeId={place.id}
+        placeName={place.name}
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+      />
     </div>
+  );
+}
+
+function ShareIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+    </svg>
   );
 }

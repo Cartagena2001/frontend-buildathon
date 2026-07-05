@@ -27,6 +27,12 @@ const sentimentDot: Record<string, string> = {
   low: "bg-fp-orange",
 };
 
+const mentionSentimentPill: Record<string, string> = {
+  high: "bg-fp-cyan-dim text-fp-teal border-fp-teal/20",
+  medium: "bg-fp-coral/12 text-fp-coral border-fp-coral/25",
+  low: "bg-fp-orange/12 text-fp-orange border-fp-orange/25",
+};
+
 function formatCount(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
@@ -100,7 +106,7 @@ export default function PlaceDetail({ place, isSaved = false }: PlaceDetailProps
 
       <aside className="relative shrink-0 h-72 sm:h-80 lg:h-auto lg:w-[380px] xl:w-[460px] 2xl:w-[520px] lg:border-l border-fp-border bg-fp-dim lg:flex lg:flex-col lg:min-h-0">
         <div className="shrink-0 px-5 py-3 border-b border-fp-border hidden lg:flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 text-fp-teal">
             <MapPinIcon />
             <span className="text-fp-cream text-sm truncate">{place.location}</span>
           </div>
@@ -138,7 +144,7 @@ function PlaceDetailHero({
   isSaved: boolean;
 }) {
   return (
-    <div className="relative h-52 sm:h-60 lg:h-64 shrink-0 overflow-hidden">
+    <div className="relative h-52 sm:h-60 lg:h-64 shrink-0 overflow-hidden after:content-[''] after:absolute after:inset-0 after:pointer-events-none after:z-[1] after:bg-[linear-gradient(to_top,var(--hero-overlay-end)_0%,var(--hero-overlay-heavy)_38%,var(--hero-overlay-mid)_68%,transparent_100%)]">
       <Image
         src={place.coverImage}
         alt={place.name}
@@ -147,9 +153,8 @@ function PlaceDetailHero({
         className="object-cover"
         sizes="(min-width: 1024px) 60vw, 100vw"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-fp-dark/95 via-fp-dark/30 to-transparent" />
 
-      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10">
+      <div className="absolute z-[2] top-3 right-3 sm:top-4 sm:right-4">
         <SaveButton
           placeId={place.id}
           placeName={place.name}
@@ -158,24 +163,28 @@ function PlaceDetailHero({
         />
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 px-5 sm:px-7 lg:px-8 pb-6">
-        <div className="flex items-center gap-2 mb-2.5">
-          <span className={`px-2.5 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider ${badgeOnImageClasses[place.badgeColor]}`}>
-            {place.badge}
-          </span>
+      <div className="absolute z-[2] inset-x-0 bottom-0 px-5 sm:px-7 lg:px-8 pb-6">
+        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider mb-2.5 ${badgeOnImageClasses[place.badgeColor]}`}>
+          {place.badge}
+        </span>
+        <div className="flex items-start justify-between gap-3 mb-1">
+          <h1 className="font-display text-fp-cream text-2xl sm:text-3xl lg:text-[2rem] leading-tight text-balance min-w-0">
+            {place.name}
+          </h1>
+          <span
+            className={`mt-2 w-2 h-2 rounded-full shrink-0 ${sentimentDot[place.sentiment]}`}
+            title={place.sentimentLabel}
+            aria-label={place.sentimentLabel}
+          />
         </div>
-        <h1 className="font-display text-fp-cream text-2xl sm:text-3xl lg:text-[2rem] leading-tight mb-1 text-balance">
-          {place.name}
-        </h1>
-        <div className="flex items-center gap-2 min-w-0 flex-wrap">
-          <p className="text-fp-muted text-xs sm:text-sm truncate">
+        {place.location ? (
+          <p className="text-fp-muted text-xs sm:text-sm leading-relaxed line-clamp-2 max-w-prose mb-2">
             {place.location}
           </p>
-          {place.category ? (
-            <span className="fp-category-chip shrink-0">{place.category}</span>
-          ) : null}
-          <span className={`w-2 h-2 rounded-full shrink-0 ${sentimentDot[place.sentiment]}`} aria-hidden />
-        </div>
+        ) : null}
+        {place.category ? (
+          <span className="fp-category-chip">{place.category}</span>
+        ) : null}
       </div>
     </div>
   );
@@ -231,8 +240,8 @@ function PlaceDetailEvidence({ place }: { place: PlaceDetailData }) {
         </section>
       )}
 
-      <section className="lg:hidden px-5 sm:px-7 py-4">
-        <div className="flex items-center gap-2 text-fp-muted text-xs mb-3">
+      <section className="lg:hidden px-5 sm:px-7 py-4 border-t border-fp-border">
+        <div className="flex items-center gap-2 text-fp-teal text-xs mb-3">
           <MapPinIcon />
           <span>{place.location}</span>
         </div>
@@ -264,7 +273,7 @@ function FeaturedMentionCard({
   const level = mentionSentimentLevel(mention.sentimentScore);
 
   return (
-    <article className="rounded-xl border border-fp-border bg-fp-surface/40 p-5 sm:p-6">
+    <article className="rounded-2xl border border-fp-border bg-fp-dim p-5 sm:p-6">
       {mention.summary ? (
         <p className="text-fp-cream/90 text-[0.95rem] sm:text-base leading-relaxed max-w-prose text-pretty">
           {mention.summary}
@@ -274,7 +283,7 @@ function FeaturedMentionCard({
       )}
 
       <div className="mt-4 pt-4 border-t border-fp-border flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-        <span className={`font-medium ${sentimentClasses[level]}`}>
+        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold capitalize border ${mentionSentimentPill[level]}`}>
           {mention.sentiment}
         </span>
         <span className="text-fp-muted tabular-nums">
@@ -298,7 +307,7 @@ function MentionListItem({
   const level = mentionSentimentLevel(mention.sentimentScore);
 
   return (
-    <li className="flex gap-3 rounded-lg border border-fp-border/80 bg-fp-surface/20 px-4 py-3.5">
+    <li className="flex gap-3 rounded-xl border border-fp-border bg-fp-dim px-4 py-3.5 transition-colors hover:border-fp-coral/30">
       <span
         className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${sentimentDot[level]}`}
         aria-hidden
@@ -322,7 +331,7 @@ function OpenInMapButton({ label, href, icon }: { label: string; href: string; i
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-fp-border bg-fp-surface text-fp-cream text-[0.72rem] font-medium hover:border-fp-coral/50 hover:text-fp-coral transition-colors"
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-fp-border bg-fp-dim text-fp-cream text-[0.72rem] font-medium hover:border-fp-coral/50 hover:text-fp-coral transition-colors"
     >
       {icon}
       {label}
