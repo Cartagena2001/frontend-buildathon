@@ -25,6 +25,7 @@ export interface SearchResultCoordinates {
 
 export interface SearchResultMetadata {
   coordinates?: SearchResultCoordinates;
+  category?: string;
   mentionCount?: number;
   engagement?: SearchEngagement;
   sentiments?: SearchSentiment[];

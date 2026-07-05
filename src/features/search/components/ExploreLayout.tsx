@@ -1,64 +1,75 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { useLocale } from "next-intl";
 import ExploreFilters from "./ExploreFilters";
 import PlaceGridCard from "@/features/places/components/PlaceGridCard";
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
+import {
+  filterAndSortPlaces,
+  type ExploreCategoryId,
+  type ExploreSentiment,
+  type ExploreSort,
+} from "@/features/search/filter-places";
 
 const MapView = dynamic(() => import("@/features/map/components/MapView"), { ssr: false });
 
-type Sentiment   = "positive" | "neutral" | "negative";
-type Ranking     = "likes" | "comments" | "views";
-type CategoryId  = "all" | "restaurant" | "beach" | "nightlife" | "shopping" | "active" | "beauty" | "automotive" | "home-services" | "other";
-
-const sentimentMap: Record<Sentiment, PlaceCardData["sentiment"][]> = {
-  positive: ["high"],
-  neutral:  ["medium"],
-  negative: ["low"],
-};
-
 interface Props {
-  places:        PlaceCardData[];
+  places: PlaceCardData[];
   savedPlaceIds?: string[];
+  sentiment: ExploreSentiment | null;
+  sort: ExploreSort;
+  category: ExploreCategoryId;
+  onSentiment: (value: ExploreSentiment | null) => void;
+  onSort: (value: ExploreSort) => void;
+  onCategory: (value: ExploreCategoryId) => void;
 }
 
-export default function ExploreLayout({ places, savedPlaceIds = [] }: Props) {
+export default function ExploreLayout({
+  places,
+  savedPlaceIds = [],
+  sentiment,
+  sort,
+  category,
+  onSentiment,
+  onSort,
+  onCategory,
+}: Props) {
   const locale = useLocale();
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [selectedId,  setSelectedId]  = useState<string | null>(places[0]?.id ?? null);
-  const [sentiment,   setSentiment]   = useState<Sentiment | null>(null);
-  const [ranking,     setRanking]     = useState<Ranking | null>(null);
-  const [category,    setCategory]    = useState<CategoryId>("all");
+  const [selectedId, setSelectedId] = useState<string | null>(places[0]?.id ?? null);
 
-  const filtered = useMemo(() => {
-    let result = [...places];
+  const filtered = useMemo(
+    () => filterAndSortPlaces(places, { sentiment, category, sort }),
+    [places, sentiment, category, sort],
+  );
 
-    if (sentiment) {
-      const levels = sentimentMap[sentiment];
-      result = result.filter((p) => levels.includes(p.sentiment));
+  useEffect(() => {
+    if (filtered.length === 0) {
+      setSelectedId(null);
+      return;
     }
 
-    if (category !== "all") {
-      result = result.filter((p) => p.categoryType === category);
+    if (!filtered.some((place) => place.id === selectedId)) {
+      setSelectedId(filtered[0].id);
     }
+  }, [filtered, selectedId]);
 
-    if (ranking === "likes")    result.sort((a, b) => b.likes    - a.likes);
-    if (ranking === "comments") result.sort((a, b) => b.comments - a.comments);
-    if (ranking === "views")    result.sort((a, b) => b.views    - a.views);
-
-    return result;
-  }, [places, sentiment, category, ranking]);
+  const activeFilterCount = [
+    sentiment,
+    sort !== "viral" ? sort : null,
+    category !== "all" ? category : null,
+  ].filter(Boolean).length;
 
   const filterPanel = (
     <ExploreFilters
       sentiment={sentiment}
-      ranking={ranking}
+      sort={sort}
       category={category}
-      onSentiment={setSentiment}
-      onRanking={setRanking}
-      onCategory={setCategory}
+      onSentiment={onSentiment}
+      onSort={onSort}
+      onCategory={onCategory}
     />
   );
 
@@ -75,9 +86,9 @@ export default function ExploreLayout({ places, savedPlaceIds = [] }: Props) {
             <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/>
           </svg>
           Filters
-          {(sentiment || ranking || category !== "all") && (
+          {activeFilterCount > 0 && (
             <span className="w-4 h-4 rounded-full bg-fp-coral text-white text-[0.55rem] flex items-center justify-center font-bold">
-              {[sentiment, ranking, category !== "all" ? category : null].filter(Boolean).length}
+              {activeFilterCount}
             </span>
           )}
         </button>

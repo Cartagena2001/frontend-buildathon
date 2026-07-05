@@ -1,4 +1,5 @@
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
+import { resolveCategoryType } from "@/features/places/category-type";
 import type { SearchResultItem } from "./types";
 
 interface CategoryImages {
@@ -65,27 +66,6 @@ function imagesForCategory(category: string): CategoryImages {
   return CATEGORY_IMAGES[category.trim().toLowerCase()] ?? DEFAULT_IMAGES;
 }
 
-const CATEGORY_TYPE_MAP: Record<string, PlaceCardData["categoryType"]> = {
-  beach: "beach",
-  food: "restaurant",
-  restaurant: "restaurant",
-  seafood: "restaurant",
-  dining: "restaurant",
-  cafe: "restaurant",
-  "café": "restaurant",
-  nightlife: "nightlife",
-  bar: "nightlife",
-  club: "nightlife",
-  shopping: "shopping",
-  market: "shopping",
-  beauty: "beauty",
-  automotive: "automotive",
-};
-
-function resolveCategoryType(category: string): PlaceCardData["categoryType"] {
-  return CATEGORY_TYPE_MAP[category.trim().toLowerCase()] ?? "other";
-}
-
 function toInt(value?: string): number {
   const parsed = Number.parseInt(value ?? "", 10);
   return Number.isFinite(parsed) ? parsed : 0;
@@ -147,7 +127,7 @@ function mapSearchResult(
   index: number,
 ): PlaceCardData {
   const { content, metadata } = item;
-  const category = content.category ?? "";
+  const category = metadata?.category ?? content.category ?? "";
   const images = imagesForCategory(category);
   const { sentiment, sentimentLabel } = resolveSentiment(item);
   const { badge, badgeColor } = resolveBadge(item.score);

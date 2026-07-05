@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import ExploreLayout from "./ExploreLayout";
 import MascotLoadingOverlay from "@/components/mascot/MascotLoadingOverlay";
 import { fetchSearchResults } from "../search-client";
 import { getCachedResults, setCachedResults } from "../search-results-cache";
+import {
+  filterAndSortPlaces,
+  type ExploreCategoryId,
+  type ExploreSentiment,
+  type ExploreSort,
+} from "../filter-places";
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
 
 interface Props {
@@ -13,10 +19,15 @@ interface Props {
   savedPlaceIds: string[];
 }
 
+const SORT_OPTIONS: ExploreSort[] = ["viral", "likes", "comments", "views"];
+
 export default function ExploreResults({ query, savedPlaceIds }: Props) {
   const t = useTranslations("explore");
   const [places, setPlaces] = useState<PlaceCardData[]>([]);
   const [loading, setLoading] = useState(Boolean(query));
+  const [sentiment, setSentiment] = useState<ExploreSentiment | null>(null);
+  const [sort, setSort] = useState<ExploreSort>("viral");
+  const [category, setCategory] = useState<ExploreCategoryId>("all");
 
   useEffect(() => {
     if (!query) {
@@ -53,6 +64,17 @@ export default function ExploreResults({ query, savedPlaceIds }: Props) {
     };
   }, [query]);
 
+  useEffect(() => {
+    setSentiment(null);
+    setSort("viral");
+    setCategory("all");
+  }, [query]);
+
+  const filteredCount = useMemo(
+    () => filterAndSortPlaces(places, { sentiment, category, sort }).length,
+    [places, sentiment, category, sort],
+  );
+
   return (
     <>
       {loading ? <MascotLoadingOverlay variant="search" /> : null}
@@ -63,27 +85,59 @@ export default function ExploreResults({ query, savedPlaceIds }: Props) {
             {t("title")}
           </h1>
           <p className="text-fp-muted text-xs mt-0.5 hidden sm:block">
-            {t("subtitle", { count: String(places.length), clips: "1,420" })}
+            {t("subtitle", {
+              count: String(filteredCount),
+              clips: "1,420",
+            })}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-fp-muted text-xs hidden sm:block">
             {t("sortedBy")}
           </span>
-          <SortDropdown />
+          <SortDropdown sort={sort} onSort={setSort} />
         </div>
       </div>
 
-      <ExploreLayout places={places} savedPlaceIds={savedPlaceIds} />
+      <ExploreLayout
+        places={places}
+        savedPlaceIds={savedPlaceIds}
+        sentiment={sentiment}
+        sort={sort}
+        category={category}
+        onSentiment={setSentiment}
+        onSort={setSort}
+        onCategory={setCategory}
+      />
     </>
   );
 }
 
-function SortDropdown() {
+function SortDropdown({
+  sort,
+  onSort,
+}: {
+  sort: ExploreSort;
+  onSort: (value: ExploreSort) => void;
+}) {
+  const t = useTranslations("explore.sortOptions");
+
   return (
-    <div className="flex items-center gap-1.5 border border-fp-border rounded-full px-3 py-1.5 cursor-pointer hover:border-fp-coral/50 transition-colors">
-      <span className="font-sans text-fp-cream text-xs font-medium whitespace-nowrap">
-        Viral Momentum
+    <label className="relative flex items-center gap-1.5 border border-fp-border rounded-full px-3 py-1.5 cursor-pointer hover:border-fp-coral/50 transition-colors">
+      <select
+        value={sort}
+        onChange={(event) => onSort(event.target.value as ExploreSort)}
+        className="absolute inset-0 opacity-0 cursor-pointer"
+        aria-label={t("viral")}
+      >
+        {SORT_OPTIONS.map((option) => (
+          <option key={option} value={option}>
+            {t(option === "viral" ? "viral" : option)}
+          </option>
+        ))}
+      </select>
+      <span className="font-sans text-fp-cream text-xs font-medium whitespace-nowrap pointer-events-none">
+        {t(sort === "viral" ? "viral" : sort)}
       </span>
       <svg
         width="10"
@@ -92,10 +146,10 @@ function SortDropdown() {
         fill="none"
         stroke="currentColor"
         strokeWidth="2.5"
-        className="text-fp-muted shrink-0"
+        className="text-fp-muted shrink-0 pointer-events-none"
       >
         <path d="m6 9 6 6 6-6" />
       </svg>
-    </div>
+    </label>
   );
 }

@@ -105,6 +105,9 @@
     "sortedBy": "Sorted by",
     "sortOptions": {
       "viral": "Viral Momentum",
+      "likes": "Most Likes",
+      "comments": "Most Comments",
+      "views": "Most Views",
       "sentiment": "Best Sentiment",
       "recent": "Most Recent"
     },
