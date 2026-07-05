@@ -8,7 +8,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-fp-dim border-t border-fp-border">
-      <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-20 py-16">
+      <div className="w-full px-6 sm:px-8 py-16">
         {/* Top row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-14">
           {/* Brand */}
