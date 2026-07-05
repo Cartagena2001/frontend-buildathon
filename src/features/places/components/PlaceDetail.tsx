@@ -210,6 +210,7 @@ function PlaceDetailHero({
         <SaveButton
           isSaved={isSaved}
           place={savePayload}
+          onUnauthenticated={() => {}}
           className="w-10 h-10 !bg-black/50 backdrop-blur-sm border border-white/20 !text-white hover:!bg-fp-coral/90 hover:!text-white hover:border-transparent shadow-lg"
         />
       </div>
@@ -286,32 +287,34 @@ function PlaceDetailSections({
           <span className="text-fp-muted text-[0.65rem] tabular-nums">{place.thumbnails.length} clips</span>
         </div>
 
-        {/* Filmstrip: fila horizontal compacta */}
-        <div className="flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory scrollbar-none -mx-1 px-1">
+        {/* Filmstrip: fila horizontal con miniaturas de tamaño confortable */}
+        <div className="flex gap-2.5 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none -mx-1 px-1">
           {place.thumbnails.map((src, i) => (
             <button
               key={i}
               type="button"
               onClick={() => onOpenClip(i)}
-              className="group relative h-20 w-14 shrink-0 rounded-lg overflow-hidden border border-fp-border hover:border-fp-coral/60 transition-colors snap-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fp-coral"
+              className="group relative h-40 w-28 sm:h-44 sm:w-32 shrink-0 rounded-xl overflow-hidden border border-fp-border hover:border-fp-coral/60 transition-all duration-200 snap-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fp-coral hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20"
             >
               <Image
                 src={src}
                 alt=""
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
-                sizes="56px"
+                sizes="(min-width: 640px) 128px, 112px"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-fp-dark/70 to-transparent" />
-              {/* Icono play — aparece siempre, pequeño */}
+              <div className="absolute inset-0 bg-gradient-to-t from-fp-dark/80 via-fp-dark/10 to-transparent" />
+              {/* Play — centrado, se vuelve coral en hover */}
               <span className="absolute inset-0 flex items-center justify-center">
-                <span className="w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center group-hover:bg-fp-coral/90 transition-colors">
+                <span className="w-9 h-9 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center border border-white/20 group-hover:bg-fp-coral/90 group-hover:border-transparent transition-all duration-200 shadow-md">
                   <PlayIcon />
                 </span>
               </span>
-              {/* Fecha debajo */}
-              <span className="absolute bottom-1 inset-x-0 text-center text-[0.45rem] text-fp-cream/80 font-semibold leading-none px-0.5">
-                {clipDate(i, locale)}
+              {/* Fecha en el pie */}
+              <span className="absolute bottom-0 inset-x-0 px-2 pb-2 pt-4">
+                <span className="block text-[0.58rem] text-fp-cream/90 font-semibold leading-none">
+                  {clipDate(i, locale)}
+                </span>
               </span>
             </button>
           ))}

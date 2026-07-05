@@ -6,20 +6,27 @@ import { savePlace, unsavePlace } from "@/lib/saved/actions";
 import type { SavePlaceInput } from "@/lib/saved/actions";
 
 interface Props {
-  place:     SavePlaceInput;
-  isSaved:   boolean;
-  className?: string;
+  place:              SavePlaceInput;
+  isSaved:            boolean;
+  className?:         string;
+  /** Llamado cuando la acción falla por no estar autenticado.
+   *  Por defecto redirige a /login. Pasa `() => {}` para suprimir la redirección. */
+  onUnauthenticated?: () => void;
 }
 
-export default function SaveButton({ place, isSaved: initialSaved, className = "" }: Props) {
+export default function SaveButton({ place, isSaved: initialSaved, className = "", onUnauthenticated }: Props) {
   const [saved, setSaved] = useState(initialSaved);
   const [pending, start]  = useTransition();
   const router            = useRouter();
   const pathname          = usePathname();
 
-  const redirectToLogin = () => {
-    const params = new URLSearchParams({ callbackUrl: pathname });
-    router.push(`/login?${params.toString()}`);
+  const handleUnauthenticated = () => {
+    if (onUnauthenticated) {
+      onUnauthenticated();
+    } else {
+      const params = new URLSearchParams({ callbackUrl: pathname });
+      router.push(`/login?${params.toString()}`);
+    }
   };
 
   const toggle = (e: React.MouseEvent) => {
@@ -29,14 +36,14 @@ export default function SaveButton({ place, isSaved: initialSaved, className = "
       if (saved) {
         const result = await unsavePlace(place.placeId);
         if (result?.error === "Not authenticated") {
-          redirectToLogin();
+          handleUnauthenticated();
           return;
         }
         setSaved(false);
       } else {
         const result = await savePlace(place);
         if (result?.error === "Not authenticated") {
-          redirectToLogin();
+          handleUnauthenticated();
           return;
         }
         setSaved(true);
