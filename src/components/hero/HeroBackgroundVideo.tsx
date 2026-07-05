@@ -17,20 +17,26 @@ export default function HeroBackgroundVideo() {
 
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    const syncPlayback = () => {
+    const tryPlay = async () => {
       if (motionQuery.matches) {
         video.pause();
         return;
       }
-      void video.play().catch(() => {});
+      try {
+        await video.play();
+      } catch {
+        setTimeout(() => void video.play().catch(() => {}), 150);
+      }
     };
 
-    syncPlayback();
-    motionQuery.addEventListener("change", syncPlayback);
-    video.addEventListener("canplay", syncPlayback);
+    void tryPlay();
+    motionQuery.addEventListener("change", tryPlay);
+    video.addEventListener("loadeddata", tryPlay);
+    video.addEventListener("canplay", tryPlay);
     return () => {
-      motionQuery.removeEventListener("change", syncPlayback);
-      video.removeEventListener("canplay", syncPlayback);
+      motionQuery.removeEventListener("change", tryPlay);
+      video.removeEventListener("loadeddata", tryPlay);
+      video.removeEventListener("canplay", tryPlay);
     };
   }, []);
 

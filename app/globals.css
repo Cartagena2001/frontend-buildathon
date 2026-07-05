@@ -164,9 +164,10 @@ body {
   background-position: center 40%;
 }
 
-/* Homepage — video replaces the Unsplash background-image */
+/* Homepage — poster from HeroSection inline style; video layers on top when ready */
 .hero-bg--video {
-  background-image: none;
+  background-size: cover;
+  background-position: center 40%;
 }
 
 .hero-bg--video video {
@@ -522,6 +523,12 @@ body {
 
 .mascot-loading-overlay__copy p:last-child {
   color: var(--fp-gray-500);
+}
+
+.mascot-elevation {
+  filter: drop-shadow(0 8px 16px rgba(34, 34, 34, 0.32))
+          drop-shadow(0 24px 48px rgba(34, 34, 34, 0.38))
+          drop-shadow(0 48px 96px rgba(34, 34, 34, 0.42));
 }
 
 .mascot-loading-video {
