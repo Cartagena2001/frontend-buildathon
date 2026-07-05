@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import HeroCatMascot from "@/components/mascot/HeroCatMascot";
+import HeroSection from "@/components/hero/HeroSection";
 import BrandLogo from "@/components/ui/BrandLogo";
 import { Link } from "@/i18n/navigation";
 import SearchBar from "@/features/search/components/SearchBar";
@@ -40,7 +41,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <div className="hero-bg min-h-screen flex flex-col overflow-hidden">
+      <HeroSection>
         <nav className="hero-content relative z-50 flex w-full items-center justify-between px-6 py-5 sm:px-8 sm:py-6 fade-up">
           <Link href="/" className={navLogoLinkClassName}>
             <BrandLogo size="nav" priority />
@@ -73,7 +74,7 @@ export default async function HomePage() {
         <div className="hero-content relative flex-1 flex items-center px-6 pb-16 sm:px-8 sm:pb-20">
           <div className="relative z-20 w-full max-w-3xl">
             <div className="relative mb-10">
-              <h1 className="font-display text-[clamp(2.8rem,7vw,5.5rem)] leading-[1.05] text-fp-cream">
+              <h1 className="hero-headline font-display text-[clamp(2.8rem,7vw,5.5rem)] leading-[1.05] text-fp-cream">
                 <span className="fade-up delay-100 block">{t("home.headline1")}</span>
                 <span className="fade-up delay-200 block italic">{t("home.headline2")}</span>
               </h1>
@@ -84,7 +85,7 @@ export default async function HomePage() {
             </div>
 
             <div className="fade-up delay-400 mt-6">
-              <p className="text-fp-muted text-[0.7rem] font-semibold tracking-[0.12em] uppercase mb-3">
+              <p className="hero-viral-label text-[0.7rem] font-semibold tracking-[0.12em] uppercase mb-3">
                 {t("home.viralLabel")}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -105,9 +106,7 @@ export default async function HomePage() {
             <HeroCatMascot />
           </div>
         </div>
-
-        <div className="absolute bottom-0 left-0 right-0 z-[1] h-40 bg-gradient-to-t from-fp-dark to-transparent pointer-events-none" />
-      </div>
+      </HeroSection>
 
       <PopularPlaces />
 

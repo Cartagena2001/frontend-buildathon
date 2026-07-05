@@ -9,6 +9,7 @@ import {
   BRAND_LOGO,
 } from "@/lib/brand";
 import { MASCOT_VERSION } from "@/components/mascot/types";
+import { HERO_BG_ASSETS } from "@/components/hero/types";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -63,6 +64,8 @@ export default async function RootLayout({
       className={`${dmSans.variable} h-full`}
     >
       <head>
+        <link rel="preload" href={HERO_BG_ASSETS.poster} as="image" type="image/webp" />
+        <link rel="preload" href={HERO_BG_ASSETS.mp4} as="fetch" type="video/mp4" />
         <link rel="preload" href="/mascot/hero-cat.webp" as="image" type="image/webp" />
         <link
           rel="preload"
