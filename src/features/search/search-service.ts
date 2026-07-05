@@ -45,10 +45,11 @@ export async function searchPlaces({
   const data: unknown = await res.json();
   const results = Array.isArray(data) ? (data as SearchResultItem[]) : [];
 
-  console.log(
-    `[search] query="${trimmed}" index="${index}" results=${results.length}`,
-    JSON.stringify(results, null, 2),
-  );
+  if (process.env.NODE_ENV === "development") {
+    console.log(
+      `[search] query="${trimmed}" index="${index}" results=${results.length}`,
+    );
+  }
 
   return results;
 }

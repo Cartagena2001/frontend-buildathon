@@ -75,6 +75,13 @@ function OverlayContent({ variant = "search" }: Props) {
 }
 
 export default function MascotLoadingOverlay(props: Props) {
-  if (typeof document === "undefined") return null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return createPortal(<OverlayContent {...props} />, document.body);
 }

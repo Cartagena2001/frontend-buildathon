@@ -30,7 +30,8 @@ export default function ExploreResults({
   const t = useTranslations("explore");
   const [places, setPlaces] = useState<PlaceCardData[]>([]);
   const [relatedPlaces, setRelatedPlaces] = useState<PlaceCardData[]>([]);
-  const [loading, setLoading] = useState(Boolean(query));
+  // Start false so SSR and the first client render match; enable in useEffect after mount.
+  const [loading, setLoading] = useState(false);
   const [sentiment, setSentiment] = useState<ExploreSentiment | null>(null);
   const [sort, setSort] = useState<ExploreSort>("likes");
   const [category, setCategory] = useState<ExploreCategoryId>(initialCategory);
@@ -40,6 +41,7 @@ export default function ExploreResults({
 
   if (query !== prevQuery) {
     setPrevQuery(query);
+    setLoading(false);
     setSentiment(null);
     setSort("likes");
     setCategory("all");
@@ -52,7 +54,12 @@ export default function ExploreResults({
   }
 
   useEffect(() => {
-    if (!query) return;
+    if (!query) {
+      setPlaces([]);
+      setRelatedPlaces([]);
+      setLoading(false);
+      return;
+    }
 
     let active = true;
 
@@ -133,6 +140,7 @@ export default function ExploreResults({
       <ExploreLayout
         places={displayPlaces}
         relatedPlaces={displayRelatedPlaces}
+        mapReady={!isLoading}
         savedPlaceIds={savedPlaceIds}
         sentiment={sentiment}
         sort={sort}

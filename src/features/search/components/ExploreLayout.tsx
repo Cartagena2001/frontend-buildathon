@@ -18,6 +18,7 @@ const MapView = dynamic(() => import("@/features/map/components/MapView"), { ssr
 interface Props {
   places: PlaceCardData[];
   relatedPlaces?: PlaceCardData[];
+  mapReady?: boolean;
   savedPlaceIds?: string[];
   sentiment: ExploreSentiment | null;
   sort: ExploreSort;
@@ -31,6 +32,7 @@ interface Props {
 export default function ExploreLayout({
   places,
   relatedPlaces = [],
+  mapReady = true,
   savedPlaceIds = [],
   sentiment,
   sort,
@@ -90,7 +92,7 @@ export default function ExploreLayout({
   );
 
   return (
-    <div className="flex flex-1 overflow-hidden relative">
+    <div className="flex flex-1 min-h-0 overflow-hidden relative">
 
       {/* ── Mobile filter button ── */}
       <div className="lg:hidden shrink-0 flex items-center gap-2 px-4 py-2.5 border-b border-fp-border bg-fp-dark w-full absolute top-0 left-0 right-0 z-20">
@@ -171,17 +173,21 @@ export default function ExploreLayout({
       </main>
 
       {/* ── Map (desktop only) ── */}
-      <aside className="hidden lg:block relative w-[42%] xl:w-[45%] 2xl:w-[48%] shrink-0 border-l border-fp-border">
-        <MapView
-          places={mapPlaces}
-          selectedId={resolvedSelectedId}
-          locale={locale}
-          onSelectPlace={(id) => {
-            setSelectedId(id);
-            const el = document.getElementById(`place-${id}`);
-            el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-          }}
-        />
+      <aside className="hidden lg:block relative h-full min-h-0 w-[42%] xl:w-[45%] 2xl:w-[48%] shrink-0 border-l border-fp-border">
+        {mapReady ? (
+          <MapView
+            places={mapPlaces}
+            selectedId={resolvedSelectedId}
+            locale={locale}
+            onSelectPlace={(id) => {
+              setSelectedId(id);
+              const el = document.getElementById(`place-${id}`);
+              el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-[var(--map-bg)]" aria-hidden />
+        )}
       </aside>
     </div>
   );

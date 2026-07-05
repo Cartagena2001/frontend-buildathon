@@ -66,8 +66,11 @@ export function imagesForCategory(category: string): CategoryImages {
   return CATEGORY_IMAGES[category.trim().toLowerCase()] ?? DEFAULT_IMAGES;
 }
 
-function toInt(value?: string): number {
-  const parsed = Number.parseInt(value ?? "", 10);
+function toInt(value?: string | number | null): number {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return Math.trunc(value);
+  }
+  const parsed = Number.parseInt(String(value ?? ""), 10);
   return Number.isFinite(parsed) ? parsed : 0;
 }
 

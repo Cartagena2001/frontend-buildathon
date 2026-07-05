@@ -1,8 +1,8 @@
 export interface SearchEngagement {
-  likes: string;
-  comments: string;
-  shares: string;
-  bookmarks: string;
+  likes: string | number;
+  comments: string | number;
+  shares: string | number;
+  bookmarks: string | number;
 }
 
 export interface SearchSentiment {

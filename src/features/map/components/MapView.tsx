@@ -11,36 +11,78 @@ type LeafletApi = typeof Leaflet;
 
 const EL_SALVADOR_CENTER: LatLngTuple = [13.6929, -89.2182];
 
-function createNameLabel(L: LeafletApi, name: string, selected: boolean) {
-  const bg = selected ? "#FF5A5F" : "rgba(255, 255, 255, 0.92)";
-  const color = selected ? "#ffffff" : "#222222";
-  const shadow = selected
-    ? "0 3px 14px rgba(255,90,95,0.5)"
-    : "0 2px 10px rgba(34,34,34,0.14)";
-  const short = name.length > 22 ? name.slice(0, 20) + "…" : name;
+function hasValidMapCoords(place: PlaceCardData): boolean {
+  const { lat, lng } = place;
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
+  if (lat === 0 && lng === 0) return false;
+  return lat >= 12.5 && lat <= 14.5 && lng >= -90.5 && lng <= -87.5;
+}
+const LOCATION_PIN_SRC = "/map/location-pin.webp";
+const PIN_WIDTH = 48;
+const PIN_HEIGHT = Math.round(PIN_WIDTH * (655 / 535));
+const POPUP_GAP = 6;
+
+function centerMapOnMarkerWithPopup(
+  L: LeafletApi,
+  map: LeafletMap,
+  marker: Marker,
+  animate = true,
+) {
+  const latLng = marker.getLatLng();
+  const pinHeight = PIN_HEIGHT;
+
+  const applyCenter = () => {
+    const popupHeight = marker.getPopup()?.getElement()?.offsetHeight ?? 0;
+    const offsetY = (pinHeight + POPUP_GAP + popupHeight) / 2;
+    const size = map.getSize();
+    const markerPoint = map.latLngToContainerPoint(latLng);
+    const desiredMarkerPoint = L.point(size.x / 2, size.y / 2 + offsetY);
+    const delta = markerPoint.subtract(desiredMarkerPoint);
+    const newCenterPoint = L.point(size.x / 2, size.y / 2).add(delta);
+    const newCenter = map.containerPointToLatLng(newCenterPoint);
+
+    map.setView(newCenter, map.getZoom(), {
+      animate,
+      duration: animate ? 0.4 : 0,
+    });
+  };
+
+  const popupEl = marker.getPopup()?.getElement();
+  if (marker.isPopupOpen() && popupEl && popupEl.offsetHeight > 0) {
+    requestAnimationFrame(applyCenter);
+    return;
+  }
+
+  marker.once("popupopen", () => {
+    requestAnimationFrame(applyCenter);
+  });
+}
+
+function createLocationPinIcon(L: LeafletApi, selected: boolean) {
+  const filter = selected
+    ? "drop-shadow(0 3px 8px rgba(255,90,95,0.45))"
+    : "grayscale(1) brightness(0.72) saturate(0.4)";
 
   return L.divIcon({
     className: "",
-    html: `<span style="
-      display:inline-block;
-      background:${bg};
-      color:${color};
-      font-family:${FONT_SANS};
-      font-size:11px;
-      font-weight:700;
-      padding:4px 9px;
-      border-radius:20px;
-      white-space:nowrap;
-      box-shadow:${shadow};
-      cursor:pointer;
-      user-select:none;
-      transform:${selected ? "scale(1.1)" : "scale(1)"};
-      transition:transform 0.15s,background 0.15s;
-      border:${selected ? "2px solid #fff" : "1px solid rgba(34,34,34,0.12)"};
-    ">${short}</span>`,
-    iconSize: [0, 0],
-    iconAnchor: [0, 20],
-    popupAnchor: [0, -30],
+    html: `<img
+      src="${LOCATION_PIN_SRC}"
+      alt=""
+      draggable="false"
+      style="
+        display:block;
+        width:${PIN_WIDTH}px;
+        height:${PIN_HEIGHT}px;
+        cursor:pointer;
+        user-select:none;
+        pointer-events:auto;
+        filter:${filter};
+        transition:filter 0.15s ease;
+      "
+    />`,
+    iconSize: [PIN_WIDTH, PIN_HEIGHT],
+    iconAnchor: [PIN_WIDTH / 2, PIN_HEIGHT],
+    popupAnchor: [0, -PIN_HEIGHT - 6],
   });
 }
 
@@ -183,12 +225,13 @@ export default function MapView({
     layer.clearLayers();
     markerMapRef.current.clear();
 
-    places.forEach((place) => {
+    const mappablePlaces = places.filter(hasValidMapCoords);
+
+    mappablePlaces.forEach((place) => {
       const selected = selectedId === place.id;
 
       const marker = L.marker([place.lat, place.lng], {
-        icon: createNameLabel(L, place.name, selected),
-        opacity: selectedId && !selected ? 0.6 : 1,
+        icon: createLocationPinIcon(L, selected),
         zIndexOffset: selected ? 1000 : 0,
       });
 
@@ -197,8 +240,7 @@ export default function MapView({
           maxWidth: 240,
           className: "fp-map-popup",
           closeButton: true,
-          offset: [60, 0],
-          autoPan: true,
+          autoPan: false,
         });
       }
 
@@ -211,16 +253,24 @@ export default function MapView({
       markerMapRef.current.set(place.id, marker);
     });
 
-    if (places.length === 0) {
-      map.setView(EL_SALVADOR_CENTER, 8);
-    } else if (places.length === 1) {
-      map.setView([places[0].lat, places[0].lng], 13);
-    } else {
-      const bounds = L.latLngBounds(places.map((p) => [p.lat, p.lng]));
-      map.fitBounds(bounds, { padding: [48, 48], maxZoom: 13 });
-    }
+    const fitMapToPlaces = () => {
+      if (mappablePlaces.length === 0) {
+        map.setView(EL_SALVADOR_CENTER, 8);
+      } else if (mappablePlaces.length === 1) {
+        map.setView([mappablePlaces[0].lat, mappablePlaces[0].lng], 13);
+      } else {
+        const bounds = L.latLngBounds(
+          mappablePlaces.map((p) => [p.lat, p.lng] as LatLngTuple),
+        );
+        map.fitBounds(bounds, { padding: [48, 48], maxZoom: 13 });
+      }
+    };
 
-    window.setTimeout(() => map.invalidateSize({ animate: false }), 0);
+    fitMapToPlaces();
+    requestAnimationFrame(() => {
+      map.invalidateSize({ animate: false });
+      fitMapToPlaces();
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [places, locale, showPopup, leafletReady]);
 
@@ -231,15 +281,16 @@ export default function MapView({
     if (!marker) return;
 
     markerMapRef.current.forEach((m, id) => {
-      const place = places.find((p) => p.id === id);
-      if (!place) return;
-      m.setIcon(createNameLabel(L, place.name, id === selectedId));
-      m.setOpacity(id === selectedId ? 1 : 0.6);
+      m.setIcon(createLocationPinIcon(L, id === selectedId));
       (m.options as MarkerOptions).zIndexOffset = id === selectedId ? 1000 : 0;
     });
 
-    if (showPopup) marker.openPopup();
-    mapRef.current.panTo(marker.getLatLng(), { animate: true, duration: 0.4 });
+    if (showPopup) {
+      marker.openPopup();
+      centerMapOnMarkerWithPopup(L, mapRef.current, marker);
+    } else {
+      mapRef.current.panTo(marker.getLatLng(), { animate: true, duration: 0.4 });
+    }
   }, [selectedId, places, showPopup, leafletReady]);
 
   return (
