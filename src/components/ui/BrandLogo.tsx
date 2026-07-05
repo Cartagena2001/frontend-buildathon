@@ -7,7 +7,7 @@ import { useTheme } from "@/components/ui/ThemeProvider";
 const HEIGHT = {
   sm: "h-5",
   md: "h-6",
-  nav: "h-[21px]",
+  nav: "h-13 translate-y-0.5",
   lg: "h-8",
 } as const;
 
