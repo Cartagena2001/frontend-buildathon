@@ -13,12 +13,18 @@ export const authConfig = {
   providers: [],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update") {
+        if (session?.name) token.name = session.name;
+        // Profile/session refresh — keep findyCoreToken for place-lists API calls.
+        return token;
+      }
+
       // On initial sign-in, copy all fields from the User object so they
       // persist in every subsequent session refresh.
       if (user?.id) {
         token.id    = user.id;
-        token.email = user.email;
+        token.email = user.email ?? token.email;
         token.name  = user.name;
       }
 
