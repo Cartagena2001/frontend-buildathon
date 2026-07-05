@@ -41,7 +41,9 @@ export default function ThemeProvider({
     document.body.setAttribute("data-theme", resolved);
     localStorage.setItem("fp-theme", resolved);
     document.cookie = `fp-theme=${resolved};path=/;max-age=31536000;samesite=lax`;
-    setTheme(resolved);
+
+    const frame = window.requestAnimationFrame(() => setTheme(resolved));
+    return () => window.cancelAnimationFrame(frame);
   }, [initialTheme]);
 
   function apply(next: Theme) {

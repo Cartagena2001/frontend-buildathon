@@ -1,15 +1,59 @@
 import type { Metadata } from "next";
+import { DM_Serif_Display, DM_Sans } from "next/font/google";
 import { getLocale } from "next-intl/server";
 import { getTheme } from "@/lib/theme";
+import {
+  APP_DESCRIPTION_ES,
+  APP_NAME,
+  APP_TAGLINE_ES,
+  BRAND_LOGO,
+} from "@/lib/brand";
 import { MASCOT_VERSION } from "@/components/mascot/types";
 import "./globals.css";
 
-// SF Pro Display loaded via @font-face in globals.css (local OTF files in public/fonts/sf-pro)
+const dmSerifDisplay = DM_Serif_Display({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+});
+
+const dmSans = DM_Sans({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+});
 
 export const metadata: Metadata = {
-  title: "findy.place — Tu guía de experiencias",
-  description:
-    "Descubre, explora y recomienda los lugares más virales de El Salvador, impulsados por datos de TikTok e Instagram.",
+  applicationName: APP_NAME,
+  title: {
+    default: `${APP_NAME} — ${APP_TAGLINE_ES}`,
+    template: `%s · ${APP_NAME}`,
+  },
+  description: APP_DESCRIPTION_ES,
+  openGraph: {
+    type: "website",
+    siteName: APP_NAME,
+    title: `${APP_NAME} — ${APP_TAGLINE_ES}`,
+    description: APP_DESCRIPTION_ES,
+    images: [
+      {
+        url: BRAND_LOGO.src,
+        width: BRAND_LOGO.width,
+        height: BRAND_LOGO.height,
+        alt: APP_NAME,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: `${APP_NAME} — ${APP_TAGLINE_ES}`,
+    description: APP_DESCRIPTION_ES,
+    images: [BRAND_LOGO.src],
+  },
+  appleWebApp: {
+    title: APP_NAME,
+  },
 };
 
 export default async function RootLayout({
@@ -23,7 +67,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className="h-full"
+      className={`${dmSerifDisplay.variable} ${dmSans.variable} h-full`}
     >
       <head>
         <link rel="preload" href="/mascot/hero-cat.webp" as="image" type="image/webp" />
@@ -42,7 +86,7 @@ export default async function RootLayout({
       <body
         data-theme={theme}
         suppressHydrationWarning
-        className="min-h-full bg-fp-dark text-fp-cream antialiased transition-colors duration-300"
+        className="min-h-full font-sans bg-fp-dark text-fp-cream antialiased transition-colors duration-300"
       >
         {children}
       </body>

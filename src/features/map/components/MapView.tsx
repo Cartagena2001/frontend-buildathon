@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
+import { FONT_DISPLAY, FONT_SANS } from "@/lib/typography";
 import "leaflet/dist/leaflet.css";
 
 const EL_SALVADOR_CENTER: L.LatLngTuple = [13.6929, -89.2182];
@@ -21,7 +22,7 @@ function createNameLabel(name: string, selected: boolean) {
       display:inline-block;
       background:${bg};
       color:#fff;
-      font-family:Inter,system-ui,sans-serif;
+      font-family:${FONT_SANS};
       font-size:11px;
       font-weight:700;
       padding:4px 9px;
@@ -49,7 +50,7 @@ function buildPopupHtml(place: PlaceCardData, locale: string) {
   const href = `/${locale}/explore/${place.id}`;
 
   return `
-    <div style="font-family:Inter,system-ui,sans-serif;width:220px;border-radius:14px;overflow:hidden;background:#fff">
+    <div style="font-family:${FONT_SANS};width:220px;border-radius:14px;overflow:hidden;background:#fff">
       <div style="position:relative;width:100%;height:120px;overflow:hidden">
         <img
           src="${place.coverImage}"
@@ -60,7 +61,7 @@ function buildPopupHtml(place: PlaceCardData, locale: string) {
         <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.35) 0%,transparent 55%)"></div>
       </div>
       <div style="padding:11px 13px 13px">
-        <p style="margin:0 0 2px;font-weight:700;font-size:13px;color:#111;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${place.name}</p>
+        <p style="font-family:${FONT_DISPLAY};margin:0 0 2px;font-weight:600;font-size:15px;color:#111;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${place.name}</p>
         <p style="margin:0 0 7px;font-size:11px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${place.location}</p>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
           <span style="font-size:12px;font-weight:700;color:#111">${place.viralScore} <span style="font-weight:400;color:#aaa;font-size:10px">viral</span></span>
@@ -139,6 +140,7 @@ export default function MapView({
     const t2 = window.setTimeout(invalidate, 400);
     const obs = new ResizeObserver(invalidate);
     obs.observe(container);
+    const markerMap = markerMapRef.current;
 
     return () => {
       window.clearTimeout(t1);
@@ -147,7 +149,7 @@ export default function MapView({
       map.remove();
       mapRef.current = null;
       layerRef.current = null;
-      markerMapRef.current.clear();
+      markerMap.clear();
     };
   }, []);
 

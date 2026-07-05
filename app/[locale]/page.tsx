@@ -1,10 +1,17 @@
 import { getTranslations } from "next-intl/server";
 import HeroCatMascot from "@/components/mascot/HeroCatMascot";
+import BrandLogo from "@/components/ui/BrandLogo";
 import { Link } from "@/i18n/navigation";
 import SearchBar from "@/features/search/components/SearchBar";
 import TagSearchLink from "@/features/search/components/TagSearchLink";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import MobileNav from "@/components/ui/MobileNav";
+import {
+  NavBarCluster,
+  NavBarDivider,
+  navLinkClassName,
+  navLogoLinkClassName,
+} from "@/components/ui/NavBarCluster";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import NavAuth from "@/components/ui/NavAuth";
 import PopularPlaces from "@/features/places/components/PopularPlaces";
@@ -34,41 +41,37 @@ export default async function HomePage() {
   return (
     <>
       <div className="hero-bg min-h-screen flex flex-col overflow-hidden">
-        <nav className="hero-content relative z-50 w-full flex items-center justify-between px-6 sm:px-8 py-5 sm:py-6 fade-up">
-          <Link
-            href="/"
-            className="text-fp-cream font-sans text-[1.05rem] font-light tracking-wide"
-          >
-            findy<span className="text-fp-coral">.</span>place
+        <nav className="hero-content relative z-50 flex w-full items-center justify-between px-6 py-5 sm:px-8 sm:py-6 fade-up">
+          <Link href="/" className={navLogoLinkClassName}>
+            <BrandLogo size="nav" priority />
           </Link>
 
-          <div className="hidden md:flex items-center gap-6">
+          <NavBarCluster className="hidden lg:flex">
             <ThemeToggle />
+            <NavBarDivider />
             <LocaleSwitcher />
-            <Link
-              href="/explore"
-              className="text-fp-muted hover:text-fp-coral text-sm font-medium transition-colors"
-            >
+            <NavBarDivider />
+            <Link href="/explore" className={navLinkClassName}>
               {t("nav.destinations")}
             </Link>
-            <Link
-              href="/explore?sort=trending"
-              className="text-fp-muted hover:text-fp-coral text-sm font-medium transition-colors"
-            >
+            <Link href="/explore?sort=trending" className={navLinkClassName}>
               {t("nav.trending")}
             </Link>
+            <NavBarDivider />
             <NavAuth />
-          </div>
+          </NavBarCluster>
 
-          <div className="flex md:hidden items-center gap-3">
+          <NavBarCluster className="flex lg:hidden">
             <ThemeToggle />
+            <NavBarDivider />
             <LocaleSwitcher />
+            <NavBarDivider />
             <MobileNav user={user} />
-          </div>
+          </NavBarCluster>
         </nav>
 
-        <div className="hero-content relative flex-1 grid items-center gap-8 px-6 pb-16 sm:px-8 sm:pb-20 lg:grid-cols-[minmax(0,36rem)_minmax(20rem,1fr)] xl:grid-cols-[minmax(0,40rem)_minmax(24rem,1fr)]">
-          <div className="relative z-20 w-full max-w-3xl lg:max-w-none">
+        <div className="hero-content relative flex-1 flex items-center px-6 pb-16 sm:px-8 sm:pb-20">
+          <div className="relative z-20 w-full max-w-3xl">
             <div className="relative mb-10">
               <h1 className="font-display text-[clamp(2.8rem,7vw,5.5rem)] leading-[1.05] text-fp-cream">
                 <span className="fade-up delay-100 block">{t("home.headline1")}</span>
@@ -98,7 +101,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="relative z-10 hidden h-full min-h-[28rem] items-end justify-end lg:flex">
+          <div className="fade-up delay-300 pointer-events-none absolute bottom-[clamp(5rem,11vh,7.5rem)] right-6 z-10 hidden w-[min(50vw,45rem)] justify-end sm:right-8 lg:flex xl:right-10">
             <HeroCatMascot />
           </div>
         </div>

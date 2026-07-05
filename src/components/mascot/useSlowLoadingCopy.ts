@@ -24,25 +24,25 @@ export function useSlowLoadingCopy({
   const [stepIndex, setStepIndex] = useState(0);
 
   useEffect(() => {
-    if (!visible) {
-      setElapsed(0);
-      setStepIndex(0);
-      return;
-    }
+    if (!visible) return;
 
     const start = Date.now();
+    const reset = window.requestAnimationFrame(() => {
+      setElapsed(0);
+      setStepIndex(0);
+    });
     const tick = setInterval(() => {
       setElapsed(Date.now() - start);
     }, 100);
 
-    return () => clearInterval(tick);
+    return () => {
+      window.cancelAnimationFrame(reset);
+      clearInterval(tick);
+    };
   }, [visible]);
 
   useEffect(() => {
-    if (!visible || elapsed <= SLOW_THRESHOLD_MS) {
-      setStepIndex(0);
-      return;
-    }
+    if (!visible || elapsed <= SLOW_THRESHOLD_MS) return;
 
     const rotate = setInterval(() => {
       setStepIndex((i) => (i + 1) % slowSteps.length);

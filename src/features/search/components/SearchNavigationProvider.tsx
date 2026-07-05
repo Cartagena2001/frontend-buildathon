@@ -9,12 +9,14 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 
 /** Tiempo mínimo visible antes de navegar a /explore */
 const MIN_OVERLAY_MS = 3200;
 /** Failsafe: nunca dejar el overlay colgado */
 const MAX_OVERLAY_MS = 8000;
+const IMMEDIATE_OVERLAY_ID = "search-loading-fallback";
 
 interface SearchNavigationContextValue {
   isSearching: boolean;
@@ -45,9 +47,65 @@ function unlockPageScroll() {
   document.body.style.overflow = "";
 }
 
+function showImmediateOverlay(title: string, subtitle: string) {
+  if (typeof document === "undefined") return;
+  if (document.getElementById(IMMEDIATE_OVERLAY_ID)) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = IMMEDIATE_OVERLAY_ID;
+  overlay.className =
+    "mascot-loading-overlay mascot-loading-overlay--fallback";
+  overlay.setAttribute("role", "status");
+  overlay.setAttribute("aria-live", "polite");
+  overlay.setAttribute("aria-busy", "true");
+
+  const viewport = document.createElement("div");
+  viewport.className = "mascot-loading-overlay__viewport";
+
+  const shell = document.createElement("div");
+  shell.className =
+    "mascot-loading-overlay__shell mascot-loading-overlay__shell--text-only";
+
+  const pulse = document.createElement("div");
+  pulse.className = "mascot-loading-fallback__pulse";
+  pulse.setAttribute("aria-hidden", "true");
+
+  const copy = document.createElement("div");
+  copy.className =
+    "mascot-loading-overlay__copy mascot-loading-fallback__copy";
+
+  const titleEl = document.createElement("p");
+  titleEl.className = "mascot-loading-fallback__title";
+  titleEl.textContent = title;
+
+  const subtitleEl = document.createElement("p");
+  subtitleEl.className = "mascot-loading-fallback__subtitle";
+  subtitleEl.textContent = subtitle;
+
+  const progress = document.createElement("div");
+  progress.className = "mascot-loading-fallback__progress";
+  progress.setAttribute("aria-hidden", "true");
+
+  const progressFill = document.createElement("div");
+  progressFill.className = "mascot-loading-fallback__progress-fill";
+
+  copy.append(titleEl, subtitleEl);
+  progress.append(progressFill);
+  shell.append(pulse, copy, progress);
+  viewport.append(shell);
+  overlay.append(viewport);
+  document.body.append(overlay);
+}
+
+function hideImmediateOverlay() {
+  if (typeof document === "undefined") return;
+  document.getElementById(IMMEDIATE_OVERLAY_ID)?.remove();
+}
+
 export function SearchNavigationProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const t = useTranslations("loading");
   const [isSearching, setIsSearching] = useState(false);
   const [searchSession, setSearchSession] = useState(0);
   const isSearchingRef = useRef(false);
@@ -69,6 +127,7 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
 
   const dismissOverlay = useCallback(() => {
     clearSearchTimers();
+    hideImmediateOverlay();
     destinationRef.current = null;
     hasNavigatedRef.current = false;
     isSearchingRef.current = false;
@@ -101,6 +160,7 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
       const destination = `/explore?q=${encodeURIComponent(trimmed)}`;
 
       lockPageScroll();
+      showImmediateOverlay(t("search.title"), t("search.subtitle"));
 
       setSearchSession((s) => s + 1);
       destinationRef.current = destination;
@@ -117,11 +177,11 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
         dismissOverlay();
       }, MAX_OVERLAY_MS);
     },
-    [navigateToDestination, dismissOverlay, clearSearchTimers],
+    [navigateToDestination, dismissOverlay, clearSearchTimers, t],
   );
 
   useEffect(() => {
-    if (!isSearching || !destinationRef.current) return;
+    if (!isSearching || !destinationRef.current || !hasNavigatedRef.current) return;
 
     const targetPath = destinationRef.current.split("?")[0] ?? destinationRef.current;
     if (pathname === targetPath || pathname.startsWith(`${targetPath}/`)) {
@@ -141,6 +201,7 @@ export function SearchNavigationProvider({ children }: { children: ReactNode }) 
   useEffect(() => {
     return () => {
       clearSearchTimers();
+      hideImmediateOverlay();
       isSearchingRef.current = false;
       unlockPageScroll();
     };

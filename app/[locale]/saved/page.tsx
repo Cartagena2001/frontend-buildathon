@@ -6,6 +6,8 @@ import { savedPlaces } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
+import BrandLogo from "@/components/ui/BrandLogo";
+import { navLogoLinkClassName } from "@/components/ui/NavBarCluster";
 import NavAuth from "@/components/ui/NavAuth";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
@@ -30,8 +32,8 @@ export default async function SavedPage() {
     <div className="min-h-screen" style={{ background: "var(--fp-dark)" }}>
       {/* Nav */}
       <nav className="w-full flex items-center justify-between px-6 sm:px-8 py-5 border-b border-fp-border">
-        <Link href="/" className="text-fp-cream font-sans text-[1.05rem] font-light tracking-wide">
-          findy<span className="text-fp-cyan">.</span>place
+        <Link href="/" className={navLogoLinkClassName}>
+          <BrandLogo size="nav" />
         </Link>
         <div className="flex items-center gap-4">
           <ThemeToggle />

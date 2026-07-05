@@ -1,0 +1,45 @@
+---
+description: Typography — DM Serif Display (titles) and DM Sans (UI/body) only
+globs: **/*.{tsx,ts,css}
+alwaysApply: true
+---
+
+# Typography: findy.place
+
+## Brand fonts (only these two)
+
+| Role | Font | Tailwind | Weights |
+|------|------|----------|---------|
+| Display / titles | **DM Serif Display** | `font-display` | 400, italic |
+| UI / body / labels | **DM Sans** | `font-sans` | 300–600 |
+
+Loaded once in `app/layout.tsx` via `next/font/google`. **Never** add Montserrat, Poppins, Inter, Geist, Arial, or other font imports.
+
+Stacks for non-Tailwind contexts: `@/lib/typography`.
+
+## When to use each
+
+- **`font-display`**: h1, page titles, place names, hero headlines, auth titles, footer wordmark, loading overlay titles, italic emphasis in nav
+- **`font-sans`**: body default, nav links, buttons, inputs, form labels, eyebrows (uppercase + tracking), subtitles, badges, metadata, section labels
+
+## Rules
+
+1. Titles and display text → `font-display`. Everything else → `font-sans` (or inherit from body).
+2. Never use `font-serif`, bare `sans-serif`, or hardcoded `font-family` outside `@/lib/typography`.
+3. `font-mono` only for OTP / verification codes.
+4. Mascot or brand reference images may show other fonts — **ignore them**; match app fonts above.
+5. Emails and Leaflet popups: import `EMAIL_FONT_DISPLAY` / `EMAIL_FONT_SANS` from `@/lib/typography`.
+
+## Examples
+
+```tsx
+// ✅ Page title
+<h1 className="font-display text-4xl text-fp-cream">{t("title")}</h1>
+
+// ✅ Eyebrow label
+<p className="font-sans text-[0.65rem] font-bold uppercase tracking-widest text-fp-muted">
+
+// ❌ Wrong — generic or missing font role
+<h1 className="text-4xl font-serif">
+<p style={{ fontFamily: "Montserrat" }}>
+```
