@@ -9,8 +9,10 @@ type Props = {
 
 export default async function PlaceDetailPage({ params }: Props) {
   const { placeId } = await params;
-  const place = findPlaceById(placeId);
-  const savedIds = await getSavedPlaceIds();
+  const [place, savedIds] = await Promise.all([
+    Promise.resolve(findPlaceById(placeId)),
+    getSavedPlaceIds(),
+  ]);
 
   if (!place) {
     notFound();

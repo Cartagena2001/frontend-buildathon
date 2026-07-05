@@ -57,7 +57,7 @@ function hqSrc(src: string): string {
 
 /** Fire-and-forget: notifica al backend que el usuario visitó este lugar */
 async function trackClickedPlace(placeId: string) {
-  const apiUrl = process.env.FINDY_CORE_API;
+  const apiUrl = process.env.NEXT_PUBLIC_FINDY_CORE_API;
   if (!apiUrl) return;
   try {
     let token: string | undefined;
@@ -70,6 +70,7 @@ async function trackClickedPlace(placeId: string) {
     }
     await fetch(`${apiUrl}/clicked-places`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
