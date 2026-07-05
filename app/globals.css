@@ -143,6 +143,7 @@
 html, body { height: 100%; }
 
 body {
+  /* DM Sans — see app/layout.tsx + .cursor/rules/typography-rules.mdc */
   font-family: var(--font-sans), system-ui, sans-serif;
   background-color: var(--fp-dark);
   color: var(--fp-cream);

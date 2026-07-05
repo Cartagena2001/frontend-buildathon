@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
+import { FONT_DISPLAY, FONT_SANS } from "@/lib/typography";
 import "leaflet/dist/leaflet.css";
 
 const EL_SALVADOR_CENTER: L.LatLngTuple = [13.6929, -89.2182];
@@ -92,8 +93,8 @@ export default function MapView({
       });
 
       marker.bindPopup(
-        `<div style="font-family:sans-serif;font-size:14px;color:#1a1a1a">
-          <p style="font-weight:600;margin:0">${place.name}</p>
+        `<div style="font-family:${FONT_SANS};font-size:14px;color:#1a1a1a">
+          <p style="font-family:${FONT_DISPLAY};font-weight:600;margin:0">${place.name}</p>
           <p style="color:#666;margin:4px 0 0">${place.location}</p>
         </div>`,
       );

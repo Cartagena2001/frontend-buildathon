@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import BrandLogo from "@/components/ui/BrandLogo";
+import { navLogoLinkClassName } from "@/components/ui/NavBarCluster";
 import ExploreLayout from "@/features/search/components/ExploreLayout";
 import { EXPLORE_PLACES } from "@/features/places/data/mock-places";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
@@ -16,11 +18,8 @@ export default async function ExplorePage() {
   return (
     <div className="flex flex-col h-screen bg-fp-dark overflow-hidden">
       <nav className="shrink-0 flex items-center justify-between gap-4 px-4 sm:px-6 py-3 border-b border-fp-border bg-fp-dark z-30 overflow-visible">
-        <Link
-          href="/"
-          className="text-fp-cream font-sans text-[1rem] font-light tracking-wide shrink-0"
-        >
-          findy<span className="text-fp-coral">.</span>place
+        <Link href="/" className={navLogoLinkClassName}>
+          <BrandLogo size="nav" />
         </Link>
 
         <div className="flex-1 min-w-0 max-w-xl">
@@ -72,7 +71,7 @@ function ExploreSearchBar() {
 function SortDropdown() {
   return (
     <div className="flex items-center gap-1.5 border border-fp-border rounded-full px-3 py-1.5 cursor-pointer hover:border-fp-coral/50 transition-colors">
-      <span className="text-fp-cream text-xs font-medium whitespace-nowrap">Viral Momentum</span>
+      <span className="font-sans text-fp-cream text-xs font-medium whitespace-nowrap">Viral Momentum</span>
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-fp-muted shrink-0">
         <path d="m6 9 6 6 6-6" />
       </svg>

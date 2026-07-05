@@ -1,3 +1,4 @@
+import { EMAIL_FONT_DISPLAY } from "@/lib/typography";
 import { emailLayout, emailButton, EMAIL_BRAND } from "./base";
 
 export interface WelcomeEmailContent {
@@ -33,7 +34,7 @@ export function welcomeEmail({ firstName, exploreUrl, locale }: WelcomeEmailCont
   const t = copy[locale];
 
   const bodyHtml = `
-    <p style="margin:0 0 16px;font-size:22px;font-style:italic;color:${EMAIL_BRAND.cream};font-family:Georgia,'Times New Roman',serif;">
+    <p style="margin:0 0 16px;font-size:22px;font-style:italic;color:${EMAIL_BRAND.cream};font-family:${EMAIL_FONT_DISPLAY};">
       ${t.greeting(firstName)}
     </p>
     <p style="margin:0 0 16px;color:${EMAIL_BRAND.muted};">${t.lead}</p>

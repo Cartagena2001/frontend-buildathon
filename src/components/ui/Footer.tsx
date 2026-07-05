@@ -1,5 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import BrandLogo from "@/components/ui/BrandLogo";
+import { APP_NAME } from "@/lib/brand";
 
 export default function Footer() {
   const t = useTranslations("footer");
@@ -11,11 +13,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-14">
           {/* Brand */}
           <div className="md:col-span-1">
-            <Link
-              href="/"
-              className="font-display text-fp-cream text-xl italic tracking-wide inline-block mb-4"
-            >
-              findy<span className="text-fp-coral not-italic">.</span>place
+            <Link href="/" className="inline-flex mb-4">
+              <BrandLogo size="lg" />
             </Link>
             <p className="text-fp-muted text-sm leading-6 max-w-xs">
               {t("tagline")}
@@ -77,7 +76,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="pt-8 border-t border-fp-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-fp-muted text-xs">
-            © {new Date().getFullYear()} findy.place · {t("rights")}
+            © {new Date().getFullYear()} {APP_NAME} · {t("rights")}
           </p>
           <div className="flex items-center gap-5">
             <SocialIcon href="#" label="TikTok">
