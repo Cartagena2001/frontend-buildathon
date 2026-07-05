@@ -56,7 +56,12 @@ export async function updateProfile(input: {
   }
 
   const name = `${updated.firstName} ${updated.lastName}`.trim();
-  await unstable_update({ name });
+  await unstable_update({
+    user: {
+      name,
+      ...(updated.image != null ? { image: updated.image } : {}),
+    },
+  });
 
   revalidatePath("/profile");
   return { ok: true };
