@@ -109,14 +109,9 @@ export default function PlaceGridCard({
           <span className={`mt-1 w-2 h-2 rounded-full shrink-0 ${sentimentDot[place.sentiment]}`} />
         </div>
 
-        <div className="flex items-center gap-1.5 min-w-0 mb-2">
-          <p className="text-fp-muted text-[0.7rem] truncate min-w-0">
-            {place.location}
-          </p>
-          {place.categories[0] ? (
-            <span className="fp-category-chip shrink-0">{place.categories[0]}</span>
-          ) : null}
-        </div>
+        <p className="text-fp-muted text-[0.7rem] truncate mb-2">
+          {place.location}
+        </p>
 
         <div className="flex items-center justify-between">
           <span className="text-fp-cream text-xs font-semibold">
