@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/NavBarCluster";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import NavAuth from "@/components/ui/NavAuth";
-import PopularPlaces from "@/features/places/components/PopularPlaces";
 import Footer from "@/components/ui/Footer";
 import { auth } from "@/lib/auth";
 
@@ -107,8 +106,6 @@ export default async function HomePage() {
           </div>
         </div>
       </HeroSection>
-
-      <PopularPlaces />
 
       <Footer />
     </>
