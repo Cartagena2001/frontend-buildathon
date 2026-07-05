@@ -6,7 +6,7 @@ import ExploreSearchBar from "@/features/search/components/ExploreSearchBar";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import NavAuth from "@/components/ui/NavAuth";
-import { getSavedPlaceIds } from "@/lib/saved/actions";
+import { getSavedPlaceIds } from "@/features/place-lists/actions";
 
 interface Props {
   searchParams: Promise<{ q?: string }>;

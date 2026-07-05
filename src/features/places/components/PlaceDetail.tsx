@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import MapView from "@/features/map/components/MapView";
+import SaveButton from "@/features/places/components/SaveButton";
 import type { PlaceCardData } from "./PlaceCard";
 
 const badgeClasses: Record<PlaceCardData["badgeColor"], string> = {
@@ -20,9 +21,10 @@ const sentimentClasses: Record<string, string> = {
 
 interface PlaceDetailProps {
   place: PlaceCardData;
+  isSaved?: boolean;
 }
 
-export default function PlaceDetail({ place }: PlaceDetailProps) {
+export default function PlaceDetail({ place, isSaved = false }: PlaceDetailProps) {
   const t = useTranslations("place");
 
   return (
@@ -44,9 +46,12 @@ export default function PlaceDetail({ place }: PlaceDetailProps) {
           </p>
         </div>
 
-        <span className="w-9 h-9 rounded-full fp-badge-overlay flex items-center justify-center text-xs font-semibold tabular-nums shrink-0">
-          {String(place.rank).padStart(2, "0")}
-        </span>
+        <SaveButton
+          placeId={place.id}
+          placeName={place.name}
+          isSaved={isSaved}
+          className="shrink-0"
+        />
       </header>
 
       {/* Single layout tree — one MapView, responsive position */}

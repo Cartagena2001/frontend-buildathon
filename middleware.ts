@@ -6,7 +6,7 @@ import type { NextRequest } from "next/server";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
-const PROTECTED = ["/profile", "/saved"];
+const PROTECTED = ["/profile", "/saved", "/lists"];
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

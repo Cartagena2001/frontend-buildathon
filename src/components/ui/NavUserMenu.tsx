@@ -98,12 +98,12 @@ export default function NavUserMenu({ name, email }: Props) {
           {t("profile")}
         </Link>
         <Link
-          href="/saved"
+          href="/lists"
           onClick={() => setOpen(false)}
           className="flex items-center gap-2 px-4 py-2.5 text-sm text-fp-cream hover:bg-fp-cyan/10 hover:text-fp-cyan transition-colors"
         >
           <SavedIcon />
-          {t("saved")}
+          {t("lists")}
         </Link>
       </div>
 

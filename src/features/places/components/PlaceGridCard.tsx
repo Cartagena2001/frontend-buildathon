@@ -81,13 +81,8 @@ export default function PlaceGridCard({
           <SaveButton
             isSaved={isSaved}
             className="absolute top-3 right-3"
-            place={{
-              placeId:         place.id,
-              placeName:       place.name,
-              placeLocation:   place.location,
-              placeImage:      place.coverImage,
-              placeCategories: place.categories,
-            }}
+            placeId={place.id}
+            placeName={place.name}
           />
         </span>
 
