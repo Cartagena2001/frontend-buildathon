@@ -6,7 +6,7 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const findyCoreInternal =
   process.env.FINDY_CORE_INTERNAL_URL ??
   process.env.FINDY_CORE_API_URL ??
-  "http://localhost:3000";
+  "http://localhost:3001";
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["172.20.10.3"],

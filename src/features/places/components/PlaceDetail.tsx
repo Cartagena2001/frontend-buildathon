@@ -11,6 +11,11 @@ import { toMapPlace } from "@/features/places/place-detail.types";
 import { badgeOnImageClasses } from "./place-badge-styles";
 import ReviewsSection from "@/features/reviews/components/ReviewsSection";
 import type { PlaceReviewsData } from "@/features/reviews/types";
+import {
+  isRedundantLocation,
+  mentionSentimentKey,
+} from "@/features/places/place-detail-labels";
+import PlaceGoogleInfo from "./PlaceGoogleInfo";
 
 const MapView = dynamic(() => import("@/features/map/components/MapView"), {
   ssr: false,
@@ -94,17 +99,22 @@ interface PlaceDetailProps {
 
 export default function PlaceDetail({ place, isSaved = false, reviewsData, isAuthenticated = false }: PlaceDetailProps) {
   const t = useTranslations("place");
+  const locale = useLocale();
 
   useEffect(() => {
     void trackClickedPlace(place.id);
   }, [place.id]);
 
   const mapPlace = toMapPlace(place);
+  const mapsHref =
+    place.google?.googleMapsUri ??
+    `https://www.google.com/maps?q=${place.lat},${place.lng}`;
 
   return (
     <div className="flex flex-1 min-h-0 overflow-y-auto lg:overflow-hidden flex-col lg:flex-row">
       <main className="lg:flex-1 lg:min-w-0 lg:overflow-y-auto lg:min-h-0">
         <PlaceDetailHero place={place} isSaved={isSaved} />
+        <PlaceDetailHeader place={place} />
         <PlaceDetailEvidence place={place} />
         {reviewsData && (
           <ReviewsSection placeId={place.id} initialData={reviewsData} isAuthenticated={isAuthenticated} />
@@ -112,24 +122,20 @@ export default function PlaceDetail({ place, isSaved = false, reviewsData, isAut
       </main>
 
       <aside className="relative shrink-0 h-72 sm:h-80 lg:h-auto lg:w-[380px] xl:w-[460px] 2xl:w-[520px] lg:border-l border-fp-border bg-fp-dim lg:flex lg:flex-col lg:min-h-0">
-        <div className="shrink-0 px-5 py-3 border-b border-fp-border hidden lg:flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0 text-fp-teal">
-            <MapPinIcon />
-            <span className="text-fp-cream text-sm truncate">{place.location}</span>
-          </div>
-          <span className="text-fp-muted text-[0.62rem] tabular-nums shrink-0 ml-3">
-            {place.lat.toFixed(4)}, {place.lng.toFixed(4)}
-          </span>
-        </div>
-
-        <div className="relative flex-1 min-h-[16rem] lg:min-h-0">
-          <MapView places={[mapPlace]} selectedId={place.id} showPopup={false} />
+        <div className="relative flex-1 min-h-[18rem] lg:min-h-0">
+          <MapView
+            places={[mapPlace]}
+            selectedId={place.id}
+            locale={locale}
+            showPopup
+            showPopupCta={false}
+          />
         </div>
 
         <div className="shrink-0 hidden lg:flex items-center gap-2 px-5 py-3 border-t border-fp-border">
           <OpenInMapButton
             label={t("openInMaps")}
-            href={`https://www.google.com/maps?q=${place.lat},${place.lng}`}
+            href={mapsHref}
             icon={<GoogleMapsIcon />}
           />
           <OpenInMapButton
@@ -151,7 +157,7 @@ function PlaceDetailHero({
   isSaved: boolean;
 }) {
   return (
-    <div className="relative h-52 sm:h-60 lg:h-64 shrink-0 overflow-hidden after:content-[''] after:absolute after:inset-0 after:pointer-events-none after:z-[1] after:bg-[linear-gradient(to_top,var(--hero-overlay-end)_0%,var(--hero-overlay-heavy)_38%,var(--hero-overlay-mid)_68%,transparent_100%)]">
+    <div className="relative h-52 sm:h-60 lg:h-64 shrink-0 overflow-hidden">
       <Image
         src={place.coverImage}
         alt={place.name}
@@ -161,6 +167,10 @@ function PlaceDetailHero({
         sizes="(min-width: 1024px) 60vw, 100vw"
       />
 
+      <span className={`absolute z-[2] top-3 left-3 sm:top-4 sm:left-4 inline-flex px-2.5 py-1 rounded-full text-[0.6rem] font-bold uppercase tracking-wider shadow-sm ${badgeOnImageClasses[place.badgeColor]}`}>
+        {place.badge}
+      </span>
+
       <div className="absolute z-[2] top-3 right-3 sm:top-4 sm:right-4">
         <SaveButton
           placeId={place.id}
@@ -169,32 +179,76 @@ function PlaceDetailHero({
           className="w-10 h-10 fp-badge-overlay hover:!bg-fp-coral hover:!text-fp-on-accent hover:!border-fp-coral shadow-lg"
         />
       </div>
+    </div>
+  );
+}
 
-      <div className="absolute z-[2] inset-x-0 bottom-0 px-5 sm:px-7 lg:px-8 pb-6">
-        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider mb-2.5 ${badgeOnImageClasses[place.badgeColor]}`}>
-          {place.badge}
-        </span>
-        <div className="flex items-start justify-between gap-3 mb-1">
-          <h1 className="font-display text-fp-cream text-2xl sm:text-3xl lg:text-[2rem] leading-tight text-balance min-w-0">
-            {place.name}
-          </h1>
-          <span
-            className={`mt-2 w-2 h-2 rounded-full shrink-0 ${sentimentDot[place.sentiment]}`}
-            title={place.sentimentLabel}
-            aria-label={place.sentimentLabel}
-          />
-        </div>
-        {place.location ? (
-          <p className="text-fp-muted text-xs sm:text-sm leading-relaxed line-clamp-2 max-w-prose mb-2">
-            {place.location}
-          </p>
-        ) : null}
+function PlaceDetailHeader({ place }: { place: PlaceDetailData }) {
+  const t = useTranslations("place");
+  const locale = useLocale();
+
+  const locationIsRedundant = isRedundantLocation(place.location, place.name);
+  const locationText = locationIsRedundant ? null : place.location?.trim() || null;
+  const summary =
+    place.google?.editorialSummary?.trim() ||
+    place.featuredMention?.summary?.trim() ||
+    null;
+
+  return (
+    <header className="px-5 sm:px-7 lg:px-8 pt-5 sm:pt-6 pb-5 border-b border-fp-border">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         {place.category ? (
           <span className="fp-category-chip">{place.category}</span>
         ) : null}
+        <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${sentimentClasses[place.sentiment]}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${sentimentDot[place.sentiment]}`} aria-hidden />
+          {t(`sentimentVibe.${place.sentiment}`)}
+        </span>
       </div>
-    </div>
+
+      <h1 className="font-display text-fp-cream text-[1.7rem] sm:text-3xl lg:text-[2.1rem] leading-[1.12] text-balance">
+        {place.name}
+      </h1>
+
+      {locationText ? (
+        <p className="mt-2 flex items-start gap-1.5 text-fp-muted text-sm leading-snug">
+          <span className="mt-0.5 text-fp-teal shrink-0">
+            <MapPinIcon />
+          </span>
+          <span className="min-w-0">{locationText}</span>
+        </p>
+      ) : null}
+
+      {summary ? (
+        <p className="mt-3.5 text-fp-ink/75 text-sm sm:text-[0.95rem] leading-relaxed max-w-prose text-pretty">
+          {summary}
+        </p>
+      ) : null}
+
+      <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-fp-muted text-sm">
+        <span className="text-fp-cream font-semibold">
+          {t("creators", { count: place.mentionCount })}
+        </span>
+        <MetaDot />
+        <span>
+          <span className="text-fp-cream font-semibold tabular-nums">
+            {formatCount(place.totalLikes)}
+          </span>{" "}
+          {t("likes").toLowerCase()}
+        </span>
+        {place.lastMentionAt ? (
+          <>
+            <MetaDot />
+            <span>{t("lastSeen", { date: formatDate(place.lastMentionAt, locale) })}</span>
+          </>
+        ) : null}
+      </div>
+    </header>
   );
+}
+
+function MetaDot() {
+  return <span className="text-fp-border" aria-hidden>·</span>;
 }
 
 function PlaceDetailEvidence({ place }: { place: PlaceDetailData }) {
@@ -203,25 +257,7 @@ function PlaceDetailEvidence({ place }: { place: PlaceDetailData }) {
 
   return (
     <div className="divide-y divide-fp-border">
-      <div className="px-5 sm:px-7 lg:px-8 py-5 grid grid-cols-2 sm:grid-cols-4 gap-y-4 sm:divide-x sm:divide-fp-border">
-        <StatInline
-          label={t("mentions")}
-          value={t("creators", { count: place.mentionCount })}
-        />
-        <StatInline
-          label={t("sentiment")}
-          value={place.sentimentLabel}
-          valueClass={sentimentClasses[place.sentiment]}
-        />
-        <StatInline
-          label={t("likes")}
-          value={formatCount(place.totalLikes)}
-        />
-        <StatInline
-          label={t("lastMention")}
-          value={place.lastMentionAt ? formatDate(place.lastMentionAt, locale) : "—"}
-        />
-      </div>
+      <PlaceGoogleInfo place={place} />
 
       {place.featuredMention ? (
         <section className="px-5 sm:px-7 lg:px-8 py-6">
@@ -262,12 +298,15 @@ function PlaceDetailEvidence({ place }: { place: PlaceDetailData }) {
       <section className="lg:hidden px-5 sm:px-7 py-4 border-t border-fp-border">
         <div className="flex items-center gap-2 text-fp-teal text-xs mb-3">
           <MapPinIcon />
-          <span>{place.location}</span>
+          <span className="text-fp-cream">{place.name}</span>
         </div>
         <div className="flex gap-2">
           <OpenInMapButton
             label={t("openInMaps")}
-            href={`https://www.google.com/maps?q=${place.lat},${place.lng}`}
+            href={
+              place.google?.googleMapsUri ??
+              `https://www.google.com/maps?q=${place.lat},${place.lng}`
+            }
             icon={<GoogleMapsIcon />}
           />
           <OpenInMapButton
@@ -290,11 +329,15 @@ function FeaturedMentionCard({
 }) {
   const t = useTranslations("place");
   const level = mentionSentimentLevel(mention.sentimentScore);
+  const sentimentKey = mentionSentimentKey(mention.sentiment);
+  const sentimentLabel = sentimentKey
+    ? t(`mentionSentiments.${sentimentKey}`)
+    : mention.sentiment;
 
   return (
     <article className="rounded-2xl border border-fp-border bg-fp-dim p-5 sm:p-6">
       {mention.summary ? (
-        <p className="text-fp-cream/90 text-[0.95rem] sm:text-base leading-relaxed max-w-prose text-pretty">
+        <p className="text-fp-cream text-[0.95rem] sm:text-base leading-relaxed max-w-prose text-pretty">
           {mention.summary}
         </p>
       ) : (
@@ -302,8 +345,8 @@ function FeaturedMentionCard({
       )}
 
       <div className="mt-4 pt-4 border-t border-fp-border flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold capitalize border ${mentionSentimentPill[level]}`}>
-          {mention.sentiment}
+        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${mentionSentimentPill[level]}`}>
+          {sentimentLabel}
         </span>
         <span className="text-fp-muted tabular-nums">
           {formatCount(mentionEngagement(mention))} {t("engagementTotal")}
@@ -332,7 +375,7 @@ function MentionListItem({
         aria-hidden
       />
       <div className="min-w-0 flex-1">
-        <p className="text-fp-cream/85 text-sm leading-snug line-clamp-2">
+        <p className="text-fp-cream text-sm leading-snug line-clamp-2">
           {mention.summary ?? "—"}
         </p>
         <div className="mt-2 flex items-center gap-3 text-[0.68rem] text-fp-muted tabular-nums">
@@ -416,15 +459,6 @@ function OpenInMapButton({ label, href, icon }: { label: string; href: string; i
       {icon}
       {label}
     </a>
-  );
-}
-
-function StatInline({ label, value, valueClass = "text-fp-cream" }: { label: string; value: string; valueClass?: string }) {
-  return (
-    <div className="px-0 sm:px-5 sm:first:pl-0">
-      <p className="text-fp-muted text-[0.58rem] font-bold uppercase tracking-widest mb-1">{label}</p>
-      <p className={`text-base sm:text-lg font-semibold leading-none ${valueClass}`}>{value}</p>
-    </div>
   );
 }
 

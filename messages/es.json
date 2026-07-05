@@ -194,6 +194,7 @@
     "sentiment": "Sentimiento",
     "likes": "Me gusta",
     "lastMention": "Última mención",
+    "lastSeen": "Última mención {date}",
     "featuredMention": "Mención destacada",
     "moreMentions": "{count, plural, one {# mención más} other {# menciones más}}",
     "noMentions": "Aún no hay menciones sociales para este lugar.",
@@ -204,7 +205,41 @@
     "readOn": "Leer en {domain}",
     "location": "Ubicación",
     "openInMaps": "Google Maps",
-    "openInWaze": "Waze"
+    "openInWaze": "Waze",
+    "sentimentVibe": {
+      "high": "Alta vibra",
+      "medium": "Buena vibra",
+      "low": "Vibra mixta",
+      "neutral": "Vibra neutral"
+    },
+    "mentionSentiments": {
+      "happy": "feliz",
+      "excited": "emocionado",
+      "relaxing": "relajante",
+      "nostalgic": "nostálgico",
+      "neutral": "neutral",
+      "disappointed": "decepcionado",
+      "sad": "triste",
+      "angry": "enojado"
+    },
+    "google": {
+      "title": "Información práctica",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "website": "Sitio web",
+      "hours": "Horario",
+      "openNow": "Abierto ahora",
+      "closedNow": "Cerrado ahora",
+      "reviews": "reseñas",
+      "photos": "Más fotos",
+      "priceLevel": {
+        "free": "Gratis",
+        "inexpensive": "Económico",
+        "moderate": "Moderado",
+        "expensive": "Caro",
+        "veryExpensive": "Muy caro"
+      }
+    }
   },
   "reviews": {
     "reviews": "Reseñas",

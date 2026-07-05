@@ -12,11 +12,11 @@ type Props = {
 };
 
 export default async function PlaceDetailPage({ params }: Props) {
-  const { placeId } = await params;
+  const { placeId, locale } = await params;
 
   let place;
   try {
-    place = await fetchPlaceDetail(placeId);
+    place = await fetchPlaceDetail(placeId, locale);
   } catch (error) {
     if (error instanceof FindyApiError) {
       if (error.status === 404 || error.status === 400) {

@@ -194,6 +194,7 @@
     "sentiment": "Sentiment",
     "likes": "Likes",
     "lastMention": "Last mention",
+    "lastSeen": "Last mention {date}",
     "featuredMention": "Top mention",
     "moreMentions": "{count, plural, one {# more mention} other {# more mentions}}",
     "noMentions": "No social mentions yet for this place.",
@@ -204,7 +205,41 @@
     "readOn": "Read on {domain}",
     "location": "Location",
     "openInMaps": "Google Maps",
-    "openInWaze": "Waze"
+    "openInWaze": "Waze",
+    "sentimentVibe": {
+      "high": "High Vibe",
+      "medium": "Good Vibes",
+      "low": "Mixed Vibe",
+      "neutral": "Neutral Vibe"
+    },
+    "mentionSentiments": {
+      "happy": "happy",
+      "excited": "excited",
+      "relaxing": "relaxing",
+      "nostalgic": "nostalgic",
+      "neutral": "neutral",
+      "disappointed": "disappointed",
+      "sad": "sad",
+      "angry": "angry"
+    },
+    "google": {
+      "title": "Practical info",
+      "address": "Address",
+      "phone": "Phone",
+      "website": "Website",
+      "hours": "Hours",
+      "openNow": "Open now",
+      "closedNow": "Closed now",
+      "reviews": "reviews",
+      "photos": "More photos",
+      "priceLevel": {
+        "free": "Free",
+        "inexpensive": "Budget-friendly",
+        "moderate": "Moderate",
+        "expensive": "Upscale",
+        "veryExpensive": "Premium"
+      }
+    }
   },
   "reviews": {
     "reviews": "Reviews",

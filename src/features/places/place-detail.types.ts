@@ -1,4 +1,5 @@
 import type { PlaceCardData } from "@/features/places/components/PlaceCard";
+import type { GooglePlaceDetails } from "@/lib/google-places/types";
 
 export interface PlaceMentionView {
   id: string;
@@ -35,6 +36,10 @@ export interface PlaceDetailData {
   featuredMention: PlaceMentionView | null;
   otherMentions: PlaceMentionView[];
   webMentions: PlaceMentionView[];
+  /** Practical visit info from Google Places (address, hours, rating, etc.). */
+  google?: Omit<GooglePlaceDetails, "photos" | "lat" | "lng"> & {
+    extraPhotos?: string[];
+  };
 }
 
 /** Minimal card shape for MapView on the detail page. */

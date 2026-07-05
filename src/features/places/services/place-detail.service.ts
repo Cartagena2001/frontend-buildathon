@@ -24,14 +24,17 @@ export function isValidPlaceId(id: string): boolean {
 }
 
 /** Loads full place detail from findy-core, falling back to the search index. */
-export async function fetchPlaceDetail(id: string): Promise<PlaceDetailData> {
+export async function fetchPlaceDetail(
+  id: string,
+  locale = "en",
+): Promise<PlaceDetailData> {
   if (!isValidPlaceId(id)) {
     throw new FindyApiError("Invalid place id", 400);
   }
 
   try {
     const data = await findyFetchPublic<PlaceDetailResponse>(`/places/${id}`);
-    return enrichPlaceDetailWithGooglePhotos(mapCorePlaceToDetailData(data.place));
+    return enrichPlaceDetailWithGooglePhotos(mapCorePlaceToDetailData(data.place), locale);
   } catch (error) {
     const isCore404 =
       error instanceof FindyApiError && error.status === 404;
@@ -47,6 +50,6 @@ export async function fetchPlaceDetail(id: string): Promise<PlaceDetailData> {
       throw error;
     }
 
-    return enrichPlaceDetailWithGooglePhotos(mapSearchResultToDetailData(searchHit));
+    return enrichPlaceDetailWithGooglePhotos(mapSearchResultToDetailData(searchHit), locale);
   }
 }

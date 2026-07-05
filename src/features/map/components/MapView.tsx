@@ -86,7 +86,7 @@ function createLocationPinIcon(L: LeafletApi, selected: boolean) {
   });
 }
 
-function buildPopupHtml(place: PlaceCardData, locale: string) {
+function buildPopupHtml(place: PlaceCardData, locale: string, withCta: boolean) {
   const sentColor =
     place.sentiment === "high"
       ? "#00B39F"
@@ -95,6 +95,26 @@ function buildPopupHtml(place: PlaceCardData, locale: string) {
         : "#FF8C42";
 
   const href = `/${locale}/explore/${place.id}`;
+  const ctaLabel = locale === "es" ? "Ver más información →" : "See more →";
+  const cta = withCta
+    ? `<a
+          href="${href}"
+          style="
+            display:block;
+            width:100%;
+            padding:7px 0;
+            margin-top:10px;
+            background:#FF5A5F;
+            color:#fff;
+            text-align:center;
+            font-size:11px;
+            font-weight:700;
+            border-radius:8px;
+            text-decoration:none;
+            letter-spacing:0.02em;
+          "
+        >${ctaLabel}</a>`
+    : "";
 
   return `
     <div style="font-family:${FONT_SANS};width:220px;border-radius:14px;overflow:hidden;background:#fff">
@@ -110,26 +130,11 @@ function buildPopupHtml(place: PlaceCardData, locale: string) {
       <div style="padding:11px 13px 13px">
         <p style="font-family:${FONT_DISPLAY};margin:0 0 2px;font-weight:600;font-size:15px;color:#111;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${place.name}</p>
         <p style="margin:0 0 7px;font-size:11px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${place.location}</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
           <span style="font-size:12px;font-weight:700;color:#111">${place.viralScore} <span style="font-weight:400;color:#aaa;font-size:10px">viral</span></span>
           <span style="font-size:10px;font-weight:600;color:${sentColor}">${place.sentimentLabel}</span>
         </div>
-        <a
-          href="${href}"
-          style="
-            display:block;
-            width:100%;
-            padding:7px 0;
-            background:#FF5A5F;
-            color:#fff;
-            text-align:center;
-            font-size:11px;
-            font-weight:700;
-            border-radius:8px;
-            text-decoration:none;
-            letter-spacing:0.02em;
-          "
-        >Ver más información →</a>
+        ${cta}
       </div>
     </div>`;
 }
@@ -139,6 +144,7 @@ interface MapViewProps {
   selectedId?: string | null;
   locale?: string;
   showPopup?: boolean;
+  showPopupCta?: boolean;
   onSelectPlace?: (id: string) => void;
 }
 
@@ -147,6 +153,7 @@ export default function MapView({
   selectedId,
   locale = "en",
   showPopup = true,
+  showPopupCta = true,
   onSelectPlace,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -236,11 +243,12 @@ export default function MapView({
       });
 
       if (showPopup) {
-        marker.bindPopup(buildPopupHtml(place, locale), {
+        marker.bindPopup(buildPopupHtml(place, locale, showPopupCta), {
           maxWidth: 240,
           className: "fp-map-popup",
           closeButton: true,
-          autoPan: false,
+          autoPan: !showPopupCta,
+          autoPanPadding: L.point(20, 20),
         });
       }
 
@@ -272,7 +280,7 @@ export default function MapView({
       fitMapToPlaces();
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [places, locale, showPopup, leafletReady]);
+  }, [places, locale, showPopup, showPopupCta, leafletReady]);
 
   useEffect(() => {
     const L = leafletRef.current;
@@ -285,13 +293,18 @@ export default function MapView({
       (m.options as MarkerOptions).zIndexOffset = id === selectedId ? 1000 : 0;
     });
 
-    if (showPopup) {
+    if (showPopup && showPopupCta) {
       marker.openPopup();
       centerMapOnMarkerWithPopup(L, mapRef.current, marker);
+    } else if (showPopup) {
+      // Detail preview: open the card and let autoPan keep it fully in view.
+      const map = mapRef.current;
+      map.invalidateSize({ animate: false });
+      requestAnimationFrame(() => marker.openPopup());
     } else {
       mapRef.current.panTo(marker.getLatLng(), { animate: true, duration: 0.4 });
     }
-  }, [selectedId, places, showPopup, leafletReady]);
+  }, [selectedId, places, showPopup, showPopupCta, leafletReady]);
 
   return (
     <>
