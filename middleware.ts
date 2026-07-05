@@ -13,7 +13,7 @@ export default async function middleware(req: NextRequest) {
 
   if (
     pathname.startsWith("/_next") ||
-    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api") ||
     pathname.startsWith("/auth/") ||
     /\.(.+)$/.test(pathname)
   ) {
@@ -36,6 +36,6 @@ export default async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next|_vercel|icon|apple-icon|favicon\\.ico|.*\\..*).*)",
+    "/((?!api|_next|_vercel|icon|apple-icon|favicon\\.ico|.*\\..*).*)",
   ],
 };

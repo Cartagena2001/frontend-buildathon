@@ -4,6 +4,8 @@ const SEARCH_API_URL =
   process.env.SEARCH_API_URL ?? "https://search.findy.place";
 const DEFAULT_INDEX = "places";
 const DEFAULT_LIMIT = 12;
+const DEFAULT_SEMANTIC_WEIGHT = 0.5;
+const DEFAULT_RERANKING = true;
 
 /** Calls the findy search engine and returns the raw ranked hits. */
 export async function searchPlaces({
@@ -11,6 +13,8 @@ export async function searchPlaces({
   index = DEFAULT_INDEX,
   limit = DEFAULT_LIMIT,
   filter,
+  semanticWeight = DEFAULT_SEMANTIC_WEIGHT,
+  reranking = DEFAULT_RERANKING,
 }: SearchQuery): Promise<SearchResultItem[]> {
   const trimmed = query.trim();
   if (!trimmed) return [];
@@ -18,7 +22,14 @@ export async function searchPlaces({
   const res = await fetch(`${SEARCH_API_URL}/query`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ index, query: trimmed, limit, filter }),
+    body: JSON.stringify({
+      index,
+      query: trimmed,
+      limit,
+      filter,
+      semanticWeight,
+      reranking,
+    }),
     cache: "no-store",
   });
 

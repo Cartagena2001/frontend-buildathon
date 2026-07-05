@@ -44,4 +44,8 @@ export interface SearchQuery {
   index?: string;
   limit?: number;
   filter?: string;
+  /** 0 = keyword-only, 1 = semantic-only. Default 0.5 balances place names and meaning. */
+  semanticWeight?: number;
+  /** Re-score candidates with Upstash's reranker for better ordering. */
+  reranking?: boolean;
 }
