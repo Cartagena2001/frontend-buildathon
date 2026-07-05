@@ -1,5 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import BrandLogo from "@/components/ui/BrandLogo";
+import { navLogoLinkClassName } from "@/components/ui/NavBarCluster";
 
 export default function PrivacyPage() {
   const t = useTranslations("legal");
@@ -23,11 +25,8 @@ export default function PrivacyPage() {
       {/* Top bar */}
       <div className="border-b border-fp-border">
         <div className="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-fp-cream font-sans text-[1.05rem] font-light tracking-wide"
-          >
-            findy<span className="text-fp-coral">.</span>place
+          <Link href="/" className={navLogoLinkClassName}>
+            <BrandLogo size="nav" />
           </Link>
           <Link
             href="/"

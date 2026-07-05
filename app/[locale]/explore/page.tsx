@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import BrandLogo from "@/components/ui/BrandLogo";
+import { navLogoLinkClassName } from "@/components/ui/NavBarCluster";
 import ExploreLayout from "@/features/search/components/ExploreLayout";
 import ExploreSearchBar from "@/features/search/components/ExploreSearchBar";
 import { searchPlaces } from "@/features/search/search-service";
@@ -38,11 +40,8 @@ export default async function ExplorePage({ searchParams }: Props) {
   return (
     <div className="flex flex-col h-screen bg-fp-dark overflow-hidden">
       <nav className="shrink-0 flex items-center justify-between gap-4 px-4 sm:px-6 py-3 border-b border-fp-border bg-fp-dark z-30 overflow-visible">
-        <Link
-          href="/"
-          className="text-fp-cream font-sans text-[1rem] font-light tracking-wide shrink-0"
-        >
-          findy<span className="text-fp-coral">.</span>place
+        <Link href="/" className={navLogoLinkClassName}>
+          <BrandLogo size="nav" />
         </Link>
 
         <div className="flex-1 min-w-0 max-w-xl">
@@ -56,18 +55,33 @@ export default async function ExplorePage({ searchParams }: Props) {
         </div>
       </nav>
 
-      <div className="shrink-0 flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-fp-border">
+      <div className="shrink-0 flex items-center justify-between px-4 sm:px-6 py-3 border-b border-fp-border">
         <div>
-          <h1 className="font-display text-fp-cream text-lg sm:text-xl leading-tight">
+          <h1 className="font-display text-fp-cream text-xl sm:text-2xl leading-tight">
             {t("title")}
           </h1>
-          <p className="text-fp-muted text-[0.68rem] mt-0.5 hidden sm:block">
+          <p className="text-fp-muted text-xs mt-0.5 hidden sm:block">
             {t("subtitle", { count: String(places.length), clips: "1,420" })}
           </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-fp-muted text-xs hidden sm:block">{t("sortedBy")}</span>
+          <SortDropdown />
         </div>
       </div>
 
       <ExploreLayout places={places} savedPlaceIds={savedIds} />
+    </div>
+  );
+}
+
+function SortDropdown() {
+  return (
+    <div className="flex items-center gap-1.5 border border-fp-border rounded-full px-3 py-1.5 cursor-pointer hover:border-fp-coral/50 transition-colors">
+      <span className="font-sans text-fp-cream text-xs font-medium whitespace-nowrap">Viral Momentum</span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-fp-muted shrink-0">
+        <path d="m6 9 6 6 6-6" />
+      </svg>
     </div>
   );
 }

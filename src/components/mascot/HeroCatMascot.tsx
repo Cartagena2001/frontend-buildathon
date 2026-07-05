@@ -3,20 +3,20 @@
 /** Decorative hero mascot — plain img avoids next/image soft-nav glitches. */
 export default function HeroCatMascot() {
   return (
-    <div
+    <img
+      src="/mascot/hero-cat.webp"
+      alt=""
       aria-hidden
-      className="pointer-events-none flex w-full justify-end"
-    >
-      <img
-        src="/mascot/hero-cat.webp"
-        alt=""
-        width={1672}
-        height={941}
-        loading="eager"
-        decoding="async"
-        fetchPriority="high"
-        className="block h-auto w-full max-w-[min(42vw,34rem)] translate-x-[4%] drop-shadow-[0_16px_40px_rgba(0,0,0,0.35)]"
-      />
-    </div>
+      width={653}
+      height={367}
+      loading="eager"
+      decoding="async"
+      fetchPriority="high"
+      style={{
+        width: "min(100%, clamp(21rem, 42vw, 45rem))",
+        height: "auto",
+      }}
+      className="pointer-events-none block h-auto w-full max-w-[clamp(21rem,42vw,45rem)] drop-shadow-[0_20px_48px_rgba(0,0,0,0.28)]"
+    />
   );
 }

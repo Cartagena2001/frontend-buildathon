@@ -56,7 +56,7 @@ export default function PlaceDetail({ place }: PlaceDetailProps) {
           <PlaceDetailSections place={place} />
 
           <div className="lg:hidden px-4 sm:px-6">
-            <h2 className="text-fp-muted text-[0.65rem] font-bold uppercase tracking-widest mb-3">
+            <h2 className="font-sans text-fp-muted text-[0.65rem] font-bold uppercase tracking-widest mb-3">
               {t("location")}
             </h2>
           </div>
@@ -124,7 +124,7 @@ function PlaceDetailSections({ place }: { place: PlaceCardData }) {
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-8">
       <section>
-        <h2 className="text-fp-muted text-[0.65rem] font-bold uppercase tracking-widest mb-3">
+        <h2 className="font-sans text-fp-muted text-[0.65rem] font-bold uppercase tracking-widest mb-3">
           {t("about")}
         </h2>
         <p className="text-fp-cream/90 text-base leading-relaxed">
@@ -133,7 +133,7 @@ function PlaceDetailSections({ place }: { place: PlaceCardData }) {
       </section>
 
       <section>
-        <h2 className="text-fp-muted text-[0.65rem] font-bold uppercase tracking-widest mb-4">
+        <h2 className="font-sans text-fp-muted text-[0.65rem] font-bold uppercase tracking-widest mb-4">
           {t("socialProof")}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -152,7 +152,7 @@ function PlaceDetailSections({ place }: { place: PlaceCardData }) {
       </section>
 
       <section className="lg:pb-8">
-        <h2 className="text-fp-muted text-[0.65rem] font-bold uppercase tracking-widest mb-4">
+        <h2 className="font-sans text-fp-muted text-[0.65rem] font-bold uppercase tracking-widest mb-4">
           {t("clips")}
         </h2>
         <div className="flex flex-wrap gap-3">

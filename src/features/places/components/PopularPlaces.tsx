@@ -41,7 +41,7 @@ export default function PopularPlaces() {
       <div className="space-y-16">
         {SECTIONS.map((section) => (
           <div key={section.key}>
-            <h3 className="text-fp-cream text-sm font-semibold uppercase tracking-widest mb-6 flex items-center gap-3">
+            <h3 className="font-sans text-fp-cream text-sm font-semibold uppercase tracking-widest mb-6 flex items-center gap-3">
               {section.label}
               <span className="flex-1 h-px bg-fp-border" />
             </h3>

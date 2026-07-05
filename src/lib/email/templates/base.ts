@@ -1,3 +1,5 @@
+import { EMAIL_FONT_SANS } from "@/lib/typography";
+
 /** Brand tokens for HTML emails (inline CSS — email clients ignore CSS variables). */
 export const EMAIL_BRAND = {
   bg:      "#040404",
@@ -26,7 +28,7 @@ export function emailLayout({ previewText, bodyHtml }: EmailLayoutOptions): stri
   <meta name="color-scheme" content="dark" />
   <title>findy.place</title>
 </head>
-<body style="margin:0;padding:0;background-color:${bg};font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<body style="margin:0;padding:0;background-color:${bg};font-family:${EMAIL_FONT_SANS};">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${previewText}</div>
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:${bg};padding:40px 16px;">
     <tr>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import MascotVideo from "./MascotVideo";
@@ -8,15 +8,21 @@ import LoadingProgressBar from "./LoadingProgressBar";
 import { useSlowLoadingCopy } from "./useSlowLoadingCopy";
 import { MASCOT_ASSETS, type MascotVariant } from "./types";
 
+const IMMEDIATE_OVERLAY_ID = "search-loading-fallback";
+
 interface Props {
   variant?: MascotVariant;
 }
 
 function OverlayContent({ variant = "search" }: Props) {
   const t = useTranslations("loading");
-  const [videoAvailable, setVideoAvailable] = useState(true);
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const [showVideo, setShowVideo] = useState(true);
   const assets = MASCOT_ASSETS[variant];
+
+  useEffect(() => {
+    document.getElementById(IMMEDIATE_OVERLAY_ID)?.remove();
+  }, []);
 
   const { title, subtitle } = useSlowLoadingCopy({
     visible: true,
@@ -28,32 +34,31 @@ function OverlayContent({ variant = "search" }: Props) {
 
   return (
     <div
-      className="mascot-loading-overlay fixed inset-0 z-[10050] overflow-y-auto overscroll-none bg-[var(--mascot-loading-bg)]"
+      className="mascot-loading-overlay overflow-y-auto overscroll-none"
       role="status"
       aria-live="polite"
       aria-busy="true"
     >
       <div className="mascot-loading-overlay__viewport">
-        <div
-          className={`mascot-loading-overlay__shell${videoAvailable ? "" : " mascot-loading-overlay__shell--text-only"}`}
-        >
-          {videoAvailable ? (
-            <div className="mascot-loading-overlay__media">
-              <img
-                src={assets.poster}
-                alt=""
-                aria-hidden="true"
-                className={`mascot-loading-video mascot-loading-video__poster${videoPlaying ? " mascot-loading-video__poster--hidden" : ""}`}
-              />
+        <div className="mascot-loading-overlay__shell">
+          <div className="mascot-loading-overlay__media" aria-hidden="true">
+            <img
+              src={assets.poster}
+              alt=""
+              className={`mascot-loading-video mascot-loading-video__poster${videoPlaying ? " mascot-loading-video__poster--hidden" : ""}`}
+            />
+            {showVideo ? (
               <MascotVideo
                 variant={variant}
                 essential
+                stallTimeoutMs={1500}
                 className={`mascot-loading-video mascot-loading-video__player${videoPlaying ? " mascot-loading-video--playing" : ""}`}
-                onUnavailable={() => setVideoAvailable(false)}
+                onUnavailable={() => setShowVideo(false)}
                 onPlaying={() => setVideoPlaying(true)}
               />
-            </div>
-          ) : null}
+            ) : null}
+          </div>
+
           <div className="mascot-loading-overlay__footer">
             <div className="mascot-loading-overlay__copy">
               <p className="font-display text-xl sm:text-2xl leading-tight">
