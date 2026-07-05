@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { upsertGoogleUser } from "@/lib/auth/google-user";
 import { createOAuthBridgeToken } from "@/lib/auth/oauth-bridge-token";
+import { provisionFindyCoreToken } from "@/lib/findy-core/auth";
 import { signIn } from "@/lib/auth";
 
 function loginError(origin: string, locale: string) {
@@ -55,8 +56,20 @@ export async function GET(request: Request) {
 
   const bridgeToken = createOAuthBridgeToken(dbUser.id);
 
+  const findyCoreToken = await provisionFindyCoreToken({
+    id:        dbUser.id,
+    email:     dbUser.email,
+    firstName: dbUser.firstName,
+    lastName:  dbUser.lastName,
+  });
+
+  if (!findyCoreToken) {
+    console.error("[auth/callback] findy-core token provisioning failed for", dbUser.id);
+  }
+
   await signIn("credentials", {
     oauthBridge: bridgeToken,
+    ...(findyCoreToken ? { findyCoreToken } : {}),
     redirectTo: next,
   });
 }

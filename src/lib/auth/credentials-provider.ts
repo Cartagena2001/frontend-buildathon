@@ -26,11 +26,16 @@ export const credentialsProvider = Credentials({
 
       if (!user) return null;
 
+      const findyCoreToken = credentials.findyCoreToken
+        ? String(credentials.findyCoreToken)
+        : undefined;
+
       return {
         id:    user.id,
         name:  `${user.firstName} ${user.lastName}`.trim(),
         email: user.email,
         image: user.image ?? undefined,
+        findyCoreToken,
       };
     }
 

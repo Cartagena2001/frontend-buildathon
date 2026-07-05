@@ -123,7 +123,42 @@ async function tryDeterministicLoginRecovery(
   return findyLogin(payload.email, password);
 }
 
-/** OAuth fallback when sync-user is not deployed — login before signup. */
+/**
+ * Google/OAuth users are upserted into the shared Neon `users` table without
+ * a password. findySignup then returns 409 and findyLogin fails on null hash.
+ * Set a deterministic PBKDF2 hash so findy-core /auth/login can issue a JWT.
+ */
+async function ensureSharedDbPasswordForOAuthUser(
+  userId: string,
+  password: string,
+): Promise<boolean> {
+  try {
+    const { db } = await import("@/lib/db");
+    const { users } = await import("@/lib/db/schema");
+    const { eq } = await import("drizzle-orm");
+    const { hashFindyPassword } = await import("@/lib/auth/hash-findy-password");
+
+    const [existing] = await db
+      .select({ passwordHash: users.passwordHash })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    if (!existing || existing.passwordHash) return false;
+
+    const passwordHash = await hashFindyPassword(password);
+    await db
+      .update(users)
+      .set({ passwordHash, updatedAt: new Date() })
+      .where(eq(users.id, userId));
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** OAuth fallback when sync-user is not deployed — login, signup, or patch shared DB. */
 async function provisionWithDeterministicPassword(
   payload: SyncUserPayload,
 ): Promise<string | null> {
@@ -135,12 +170,20 @@ async function provisionWithDeterministicPassword(
   const fromLogin = await findyLogin(payload.email, password);
   if (fromLogin) return fromLogin;
 
-  return findySignup({
+  const fromSignup = await findySignup({
     email: payload.email,
     password,
     firstName: payload.firstName || "User",
     lastName: payload.lastName || "",
   });
+  if (fromSignup) return fromSignup;
+
+  const patched = await ensureSharedDbPasswordForOAuthUser(payload.id, password);
+  if (patched) {
+    return findyLogin(payload.email, password);
+  }
+
+  return null;
 }
 
 /**

@@ -117,6 +117,45 @@ describe("provisionFindyCoreToken", () => {
     expect(mockFetch.mock.calls[2][0]).toContain("/auth/signup");
   });
 
+  it("OAuth user already in shared DB without password gets hash patched then login", async () => {
+    const { password: _, ...oauthUser } = USER;
+
+    const mockUpdate = vi.fn().mockResolvedValue(undefined);
+    const mockSelect = vi.fn().mockResolvedValue([{ passwordHash: null }]);
+
+    vi.doMock("@/lib/db", () => ({
+      db: {
+        select: () => ({
+          from: () => ({
+            where: () => ({
+              limit: mockSelect,
+            }),
+          }),
+        }),
+        update: () => ({
+          set: () => ({
+            where: mockUpdate,
+          }),
+        }),
+      },
+    }));
+
+    mockFetch
+      .mockResolvedValueOnce(mockFail(404)) // sync-user
+      .mockResolvedValueOnce(mockFail(401)) // deterministic login
+      .mockResolvedValueOnce(mockFail(409)) // signup — email exists in shared DB
+      .mockResolvedValueOnce(mockOk()); // login after password patch
+
+    vi.resetModules();
+    const { provisionFindyCoreToken } = await import("@/lib/findy-core/auth");
+    const token = await provisionFindyCoreToken(oauthUser);
+
+    expect(token).toBe(FINDY_JWT);
+    expect(mockSelect).toHaveBeenCalled();
+    expect(mockUpdate).toHaveBeenCalled();
+    expect(mockFetch.mock.calls[3][0]).toContain("/auth/login");
+  });
+
   it("credentials user tries deterministic login recovery when real password fails", async () => {
     mockFetch
       .mockResolvedValueOnce(mockFail(404)) // sync-user

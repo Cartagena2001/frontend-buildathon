@@ -114,6 +114,23 @@ describe("auth config integration", () => {
     expect(result.findyCoreToken).toBe(FINDY_JWT);
   });
 
+  it("jwt callback copies findyCoreToken from Google OAuth bridge without API call", async () => {
+    const { authConfig } = await import("@/lib/auth/auth.config");
+    const jwtCb = authConfig.callbacks!.jwt!;
+
+    const token = { sub: USER.id, iat: 1000, exp: 2000, jti: "j1" };
+    const user = {
+      id: USER.id,
+      email: USER.email,
+      name: `${USER.firstName} ${USER.lastName}`,
+      findyCoreToken: FINDY_JWT,
+    };
+
+    const result = await jwtCb({ token, user: user as never, account: null, trigger: "signIn" } as never);
+    expect(result.findyCoreToken).toBe(FINDY_JWT);
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
   it("session callback exposes findyCoreToken", async () => {
     const { authConfig } = await import("@/lib/auth/auth.config");
     const sessionCb = authConfig.callbacks!.session!;
@@ -133,7 +150,7 @@ describe("auth config integration", () => {
       expires: "2099-01-01T00:00:00.000Z",
     } as Parameters<typeof sessionCb>[0]["session"];
 
-    const result = await sessionCb({ session, token, user: undefined as never } as never);
+    const result = await sessionCb({ session, token, user: undefined as never, trigger: "update" });
     expect((result as { findyCoreToken?: string }).findyCoreToken).toBe(FINDY_JWT);
   });
 });
