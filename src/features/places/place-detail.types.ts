@@ -3,6 +3,8 @@ import type { PlaceCardData } from "@/features/places/components/PlaceCard";
 export interface PlaceMentionView {
   id: string;
   videoId: string;
+  source: string;
+  sourceUrl: string | null;
   sentiment: string;
   sentimentScore: number;
   likes: number;
@@ -10,6 +12,7 @@ export interface PlaceMentionView {
   shares: number;
   bookmarks: number;
   summary: string | null;
+  evidence: string | null;
   createdAt: string;
 }
 
@@ -31,6 +34,7 @@ export interface PlaceDetailData {
   lastMentionAt: string | null;
   featuredMention: PlaceMentionView | null;
   otherMentions: PlaceMentionView[];
+  webMentions: PlaceMentionView[];
 }
 
 /** Minimal card shape for MapView on the detail page. */

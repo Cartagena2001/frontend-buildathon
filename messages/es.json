@@ -199,9 +199,27 @@
     "noMentions": "Aún no hay menciones sociales para este lugar.",
     "noSummary": "No hay resumen disponible para esta mención.",
     "engagementTotal": "interacción total",
+    "webSources": "Guías y blogs",
+    "webSourcesHint": "Menciones extraídas de artículos y guías de viaje.",
+    "readOn": "Leer en {domain}",
     "location": "Ubicación",
     "openInMaps": "Google Maps",
     "openInWaze": "Waze"
+  },
+  "reviews": {
+    "reviews": "Reseñas",
+    "yourRating": "Tu calificación",
+    "editYourRating": "Edita tu calificación",
+    "comment": "Comentario",
+    "commentPlaceholder": "Comparte tu experiencia (opcional)",
+    "submit": "Enviar reseña",
+    "update": "Actualizar reseña",
+    "delete": "Eliminar reseña",
+    "saving": "Guardando…",
+    "loginToReview": "Inicia sesión para dejar una reseña.",
+    "login": "Iniciar sesión",
+    "noReviewsYet": "Aún no hay reseñas. ¡Sé el primero en compartir tu experiencia!",
+    "basedOn": "{count} calificaciones"
   },
   "footer": {
     "tagline": "El primer motor de descubrimiento de viajes con análisis de sentimiento. Impulsado por señales públicas, curado por la multitud, mapeado para ti.",

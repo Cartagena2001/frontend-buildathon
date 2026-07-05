@@ -9,6 +9,8 @@ import { createClient } from "@/lib/supabase/client";
 import type { PlaceDetailData, PlaceMentionView } from "@/features/places/place-detail.types";
 import { toMapPlace } from "@/features/places/place-detail.types";
 import { badgeOnImageClasses } from "./place-badge-styles";
+import ReviewsSection from "@/features/reviews/components/ReviewsSection";
+import type { PlaceReviewsData } from "@/features/reviews/types";
 
 const MapView = dynamic(() => import("@/features/map/components/MapView"), {
   ssr: false,
@@ -86,9 +88,11 @@ async function trackClickedPlace(placeId: string) {
 interface PlaceDetailProps {
   place: PlaceDetailData;
   isSaved?: boolean;
+  reviewsData?: PlaceReviewsData;
+  isAuthenticated?: boolean;
 }
 
-export default function PlaceDetail({ place, isSaved = false }: PlaceDetailProps) {
+export default function PlaceDetail({ place, isSaved = false, reviewsData, isAuthenticated = false }: PlaceDetailProps) {
   const t = useTranslations("place");
 
   useEffect(() => {
@@ -102,6 +106,9 @@ export default function PlaceDetail({ place, isSaved = false }: PlaceDetailProps
       <main className="lg:flex-1 lg:min-w-0 lg:overflow-y-auto lg:min-h-0">
         <PlaceDetailHero place={place} isSaved={isSaved} />
         <PlaceDetailEvidence place={place} />
+        {reviewsData && (
+          <ReviewsSection placeId={place.id} initialData={reviewsData} isAuthenticated={isAuthenticated} />
+        )}
       </main>
 
       <aside className="relative shrink-0 h-72 sm:h-80 lg:h-auto lg:w-[380px] xl:w-[460px] 2xl:w-[520px] lg:border-l border-fp-border bg-fp-dim lg:flex lg:flex-col lg:min-h-0">
@@ -221,9 +228,21 @@ function PlaceDetailEvidence({ place }: { place: PlaceDetailData }) {
           <h2 className="text-fp-cream text-sm font-semibold mb-4">{t("featuredMention")}</h2>
           <FeaturedMentionCard mention={place.featuredMention} locale={locale} />
         </section>
-      ) : (
+      ) : place.webMentions.length === 0 ? (
         <section className="px-5 sm:px-7 lg:px-8 py-8">
           <p className="text-fp-muted text-sm">{t("noMentions")}</p>
+        </section>
+      ) : null}
+
+      {place.webMentions.length > 0 && (
+        <section className="px-5 sm:px-7 lg:px-8 py-6">
+          <h2 className="text-fp-cream text-sm font-semibold mb-1">{t("webSources")}</h2>
+          <p className="text-fp-muted text-xs mb-4">{t("webSourcesHint")}</p>
+          <ul className="space-y-3">
+            {place.webMentions.map((mention) => (
+              <WebMentionCard key={mention.id} mention={mention} locale={locale} />
+            ))}
+          </ul>
         </section>
       )}
 
@@ -325,6 +344,67 @@ function MentionListItem({
   );
 }
 
+function sourceDomain(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
+function WebMentionCard({
+  mention,
+  locale,
+}: {
+  mention: PlaceMentionView;
+  locale: string;
+}) {
+  const t = useTranslations("place");
+  const domain = mention.sourceUrl ? sourceDomain(mention.sourceUrl) : null;
+
+  return (
+    <li className="rounded-xl border border-fp-border bg-fp-surface/30 overflow-hidden">
+      <div className="px-4 py-4 sm:px-5 sm:py-5">
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 shrink-0 w-8 h-8 rounded-lg bg-fp-coral/10 border border-fp-coral/20 flex items-center justify-center text-fp-coral">
+            <BlogIcon />
+          </span>
+          <div className="min-w-0 flex-1">
+            {mention.summary ? (
+              <p className="text-fp-cream/90 text-sm sm:text-[0.95rem] leading-relaxed text-pretty">
+                {mention.summary}
+              </p>
+            ) : (
+              <p className="text-fp-muted text-sm italic">{t("noSummary")}</p>
+            )}
+
+            {mention.evidence ? (
+              <blockquote className="mt-3 pl-3 border-l-2 border-fp-coral/30 text-fp-muted text-xs sm:text-sm leading-relaxed italic line-clamp-3">
+                {mention.evidence}
+              </blockquote>
+            ) : null}
+
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[0.68rem] text-fp-muted">
+              <span>{formatDate(mention.createdAt, locale)}</span>
+              {mention.sourceUrl && domain ? (
+                <a
+                  href={mention.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-fp-coral hover:text-fp-cream transition-colors font-medium"
+                >
+                  {t("readOn", { domain })}
+                  <ExternalLinkIcon />
+                </a>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  );
+}
+
 function OpenInMapButton({ label, href, icon }: { label: string; href: string; icon: React.ReactNode }) {
   return (
     <a
@@ -366,6 +446,24 @@ function WazeIcon() {
       <path d="M8 10h.01M16 10h.01" strokeWidth="2.5" strokeLinecap="round" />
       <path d="M9.5 13.5c.8.8 3.2.8 4 0" />
       <path d="M12 17v4" />
+    </svg>
+  );
+}
+function BlogIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      <path d="M8 7h8M8 11h6" strokeLinecap="round" />
+    </svg>
+  );
+}
+function ExternalLinkIcon() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" y1="14" x2="21" y2="3" />
     </svg>
   );
 }

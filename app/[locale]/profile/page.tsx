@@ -12,6 +12,8 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import EditProfileButton from "@/components/profile/EditProfileButton";
 import UserAvatar from "@/components/ui/UserAvatar";
+import { getMyReviews } from "@/features/reviews/actions";
+import MyReviewsList from "@/features/reviews/components/MyReviewsList";
 
 export default async function ProfilePage() {
   const [session, t, locale] = await Promise.all([
@@ -25,11 +27,15 @@ export default async function ProfilePage() {
   }
 
   // Load full user record for createdAt date
-  const [user] = await db
-    .select()
-    .from(users)
-    .where(eq(users.id, session.user.id!))
-    .limit(1);
+  const [user, myReviews] = await Promise.all([
+    db
+      .select()
+      .from(users)
+      .where(eq(users.id, session.user.id!))
+      .limit(1)
+      .then((rows) => rows[0]),
+    getMyReviews(),
+  ]);
 
   const firstName  = user?.firstName ?? session.user.name?.split(" ")[0] ?? "";
   const lastName   = user?.lastName ?? session.user.name?.split(" ").slice(1).join(" ") ?? "";
@@ -37,6 +43,7 @@ export default async function ProfilePage() {
   const email      = session.user.email ?? "";
   const avatar     = user?.image ?? null;
   const createdAt  = user?.createdAt ? new Date(user.createdAt) : null;
+  const reviewCount = myReviews.length;
 
   const tNav = await getTranslations("nav");
 
@@ -94,7 +101,7 @@ export default async function ProfilePage() {
         <div className="grid grid-cols-3 gap-4 mb-8">
           {[
             { label: t("savedPlaces"), value: "0" },
-            { label: t("reviews"),     value: "0" },
+            { label: t("reviews"),     value: String(reviewCount) },
             { label: tNav("destinations"), value: "—" },
           ].map(({ label, value }) => (
             <div key={label} className="glass rounded-xl p-4 text-center">
@@ -122,10 +129,14 @@ export default async function ProfilePage() {
         {/* Reviews section */}
         <section>
           <h2 className="font-display text-xl text-fp-cream mb-4">{t("reviews")}</h2>
-          <div className="glass rounded-2xl p-8 flex flex-col items-center gap-4 text-center">
-            <ReviewEmptyIcon />
-            <p className="text-fp-muted text-sm max-w-xs">{t("noReviews")}</p>
-          </div>
+          {myReviews.length === 0 ? (
+            <div className="glass rounded-2xl p-8 flex flex-col items-center gap-4 text-center">
+              <ReviewEmptyIcon />
+              <p className="text-fp-muted text-sm max-w-xs">{t("noReviews")}</p>
+            </div>
+          ) : (
+            <MyReviewsList reviews={myReviews} />
+          )}
         </section>
       </div>
     </div>

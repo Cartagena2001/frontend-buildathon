@@ -199,9 +199,27 @@
     "noMentions": "No social mentions yet for this place.",
     "noSummary": "No summary available for this mention.",
     "engagementTotal": "total engagement",
+    "webSources": "Guides & blogs",
+    "webSourcesHint": "Mentions extracted from travel articles and blog posts.",
+    "readOn": "Read on {domain}",
     "location": "Location",
     "openInMaps": "Google Maps",
     "openInWaze": "Waze"
+  },
+  "reviews": {
+    "reviews": "Reviews",
+    "yourRating": "Your rating",
+    "editYourRating": "Edit your rating",
+    "comment": "Comment",
+    "commentPlaceholder": "Share your experience (optional)",
+    "submit": "Submit review",
+    "update": "Update review",
+    "delete": "Delete review",
+    "saving": "Saving…",
+    "loginToReview": "Sign in to leave a review.",
+    "login": "Sign in",
+    "noReviewsYet": "No reviews yet. Be the first to share your experience!",
+    "basedOn": "{count} ratings"
   },
   "footer": {
     "tagline": "The first sentiment-aware travel discovery engine. Powered by public signals, curated by the crowd, mapped for you.",

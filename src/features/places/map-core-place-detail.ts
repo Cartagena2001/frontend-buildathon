@@ -31,6 +31,8 @@ function toMentionView(mention: CorePlaceMention): PlaceMentionView {
   return {
     id: mention.id,
     videoId: mention.videoId,
+    source: mention.source,
+    sourceUrl: mention.sourceUrl,
     sentiment: mention.sentiment,
     sentimentScore: mention.sentimentScore,
     likes: mention.likes,
@@ -38,8 +40,13 @@ function toMentionView(mention: CorePlaceMention): PlaceMentionView {
     shares: mention.shares,
     bookmarks: mention.bookmarks,
     summary: mention.summary,
+    evidence: mention.evidence,
     createdAt: mention.createdAt,
   };
+}
+
+function isWebMention(mention: CorePlaceMention | PlaceMentionView): boolean {
+  return mention.source === "web";
 }
 
 function pickFeaturedMention(
@@ -111,11 +118,18 @@ function coverForCategory(category: string | null, categoryType: PlaceCardData["
 /** Maps findy-core `GET /places/:id` into the Place Detail view model. */
 export function mapCorePlaceToDetailData(place: CorePlace): PlaceDetailData {
   const categoryType = resolveCategoryType(place.category);
-  const { sentiment, sentimentLabel } = resolveSentiment(place.mentions);
+  const socialMentions = place.mentions.filter((m) => !isWebMention(m));
+  const webMentions = place.mentions
+    .filter(isWebMention)
+    .map(toMentionView)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const { sentiment, sentimentLabel } = resolveSentiment(
+    socialMentions.length > 0 ? socialMentions : place.mentions,
+  );
   const { badge, badgeColor } = resolveBadge(place.trending);
-  const featured = pickFeaturedMention(place.mentions);
+  const featured = pickFeaturedMention(socialMentions);
   const featuredView = featured ? toMentionView(featured) : null;
-  const otherMentions = place.mentions
+  const otherMentions = socialMentions
     .filter((m) => m.id !== featured?.id)
     .map(toMentionView)
     .sort((a, b) => mentionEngagement(b) - mentionEngagement(a));
@@ -138,6 +152,7 @@ export function mapCorePlaceToDetailData(place: CorePlace): PlaceDetailData {
     lastMentionAt: resolveLastMentionAt(place.mentions),
     featuredMention: featuredView,
     otherMentions,
+    webMentions,
   };
 }
 
@@ -199,6 +214,8 @@ export function mapSearchResultToDetailData(item: SearchResultItem): PlaceDetail
     return {
       id: `${item.id}-mention-${index}`,
       videoId,
+      source: "tiktok",
+      sourceUrl: null,
       sentiment: sentimentEntry?.sentiment ?? "neutral",
       sentimentScore: sentimentEntry?.sentimentScore ?? 0.5,
       likes: index === 0 ? likes : 0,
@@ -206,6 +223,7 @@ export function mapSearchResultToDetailData(item: SearchResultItem): PlaceDetail
       shares: index === 0 ? shares : 0,
       bookmarks: index === 0 ? bookmarks : 0,
       summary,
+      evidence: null,
       createdAt: new Date().toISOString(),
     };
   });
@@ -236,5 +254,6 @@ export function mapSearchResultToDetailData(item: SearchResultItem): PlaceDetail
     lastMentionAt: featured?.createdAt ?? null,
     featuredMention: featured,
     otherMentions,
+    webMentions: [],
   };
 }

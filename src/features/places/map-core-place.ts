@@ -4,6 +4,8 @@ import { resolveCategoryType } from "@/features/places/category-type";
 export interface CorePlaceMention {
   id: string;
   videoId: string;
+  source: string;
+  sourceUrl: string | null;
   sentiment: string;
   sentimentScore: number;
   likes: number;
@@ -12,6 +14,7 @@ export interface CorePlaceMention {
   bookmarks: number;
   summary: string | null;
   locationText: string | null;
+  evidence: string | null;
   createdAt: string;
 }
 
