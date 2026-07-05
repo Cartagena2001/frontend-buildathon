@@ -44,7 +44,6 @@ export async function searchPlaces({
       query: trimmed,
       limit,
       filter: resolvedFilter,
-      suspicious,
       semanticWeight,
       reranking,
     }),
