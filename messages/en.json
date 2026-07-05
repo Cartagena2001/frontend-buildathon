@@ -296,6 +296,9 @@
       "signIn": "Sign in"
     }
   },
+  "notFound": {
+    "imageAlt": "Sleeping cat with the number 404"
+  },
   "loading": {
     "search": {
       "title": "Scanning experiences…",
